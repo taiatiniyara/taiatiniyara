@@ -75,10 +75,19 @@ function BlogIndex() {
       />
       <div className="container mx-auto px-4 py-16 max-w-6xl">
         <div className="mb-12">
-          <h1 className="text-4xl font-bold mb-4">Blog</h1>
-          <p className="text-lg text-gray-600">
-            Thoughts on software development, architecture, and technology
-          </p>
+          <div className="flex justify-between items-start">
+            <div>
+              <h1 className="text-4xl font-bold mb-4">Blog</h1>
+              <p className="text-lg text-gray-600">
+                Thoughts on software development, architecture, and technology
+              </p>
+            </div>
+            <Link to="/blog/admin">
+              <Button variant="outline" size="sm">
+                Admin
+              </Button>
+            </Link>
+          </div>
         </div>
 
       {tags.length > 0 && (

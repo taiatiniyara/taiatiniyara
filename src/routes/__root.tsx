@@ -2,7 +2,7 @@ import { createRootRoute, Link, Outlet } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 
 const RootLayout = () => (
-  <>
+  <div className="flex flex-col min-h-screen">
     <header>
       <nav className="border-b bg-white" role="navigation" aria-label="Main navigation">
         <div className="container mx-auto px-4 py-4">
@@ -30,7 +30,7 @@ const RootLayout = () => (
         </div>
       </nav>
     </header>
-    <main role="main">
+    <main role="main" className="flex-grow">
       <Outlet />
     </main>
     <footer className="border-t bg-gray-50 mt-16" role="contentinfo">
@@ -41,7 +41,7 @@ const RootLayout = () => (
       </div>
     </footer>
     <TanStackRouterDevtools />
-  </>
+  </div>
 )
 
 export const Route = createRootRoute({ component: RootLayout })
