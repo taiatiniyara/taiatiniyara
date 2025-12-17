@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Disallow admin pages
+Disallow: /blog/admin
+
+# Sitemap
+Sitemap: https://taiatiniyara.web.app/sitemap.xml
