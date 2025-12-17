@@ -30,7 +30,7 @@ const RootLayout = () => (
         </div>
       </nav>
     </header>
-    <main role="main" className="flex-grow">
+    <main role="main" className="grow">
       <Outlet />
     </main>
     <footer className="border-t bg-gray-50 mt-16" role="contentinfo">
