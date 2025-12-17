@@ -15,6 +15,9 @@ import {
 import { generateSlug } from "@/lib/blog";
 import type { BlogPost, CreateBlogPostInput } from "@/types/blog";
 import { RichTextEditor } from "@/components/RichTextEditor";
+import { useSessionStorage } from "@/hooks/useSessionStorage";
+
+const blogKey = import.meta.env.VITE_BLOG_KEY;
 
 export const Route = createFileRoute("/blog/admin")({
   component: BlogAdmin,
@@ -135,6 +138,32 @@ function BlogAdmin() {
     });
   };
 
+  const sessionStorage = useSessionStorage<string | null>(
+    "blog_admin_key",
+    null
+  );
+  const [storedKey, setStoredKey] = sessionStorage;
+  console.log("Stored Key:", blogKey);
+
+  if (storedKey !== blogKey) {
+    return (
+      <div className="container mx-auto px-4 py-16 max-w-md">
+        <Card className="p-6">
+          <h2 className="text-2xl font-bold mb-4">Admin Access</h2>
+          <p className="mb-4">
+            Please enter the admin key to access the blog administration panel.
+          </p>
+          <Input
+            type="password"
+            placeholder="Enter admin key"
+            value={storedKey || ""}
+            onChange={(e) => setStoredKey(e.target.value)}
+          />
+        </Card>
+      </div>
+    );
+  }
+
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-16">
@@ -213,7 +242,8 @@ function BlogAdmin() {
                 className="min-h-100"
               />
               <p className="text-sm text-gray-500">
-                Use the toolbar above for rich text formatting. The editor supports headings, lists, links, and more.
+                Use the toolbar above for rich text formatting. The editor
+                supports headings, lists, links, and more.
               </p>
             </div>
 

@@ -141,8 +141,8 @@ function BlogPostPage() {
         )}
 
         <div 
-          className="prose prose-lg max-w-none"
-          dangerouslySetInnerHTML={{ __html: formatContent(post.content) }}
+          className="blog-content prose prose-lg max-w-none"
+          dangerouslySetInnerHTML={{ __html: post.content }}
         />
       </article>
 
@@ -154,40 +154,4 @@ function BlogPostPage() {
       </div>
     </>
   );
-}
-
-// Simple markdown-like formatting for content
-// For production, consider using a library like marked or react-markdown
-function formatContent(content: string): string {
-  // Convert markdown-style formatting to HTML
-  let html = content;
-  
-  // Headers
-  html = html.replace(/^### (.*$)/gim, '<h3 class="text-2xl font-bold mt-8 mb-4">$1</h3>');
-  html = html.replace(/^## (.*$)/gim, '<h2 class="text-3xl font-bold mt-10 mb-4">$1</h2>');
-  html = html.replace(/^# (.*$)/gim, '<h1 class="text-4xl font-bold mt-12 mb-4">$1</h1>');
-  
-  // Bold
-  html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-  
-  // Italic
-  html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
-  
-  // Code blocks
-  html = html.replace(/```([\s\S]*?)```/g, '<pre class="bg-gray-100 p-4 rounded-lg overflow-x-auto my-4"><code>$1</code></pre>');
-  
-  // Inline code
-  html = html.replace(/`(.*?)`/g, '<code class="bg-gray-100 px-2 py-1 rounded text-sm">$1</code>');
-  
-  // Links
-  html = html.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" class="text-blue-600 hover:underline">$1</a>');
-  
-  // Paragraphs
-  html = html.replace(/\n\n/g, '</p><p class="mb-4">');
-  html = '<p class="mb-4">' + html + '</p>';
-  
-  // Line breaks
-  html = html.replace(/\n/g, '<br>');
-  
-  return html;
 }

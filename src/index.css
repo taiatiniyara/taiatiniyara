@@ -245,3 +245,118 @@
 .tiptap s {
   text-decoration: line-through;
 }
+
+/* Blog Content Styles - for displaying rendered blog posts */
+.blog-content p {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.blog-content h1 {
+  font-size: 2em;
+  font-weight: bold;
+  margin-top: 0.67em;
+  margin-bottom: 0.67em;
+}
+
+.blog-content h2 {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-top: 0.83em;
+  margin-bottom: 0.83em;
+}
+
+.blog-content h3 {
+  font-size: 1.17em;
+  font-weight: bold;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.blog-content ul,
+.blog-content ol {
+  padding-left: 2em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.blog-content ul {
+  list-style-type: disc;
+}
+
+.blog-content ol {
+  list-style-type: decimal;
+}
+
+.blog-content li {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.blog-content blockquote {
+  padding-left: 1em;
+  border-left: 3px solid #e5e7eb;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  font-style: italic;
+}
+
+.blog-content code {
+  background-color: #f3f4f6;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-family: monospace;
+  font-size: 0.9em;
+}
+
+.blog-content pre {
+  background-color: #1e293b;
+  color: #e2e8f0;
+  padding: 1em;
+  border-radius: 0.5em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  overflow-x: auto;
+}
+
+.blog-content pre code {
+  background-color: transparent;
+  padding: 0;
+  color: inherit;
+  font-size: 0.875em;
+}
+
+.blog-content a {
+  color: #3b82f6;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.blog-content a:hover {
+  color: #2563eb;
+}
+
+.blog-content strong {
+  font-weight: bold;
+}
+
+.blog-content em {
+  font-style: italic;
+}
+
+.blog-content u {
+  text-decoration: underline;
+}
+
+.blog-content s {
+  text-decoration: line-through;
+}
+
+/* Dark mode styles for blog content */
+.dark .blog-content code {
+  background-color: #334155;
+}
+
+.dark .blog-content blockquote {
+  border-left-color: #475569;
+}
