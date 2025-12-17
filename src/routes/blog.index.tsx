@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { useState } from 'react';
+import { ClipLoader } from 'react-spinners';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -39,7 +40,7 @@ function BlogIndex() {
     return (
       <div className="container mx-auto px-4 py-16">
         <div className="flex justify-center items-center min-h-100">
-          <div className="text-lg">Loading blog posts...</div>
+          <ClipLoader color="#3b82f6" size={50} />
         </div>
       </div>
     );

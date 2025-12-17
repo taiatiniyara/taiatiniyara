@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
+import { ClipLoader } from 'react-spinners';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { usePostBySlug } from '@/hooks/useBlogQueries';
@@ -36,7 +37,7 @@ function BlogPostPage() {
     return (
       <div className="container mx-auto px-4 py-16">
         <div className="flex justify-center items-center min-h-100">
-          <div className="text-lg">Loading post...</div>
+          <ClipLoader color="#3b82f6" size={50} />
         </div>
       </div>
     );

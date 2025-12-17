@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { ClipLoader } from "react-spinners";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -168,7 +169,7 @@ function BlogAdmin() {
     return (
       <div className="container mx-auto px-4 py-16">
         <div className="flex justify-center items-center min-h-100">
-          <div className="text-lg">Loading...</div>
+          <ClipLoader color="#3b82f6" size={50} />
         </div>
       </div>
     );
