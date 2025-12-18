@@ -2,8 +2,9 @@ import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { ClipLoader } from 'react-spinners';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { usePostBySlug } from '@/hooks/useBlogQueries';
+import { usePostBySlug, usePublishedPosts } from '@/hooks/useBlogQueries';
 import { SEO, StructuredData } from '@/components/SEO';
+import { Card } from '@/components/ui/card';
 
 export const Route = createFileRoute('/blog/$slug')({
   component: BlogPostPage,
@@ -14,6 +15,7 @@ function BlogPostPage() {
   const navigate = useNavigate();
   
   const { data: post, isLoading: loading, error: queryError } = usePostBySlug(slug);
+  const { data: postsData } = usePublishedPosts(1, 10);
 
   // Check if post is not found or not published
   let error: string | null = null;
@@ -62,6 +64,11 @@ function BlogPostPage() {
   const postUrl = `${siteUrl}/blog/${post.slug}`;
   const excerpt = post.excerpt || post.content.substring(0, 160).replace(/<[^>]*>/g, '');
 
+  // Get other blog posts (exclude current post and limit to 3)
+  const otherPosts = postsData?.posts
+    .filter(p => p.slug !== slug)
+    .slice(0, 3) || [];
+
   return (
     <>
       <SEO
@@ -99,12 +106,13 @@ function BlogPostPage() {
           keywords: post.tags?.join(', '),
         }}
       />
-      <div className="container mx-auto px-4 py-16 max-w-4xl">
+      <div className="container mx-auto px-4 py-16">
         <Link to="/blog" className="inline-flex items-center text-blue-600 hover:underline mb-8">
           ← Back to Blog
         </Link>
 
-        <article>
+        <div className="flex flex-col lg:flex-row gap-8">
+          <article className="flex-1 max-w-4xl">
         {post.featured_image && (
           <img
             src={post.featured_image}
@@ -145,13 +153,55 @@ function BlogPostPage() {
           className="blog-content prose prose-lg max-w-none"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
-      </article>
 
         <footer className="mt-16 pt-8 border-t">
           <Button onClick={() => navigate({ to: '/blog' })} variant="outline">
             ← Back to All Posts
           </Button>
         </footer>
+      </article>
+
+          {/* Sidebar with other blog posts */}
+          {otherPosts.length > 0 && (
+            <aside className="lg:w-80 shrink-0">
+              <div className="sticky top-8">
+                <h3 className="text-xl font-semibold mb-4">Other Blog Posts</h3>
+                <div className="space-y-4">
+                  {otherPosts.map((otherPost) => (
+                    <Card key={otherPost.id} className="p-4 hover:shadow-lg transition-shadow">
+                      <Link 
+                        to="/blog/$slug" 
+                        params={{ slug: otherPost.slug }}
+                        className="block"
+                      >
+                        {otherPost.featured_image && (
+                          <img
+                            src={otherPost.featured_image}
+                            alt={otherPost.title}
+                            className="w-full h-32 object-cover rounded mb-3"
+                          />
+                        )}
+                        <h4 className="font-semibold text-sm mb-2 line-clamp-2 hover:text-blue-600">
+                          {otherPost.title}
+                        </h4>
+                        {otherPost.excerpt && (
+                          <p className="text-xs text-gray-600 line-clamp-2">
+                            {otherPost.excerpt}
+                          </p>
+                        )}
+                        {otherPost.published_at && (
+                          <time className="text-xs text-gray-500 mt-2 block">
+                            {formatDate(otherPost.published_at)}
+                          </time>
+                        )}
+                      </Link>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            </aside>
+          )}
+        </div>
       </div>
     </>
   );
