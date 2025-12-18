@@ -27,8 +27,8 @@ const RootLayout = () => {
         >
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
-              <Link
-                to="/"
+              <a
+                href="/"
                 className="flex items-center gap-2 text-xl font-bold hover:text-blue-600 transition-colors group"
                 aria-label="Taia Tiniyara - Home"
               >
@@ -37,19 +37,18 @@ const RootLayout = () => {
                   alt="Taia Tiniyara Logo"
                   className="h-9 w-9 group-hover:scale-110 transition-transform"
                 />
-              </Link>
+              </a>
 
               {/* Desktop Navigation */}
               <div className="hidden md:flex gap-6">
                 {menuItems.map((item) => (
-                  <Link
+                  <a  
                     key={item.to}
-                    to={item.to}
-                    className="hover:text-blue-600 transition-colors"
-                    activeProps={{ className: "text-blue-600 font-medium" }}
+                    href={item.to}
+                    className={"hover:text-blue-600 transition-colors " + (window.location.pathname === item.to ? "text-blue-600 font-medium" : "")}
                   >
                     {item.name}
-                  </Link>
+                  </a>
                 ))}
               </div>
 
