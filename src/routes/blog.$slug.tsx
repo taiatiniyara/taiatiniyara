@@ -86,7 +86,7 @@ function BlogPostPage() {
         data={{
           headline: post.title,
           description: excerpt,
-          image: post.featured_image || `${siteUrl}/circle.svg`,
+          image: post.featured_image || `${siteUrl}/taia.jpg`,
           datePublished: post.published_at,
           dateModified: post.updated_at,
           author: {

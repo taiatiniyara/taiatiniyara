@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { usePublishedProjects } from "@/hooks/useProjectQueries";
 import { ExternalLink, Github } from "lucide-react";
+import { SEO, StructuredData } from "@/components/SEO";
 
 export const Route = createFileRoute("/projects/")({
   component: ProjectsIndex,
@@ -25,14 +26,38 @@ function ProjectsIndex() {
   }
 
   return (
+    <>
+      <SEO
+        title="Projects"
+        description="Portfolio of software projects by Taia Tiniyara including web applications, SaaS platforms, and system architecture implementations. Featuring work with React, TypeScript, .NET, and modern web technologies."
+      />
+      <StructuredData
+        type="WebSite"
+        data={{
+          name: "Taia Tiniyara Projects",
+          url: `${window.location.origin}/projects`,
+          author: {
+            "@type": "Person",
+            name: "Taia Colai Tiniyara",
+          },
+        }}
+      />
     <div className="container mx-auto px-4 py-16 max-w-6xl">
       <div className="mb-12">
-        <h1 className="text-4xl font-bold mb-4">Projects</h1>
-        <p className="text-lg text-gray-600">
-          Check out some of the projects I've worked on
-        </p>
+        <div className="flex justify-between items-start">
+          <div>
+            <h1 className="text-4xl font-bold mb-4">Projects</h1>
+            <p className="text-lg text-gray-600">
+              Check out some of the projects I've worked on!
+            </p>
+          </div>
+          <Link to="/projects/admin">
+            <Button variant="outline" size="sm">
+              Admin
+            </Button>
+          </Link>
+        </div>
       </div>
-
       {projects.length === 0 ? (
         <div className="text-center py-16">
           <p className="text-xl text-gray-600">No projects published yet.</p>
@@ -40,7 +65,10 @@ function ProjectsIndex() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((project) => (
-            <Card key={project.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+            <Card
+              key={project.id}
+              className="overflow-hidden hover:shadow-lg transition-shadow"
+            >
               {project.thumbnail && (
                 <div className="aspect-video w-full overflow-hidden bg-gray-100">
                   <img
@@ -112,5 +140,6 @@ function ProjectsIndex() {
         </div>
       )}
     </div>
+    </>
   );
 }

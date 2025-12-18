@@ -23,8 +23,8 @@ const RootLayout = () => {
         <nav className="border-b bg-white shadow-sm" role="navigation" aria-label="Main navigation">
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
-              <Link to="/" className="text-xl font-bold hover:text-blue-600" aria-label="Home">
-                <img src="/circle.svg" alt="Taia Tiniyara Logo" className="h-8 w-8" />
+              <Link to="/" className="text-xl font-bold hover:text-blue-600" aria-label="Taia Tiniyara - Home">
+                <img src="/logo.svg" alt="Taia Tiniyara Logo" className="h-8 w-8" />
               </Link>
               
               {/* Desktop Navigation */}

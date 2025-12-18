@@ -28,7 +28,7 @@ export function SEO({
   const fullTitle = title === 'Taia Tiniyara' ? title : `${title} | Taia Tiniyara`;
   const siteUrl = window.location.origin;
   const currentUrl = canonicalUrl || window.location.href;
-  const defaultImage = `${siteUrl}/circle.svg`;
+  const defaultImage = `${siteUrl}/taia.jpg`;
   const imageUrl = ogImage || defaultImage;
 
   useEffect(() => {

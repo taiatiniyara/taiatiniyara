@@ -1,15 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <!-- Home Page -->
   <url>
     <loc>https://taiatiniyara.web.app/</loc>
-    <lastmod>2025-12-17</lastmod>
-    <changefreq>monthly</changefreq>
+    <lastmod>2025-12-19</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://taiatiniyara.web.app/taia.jpg</image:loc>
+      <image:title>Taia Tiniyara - Full-Stack Software Developer</image:title>
+    </image:image>
   </url>
+  
+  <!-- About Page -->
+  <url>
+    <loc>https://taiatiniyara.web.app/about</loc>
+    <lastmod>2025-12-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Blog Index -->
   <url>
     <loc>https://taiatiniyara.web.app/blog</loc>
-    <lastmod>2025-12-17</lastmod>
+    <lastmod>2025-12-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
+  
+  <!-- Projects Index -->
+  <url>
+    <loc>https://taiatiniyara.web.app/projects</loc>
+    <lastmod>2025-12-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Note: Dynamic blog posts and project pages should be added programmatically -->
+  
 </urlset>

@@ -1,0 +1,22 @@
+{
+  "name": "Taia Tiniyara - Full-Stack Software Developer",
+  "short_name": "Taia Tiniyara",
+  "description": "Full-Stack Software Developer specializing in systems architecture, database design, and SaaS development.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["portfolio", "developer", "technology"],
+  "lang": "en-US",
+  "dir": "ltr",
+  "scope": "/"
+}

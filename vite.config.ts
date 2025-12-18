@@ -18,4 +18,28 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    // SEO & Performance optimizations
+    cssCodeSplit: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom'],
+          'router': ['@tanstack/react-router'],
+          'ui': ['lucide-react', 'react-spinners'],
+        },
+      },
+    },
+    // Optimize assets
+    assetsInlineLimit: 4096,
+    // Enable minification
+    minify: 'esbuild',
+  },
+  esbuild: {
+    drop: ['console', 'debugger'],
+  },
+  // Performance optimizations
+  optimizeDeps: {
+    include: ['react', 'react-dom', '@tanstack/react-router'],
+  },
 })

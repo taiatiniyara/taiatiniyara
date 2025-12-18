@@ -1,8 +1,27 @@
+# Robots.txt for taiatiniyara.web.app
+# Full-Stack Software Developer Portfolio
+
 User-agent: *
 Allow: /
 
 # Disallow admin pages
 Disallow: /blog/admin
+Disallow: /projects/admin
+Disallow: /admin
+Disallow: /__
+
+# Allow all assets
+Allow: /assets/
+Allow: *.css
+Allow: *.js
+Allow: *.jpg
+Allow: *.jpeg
+Allow: *.png
+Allow: *.svg
+Allow: *.webp
+
+# Crawl delay (optional, be respectful to crawlers)
+Crawl-delay: 0
 
 # Sitemap
 Sitemap: https://taiatiniyara.web.app/sitemap.xml

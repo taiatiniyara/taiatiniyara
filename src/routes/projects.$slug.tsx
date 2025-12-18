@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useProjectBySlug } from "@/hooks/useProjectQueries";
 import { ExternalLink, Github, ArrowLeft } from "lucide-react";
+import { SEO, StructuredData } from "@/components/SEO";
 
 export const Route = createFileRoute("/projects/$slug")({
   component: ProjectDetail,
@@ -49,7 +50,46 @@ function ProjectDetail() {
     });
   };
 
+  const siteUrl = window.location.origin;
+  const projectUrl = `${siteUrl}/projects/${project.slug}`;
+  const projectDescription = project.description || `${project.title} - A project by Taia Tiniyara`;
+
   return (
+    <>
+      <SEO
+        title={project.title}
+        description={projectDescription}
+        canonicalUrl={projectUrl}
+        ogType="article"
+        ogImage={project.thumbnail || undefined}
+        publishedTime={project.published_at || undefined}
+        modifiedTime={project.updated_at}
+        tags={project.technologies || []}
+      />
+      <StructuredData
+        type="Article"
+        data={{
+          headline: project.title,
+          description: projectDescription,
+          image: project.thumbnail || `${siteUrl}/logo.svg`,
+          datePublished: project.published_at,
+          dateModified: project.updated_at,
+          author: {
+            "@type": "Person",
+            name: "Taia Colai Tiniyara",
+            url: siteUrl,
+          },
+          publisher: {
+            "@type": "Person",
+            name: "Taia Colai Tiniyara",
+            url: siteUrl,
+          },
+          mainEntityOfPage: {
+            "@type": "WebPage",
+            "@id": projectUrl,
+          },
+        }}
+      />
     <div className="container mx-auto px-4 py-16 max-w-4xl">
       <Button
         onClick={() => navigate({ to: "/projects" })}
@@ -144,5 +184,6 @@ function ProjectDetail() {
         </div>
       </article>
     </div>
+    </>
   );
 }
