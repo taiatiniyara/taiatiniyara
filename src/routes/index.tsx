@@ -36,11 +36,11 @@ function Index() {
               <span className="text-xs md:text-sm font-medium text-blue-700 dark:text-blue-300">Available for opportunities</span>
             </div>
             
-            {/* Main heading with linear */}
+            {/* Main heading */}
             <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-extrabold mb-4 md:mb-6 animate-fade-in">
               <span className="text-slate-800 dark:text-slate-100">Hi, I'm</span>
               <br />
-              <span className="bg-linear-to-r from-blue-600 via-blue-700 to-purple-600 dark:from-blue-400 dark:via-blue-500 dark:to-purple-400 bg-clip-text text-transparent">
+              <span className="text-blue-600 dark:text-blue-400">
                 Taia Tiniyara
               </span>
             </h1>

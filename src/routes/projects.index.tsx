@@ -50,8 +50,8 @@ function ProjectsIndex() {
           <StatsDisplay
             stats={[
               { value: projects.length, label: "Projects", color: "blue" },
-              { value: projects.filter(p => p.featured).length, label: "Featured", color: "purple" },
-              { value: "∞", label: "Ideas", color: "cyan" },
+              { value: projects.filter(p => p.featured).length, label: "Featured", color: "blue" },
+              { value: "∞", label: "Ideas", color: "blue" },
             ]}
           />
 
@@ -69,7 +69,7 @@ function ProjectsIndex() {
           <div className="max-w-7xl mx-auto">
             {projects.length === 0 ? (
               <div className="text-center py-20 animate-fade-in">
-                <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-linear-to-br from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 flex items-center justify-center">
+                <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
                   <FolderGit2 className="w-10 h-10 text-blue-600 dark:text-blue-400" />
                 </div>
                 <p className="text-xl font-medium text-slate-700 dark:text-slate-300 mb-2">
@@ -87,11 +87,11 @@ function ProjectsIndex() {
                     className="group relative overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 bg-white/80 dark:bg-slate-900/50 backdrop-blur-sm border-slate-200/50 dark:border-slate-700/50 hover:border-blue-300 dark:hover:border-blue-700 hover:bg-white dark:hover:bg-slate-800/70 animate-fade-in"
                     style={{ animationDelay: `${0.4 + index * 0.05}s` }}
                   >
-                    {/* Decorative linear overlay */}
-                    <div className="absolute inset-0 bg-linear-to-br from-blue-500/0 via-purple-500/0 to-blue-500/0 group-hover:from-blue-500/5 group-hover:via-purple-500/5 group-hover:to-cyan-500/5 transition-all duration-500 pointer-events-none"></div>
+                    {/* Decorative overlay */}
+                    <div className="absolute inset-0 bg-blue-500/0 group-hover:bg-blue-500/5 transition-all duration-500 pointer-events-none"></div>
                     
                     {/* Animated corner accent */}
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-linear-to-br from-blue-400/10 to-purple-400/10 rounded-full -mr-16 -mt-16 group-hover:scale-150 group-hover:from-blue-400/20 group-hover:to-purple-400/20 transition-all duration-700"></div>
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-blue-400/10 rounded-full -mr-16 -mt-16 group-hover:scale-150 group-hover:bg-blue-400/20 transition-all duration-700"></div>
                     
                     {/* Shimmer effect on hover */}
                     <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-linear-to-r from-transparent via-white/10 to-transparent pointer-events-none"></div>
@@ -106,7 +106,7 @@ function ProjectsIndex() {
                         />
                       </div>
                     ) : (
-                      <div className="w-full h-2 bg-linear-to-r from-blue-500 via-purple-500 to-cyan-500 opacity-70 group-hover:opacity-100 transition-opacity"></div>
+                      <div className="w-full h-2 bg-blue-500 opacity-70 group-hover:opacity-100 transition-opacity"></div>
                     )}
 
                     <div className="relative p-6 space-y-4">
@@ -115,7 +115,7 @@ function ProjectsIndex() {
                           {project.title}
                         </h2>
                         {project.featured && (
-                          <Badge className="shrink-0 bg-linear-to-r from-blue-500 to-purple-500 text-white border-0 shadow-md">
+                          <Badge className="shrink-0 bg-blue-500 text-white border-0 shadow-md">
                             Featured
                           </Badge>
                         )}
@@ -146,7 +146,7 @@ function ProjectsIndex() {
                           params={{ slug: project.slug }}
                           className="flex-1"
                         >
-                          <Button variant="default" className="w-full bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-md hover:shadow-lg transition-all">
+                          <Button variant="default" className="w-full bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg transition-all">
                             View Details
                           </Button>
                         </Link>

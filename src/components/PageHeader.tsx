@@ -35,7 +35,7 @@ export function PageHeader({
           )}
           
           <h1 className={`${titleClassName} font-extrabold mb-6 animate-fade-in`}>
-            <span className="bg-linear-to-r from-blue-600 via-blue-700 to-purple-600 dark:from-blue-400 dark:via-blue-500 dark:to-purple-400 bg-clip-text text-transparent">
+            <span className="text-blue-600 dark:text-blue-400">
               {title}
             </span>
           </h1>

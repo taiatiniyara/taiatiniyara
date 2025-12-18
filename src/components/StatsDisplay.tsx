@@ -1,7 +1,7 @@
 interface StatItem {
   value: string | number;
   label: string;
-  color?: 'blue' | 'purple' | 'cyan';
+  color?: 'blue';
 }
 
 interface StatsDisplayProps {
@@ -10,8 +10,6 @@ interface StatsDisplayProps {
 
 const colorClasses = {
   blue: 'text-blue-600 dark:text-blue-400',
-  purple: 'text-purple-600 dark:text-purple-400',
-  cyan: 'text-cyan-600 dark:text-cyan-400',
 };
 
 export function StatsDisplay({ stats }: StatsDisplayProps) {
