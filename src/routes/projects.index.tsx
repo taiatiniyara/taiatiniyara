@@ -1,11 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ClipLoader } from "react-spinners";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { usePublishedProjects } from "@/hooks/useProjectQueries";
-import { ExternalLink, Github } from "lucide-react";
+import { ExternalLink, Github, TrendingUp, FolderGit2 } from "lucide-react";
 import { SEO, StructuredData } from "@/components/SEO";
+import { DecorativeBackground } from "@/components/DecorativeBackground";
+import { PageHeader } from "@/components/PageHeader";
+import { StatsDisplay } from "@/components/StatsDisplay";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 
 export const Route = createFileRoute("/projects/")({
   component: ProjectsIndex,
@@ -16,13 +19,7 @@ function ProjectsIndex() {
   const projects = data?.projects || [];
 
   if (isLoading) {
-    return (
-      <div className="container mx-auto px-4 py-16">
-        <div className="flex justify-center items-center min-h-100px">
-          <ClipLoader color="#3b82f6" size={50} />
-        </div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   return (
@@ -42,104 +39,150 @@ function ProjectsIndex() {
           },
         }}
       />
-    <div className="container mx-auto px-4 py-16 max-w-6xl">
-      <div className="mb-12">
-        <div className="flex justify-between items-start">
-          <div>
-            <h1 className="text-4xl font-bold mb-4">Projects</h1>
-            <p className="text-lg text-gray-600">
-              Check out some of the projects I've worked on!
-            </p>
+      <div className="min-h-screen">
+        <DecorativeBackground />
+
+        <PageHeader
+          badge={{ icon: TrendingUp, text: "Portfolio & Work" }}
+          title="My Projects"
+          description="Check out some of the projects I've worked on, showcasing real-world solutions and creative implementations"
+        >
+          <StatsDisplay
+            stats={[
+              { value: projects.length, label: "Projects", color: "blue" },
+              { value: projects.filter(p => p.featured).length, label: "Featured", color: "purple" },
+              { value: "∞", label: "Ideas", color: "cyan" },
+            ]}
+          />
+
+          <div className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
+            <Link to="/projects/admin">
+              <Button variant="outline" size="sm" className="hover:bg-blue-50 dark:hover:bg-blue-950/30 hover:border-blue-400 dark:hover:border-blue-600">
+                Admin
+              </Button>
+            </Link>
           </div>
-          <Link to="/projects/admin">
-            <Button variant="outline" size="sm">
-              Admin
-            </Button>
-          </Link>
-        </div>
-      </div>
-      {projects.length === 0 ? (
-        <div className="text-center py-16">
-          <p className="text-xl text-gray-600">No projects published yet.</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projects.map((project) => (
-            <Card
-              key={project.id}
-              className="overflow-hidden hover:shadow-lg transition-shadow"
-            >
-              {project.thumbnail && (
-                <div className="aspect-video w-full overflow-hidden bg-gray-100">
-                  <img
-                    src={project.thumbnail}
-                    alt={project.title}
-                    className="w-full h-full object-cover"
-                  />
+        </PageHeader>
+
+        {/* Projects Section */}
+        <section className="relative container mx-auto px-4 pb-20">
+          <div className="max-w-7xl mx-auto">
+            {projects.length === 0 ? (
+              <div className="text-center py-20 animate-fade-in">
+                <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-linear-to-br from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 flex items-center justify-center">
+                  <FolderGit2 className="w-10 h-10 text-blue-600 dark:text-blue-400" />
                 </div>
-              )}
-              <div className="p-6">
-                <div className="flex items-start justify-between mb-2">
-                  <h2 className="text-xl font-bold">{project.title}</h2>
-                  {project.featured && (
-                    <Badge variant="default" className="ml-2">
-                      Featured
-                    </Badge>
-                  )}
-                </div>
-                <p className="text-gray-600 mb-4 line-clamp-3">
-                  {project.description}
+                <p className="text-xl font-medium text-slate-700 dark:text-slate-300 mb-2">
+                  No projects published yet
                 </p>
-                {project.technologies && project.technologies.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {project.technologies.map((tech) => (
-                      <Badge key={tech} variant="outline">
-                        {tech}
-                      </Badge>
-                    ))}
-                  </div>
-                )}
-                <div className="flex items-center gap-2">
-                  <Link
-                    to="/projects/$slug"
-                    params={{ slug: project.slug }}
-                    className="flex-1"
-                  >
-                    <Button variant="default" className="w-full">
-                      View Details
-                    </Button>
-                  </Link>
-                  {project.github_url && (
-                    <a
-                      href={project.github_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block"
-                    >
-                      <Button variant="outline" size="icon">
-                        <Github className="h-4 w-4" />
-                      </Button>
-                    </a>
-                  )}
-                  {project.demo_url && (
-                    <a
-                      href={project.demo_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block"
-                    >
-                      <Button variant="outline" size="icon">
-                        <ExternalLink className="h-4 w-4" />
-                      </Button>
-                    </a>
-                  )}
-                </div>
+                <p className="text-sm text-slate-500 dark:text-slate-500">
+                  Check back soon for exciting new work!
+                </p>
               </div>
-            </Card>
-          ))}
-        </div>
-      )}
-    </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {projects.map((project, index) => (
+                  <Card
+                    key={project.id}
+                    className="group relative overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 bg-white/80 dark:bg-slate-900/50 backdrop-blur-sm border-slate-200/50 dark:border-slate-700/50 hover:border-blue-300 dark:hover:border-blue-700 hover:bg-white dark:hover:bg-slate-800/70 animate-fade-in"
+                    style={{ animationDelay: `${0.4 + index * 0.05}s` }}
+                  >
+                    {/* Decorative linear overlay */}
+                    <div className="absolute inset-0 bg-linear-to-br from-blue-500/0 via-purple-500/0 to-blue-500/0 group-hover:from-blue-500/5 group-hover:via-purple-500/5 group-hover:to-cyan-500/5 transition-all duration-500 pointer-events-none"></div>
+                    
+                    {/* Animated corner accent */}
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-linear-to-br from-blue-400/10 to-purple-400/10 rounded-full -mr-16 -mt-16 group-hover:scale-150 group-hover:from-blue-400/20 group-hover:to-purple-400/20 transition-all duration-700"></div>
+                    
+                    {/* Shimmer effect on hover */}
+                    <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-linear-to-r from-transparent via-white/10 to-transparent pointer-events-none"></div>
+
+                    {/* Project thumbnail or linear bar */}
+                    {project.thumbnail ? (
+                      <div className="aspect-video w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
+                        <img
+                          src={project.thumbnail}
+                          alt={project.title}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-full h-2 bg-linear-to-r from-blue-500 via-purple-500 to-cyan-500 opacity-70 group-hover:opacity-100 transition-opacity"></div>
+                    )}
+
+                    <div className="relative p-6 space-y-4">
+                      <div className="flex items-start justify-between gap-2">
+                        <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2">
+                          {project.title}
+                        </h2>
+                        {project.featured && (
+                          <Badge className="shrink-0 bg-linear-to-r from-blue-500 to-purple-500 text-white border-0 shadow-md">
+                            Featured
+                          </Badge>
+                        )}
+                      </div>
+                      
+                      <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-3 leading-relaxed">
+                        {project.description}
+                      </p>
+                      
+                      {project.technologies && project.technologies.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                          {project.technologies.slice(0, 3).map((tech) => (
+                            <Badge key={tech} variant="outline" className="text-xs hover:border-blue-400 dark:hover:border-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-all">
+                              {tech}
+                            </Badge>
+                          ))}
+                          {project.technologies.length > 3 && (
+                            <span className="text-xs text-slate-400 dark:text-slate-600 self-center">
+                              +{project.technologies.length - 3} more
+                            </span>
+                          )}
+                        </div>
+                      )}
+                      
+                      <div className="flex items-center gap-2 pt-2 border-t border-slate-200/50 dark:border-slate-700/50">
+                        <Link
+                          to="/projects/$slug"
+                          params={{ slug: project.slug }}
+                          className="flex-1"
+                        >
+                          <Button variant="default" className="w-full bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-md hover:shadow-lg transition-all">
+                            View Details
+                          </Button>
+                        </Link>
+                        {project.github_url && (
+                          <a
+                            href={project.github_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-block"
+                          >
+                            <Button variant="outline" size="icon" className="hover:bg-blue-50 dark:hover:bg-blue-950/30 hover:border-blue-400 dark:hover:border-blue-600 transition-all">
+                              <Github className="h-4 w-4" />
+                            </Button>
+                          </a>
+                        )}
+                        {project.demo_url && (
+                          <a
+                            href={project.demo_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-block"
+                          >
+                            <Button variant="outline" size="icon" className="hover:bg-blue-50 dark:hover:bg-blue-950/30 hover:border-blue-400 dark:hover:border-blue-600 transition-all">
+                              <ExternalLink className="h-4 w-4" />
+                            </Button>
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      </div>
     </>
   );
 }

@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
 import { SEO, StructuredData } from '@/components/SEO'
+import { DecorativeBackground } from '@/components/DecorativeBackground'
 
 export const Route = createFileRoute('/about/')({
   component: RouteComponent,
@@ -43,12 +44,8 @@ function RouteComponent() {
           ],
         }}
       />
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
-        {/* Decorative background elements */}
-        <div className="fixed inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }}></div>
-        </div>
+      <div className="min-h-screen">
+        <DecorativeBackground />
 
         {/* Hero Section */}
         <section className="relative container mx-auto px-4 py-20 lg:py-32">
@@ -57,7 +54,7 @@ function RouteComponent() {
               {/* Profile Image */}
               <div className="shrink-0 animate-fade-in">
                 <div className="relative group">
-                  <div className="absolute inset-0 bg-blue-500 rounded-full blur-2xl opacity-30 group-hover:opacity-40 transition-opacity duration-300 animate-pulse"></div>
+                  <div className="absolute inset-0 bg-linear-to-br from-blue-500 to-purple-500 rounded-full blur-2xl opacity-30 group-hover:opacity-50 transition-opacity duration-300 animate-pulse"></div>
                   <img 
                     src="/taia.jpg" 
                     alt="Taia Tiniyara" 
@@ -69,10 +66,12 @@ function RouteComponent() {
               {/* Text Content */}
               <div className="flex-1 text-center lg:text-left space-y-6">
                 <div className="space-y-2">
-                  <h1 className="text-5xl lg:text-7xl font-bold tracking-tight text-blue-700 dark:text-blue-400 animate-fade-in">
-                    Taia Colai Tiniyara
+                  <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight animate-fade-in">
+                    <span className="bg-linear-to-r from-blue-600 via-blue-700 to-purple-600 dark:from-blue-400 dark:via-blue-500 dark:to-purple-400 bg-clip-text text-transparent">
+                      Taia Colai Tiniyara
+                    </span>
                   </h1>
-                  <div className="h-1 w-24 bg-blue-600 dark:bg-blue-400 mx-auto lg:mx-0 rounded-full"></div>
+                  <div className="h-1 w-24 bg-linear-to-r from-blue-600 to-purple-600 mx-auto lg:mx-0 rounded-full"></div>
                 </div>
                 <p className="text-2xl lg:text-3xl text-slate-700 dark:text-slate-300 font-medium animate-fade-in" style={{ animationDelay: "0.1s" }}>
                   Full-Stack Software Developer
@@ -92,9 +91,9 @@ function RouteComponent() {
               <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-3">
                 About Me
               </h2>
-              <div className="h-1 w-16 bg-blue-600 dark:bg-blue-400 mx-auto rounded-full mb-6"></div>
+              <div className="h-1 w-16 bg-linear-to-r from-blue-600 to-purple-600 mx-auto rounded-full mb-6"></div>
             </div>
-            <Card className="p-8 bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 shadow-xl">
+            <Card className="p-8 bg-white/80 dark:bg-slate-900/50 backdrop-blur-sm border-slate-200/50 dark:border-slate-700/50 shadow-xl hover:shadow-2xl transition-all duration-300">
               <p className="text-lg text-slate-700 dark:text-slate-300 leading-relaxed mb-6">
                 I'm a passionate Full-Stack Software Developer with expertise in building scalable, multi-tenant systems and SaaS applications. 
                 My approach combines strong technical skills with a keen eye for design, ensuring that the solutions I create are not only 
@@ -120,8 +119,10 @@ function RouteComponent() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {coreCompetencies.map((competency, index) => (
-                <Card key={competency} className={`group relative p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 ${index % 2 === 0 ? `bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-800` : `bg-slate-100 dark:bg-slate-900/30 border-slate-200 dark:border-slate-700`}`}>
-                  <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-bl-full"></div>
+                <Card key={competency} className={`group relative p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 overflow-hidden ${index % 2 === 0 ? `bg-blue-50/80 dark:bg-blue-950/30 border-blue-200/50 dark:border-blue-800/50` : `bg-slate-100/80 dark:bg-slate-900/30 border-slate-200/50 dark:border-slate-700/50`} backdrop-blur-sm`}>
+                  <div className="absolute top-0 right-0 w-16 h-16 bg-linear-to-br from-blue-500/10 to-purple-500/10 rounded-bl-full"></div>
+                  {/* Shimmer effect on hover */}
+                  <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-linear-to-r from-transparent via-white/10 to-transparent"></div>
                   <p className="relative text-center font-medium text-slate-800 dark:text-slate-200 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">
                     {competency}
                   </p>
@@ -144,7 +145,7 @@ function RouteComponent() {
               {skills.map((skill, index) => (
                 <Badge 
                   key={skill} 
-                  className={`px-5 py-2.5 text-base hover:scale-110 transition-all duration-200 cursor-default shadow-md hover:shadow-lg ${index % 2 === 0 ? `bg-blue-500 hover:bg-blue-600 text-white ring-2 ring-blue-500/20` : `bg-slate-600 hover:bg-slate-700 text-white ring-2 ring-slate-600/20`}`}
+                  className={`px-5 py-2.5 text-base hover:scale-110 transition-all duration-200 cursor-default shadow-md hover:shadow-lg ${index % 2 === 0 ? `bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white ring-2 ring-blue-500/20` : `bg-linear-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white ring-2 ring-slate-600/20`}`}
                 >
                   {skill}
                 </Badge>
@@ -162,8 +163,8 @@ function RouteComponent() {
               </h2>
               <p className="text-slate-600 dark:text-slate-400">Let's connect and collaborate</p>
             </div>
-            <Card className="relative overflow-hidden p-8 bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800 shadow-xl">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 rounded-full -mr-32 -mt-32"></div>
+            <Card className="relative overflow-hidden p-8 bg-blue-50/80 dark:bg-blue-950/20 backdrop-blur-sm border-blue-200/50 dark:border-blue-800/50 shadow-xl hover:shadow-2xl transition-all duration-300">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-linear-to-br from-blue-500/10 to-purple-500/10 rounded-full -mr-32 -mt-32"></div>
               <div className="relative flex flex-col md:flex-row justify-center items-center gap-8 md:gap-16">
                 <a 
                   href="mailto:taiatiniyara@gmail.com" 

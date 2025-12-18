@@ -1,11 +1,11 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ClipLoader } from "react-spinners";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useProjectBySlug } from "@/hooks/useProjectQueries";
 import { ExternalLink, Github, ArrowLeft } from "lucide-react";
 import { SEO, StructuredData } from "@/components/SEO";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 
 export const Route = createFileRoute("/projects/$slug")({
   component: ProjectDetail,
@@ -17,13 +17,7 @@ function ProjectDetail() {
   const { data: project, isLoading, error } = useProjectBySlug(slug);
 
   if (isLoading) {
-    return (
-      <div className="container mx-auto px-4 py-16">
-        <div className="flex justify-center items-center min-h-100px">
-          <ClipLoader color="#3b82f6" size={50} />
-        </div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (error || !project) {

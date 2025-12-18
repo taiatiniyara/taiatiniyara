@@ -1,10 +1,10 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
-import { ClipLoader } from 'react-spinners';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { usePostBySlug, usePublishedPosts } from '@/hooks/useBlogQueries';
 import { SEO, StructuredData } from '@/components/SEO';
 import { Card } from '@/components/ui/card';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
 
 export const Route = createFileRoute('/blog/$slug')({
   component: BlogPostPage,
@@ -36,13 +36,7 @@ function BlogPostPage() {
   };
 
   if (loading) {
-    return (
-      <div className="container mx-auto px-4 py-16">
-        <div className="flex justify-center items-center min-h-100">
-          <ClipLoader color="#3b82f6" size={50} />
-        </div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (error || !post) {

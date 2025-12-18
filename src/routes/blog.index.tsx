@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { ClipLoader } from "react-spinners";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,6 +9,11 @@ import {
   usePostsByTag,
 } from "@/hooks/useBlogQueries";
 import { SEO, StructuredData } from "@/components/SEO";
+import { Calendar, Tag, TrendingUp } from "lucide-react";
+import { DecorativeBackground } from "@/components/DecorativeBackground";
+import { PageHeader } from "@/components/PageHeader";
+import { StatsDisplay } from "@/components/StatsDisplay";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 
 export const Route = createFileRoute("/blog/")({
   component: BlogIndex,
@@ -49,13 +53,7 @@ function BlogIndex() {
   };
 
   if (loading) {
-    return (
-      <div className="container mx-auto px-4 py-16">
-        <div className="flex justify-center items-center min-h-100">
-          <ClipLoader color="#3b82f6" size={50} />
-        </div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (error) {
@@ -85,121 +83,233 @@ function BlogIndex() {
           },
         }}
       />
-      <div className="container mx-auto px-4 py-16 max-w-6xl">
-        <div className="mb-12">
-          <div className="flex justify-between items-start">
-            <div>
-              <h1 className="text-4xl font-bold mb-4">Blog</h1>
-              <p className="text-lg text-gray-600">
-                Thoughts on software development, architecture, and technology
-              </p>
-            </div>
+      <div className="min-h-screen">
+        <DecorativeBackground />
+
+        <PageHeader
+          badge={{ icon: TrendingUp, text: "Latest Insights & Articles" }}
+          title="Blog & Insights"
+          description="Thoughts on software development, architecture, and technology"
+        >
+          <StatsDisplay
+            stats={[
+              { value: posts.length, label: "Articles", color: "blue" },
+              { value: tags.length, label: "Topics", color: "purple" },
+              { value: "∞", label: "Learning", color: "cyan" },
+            ]}
+          />
+
+          <div className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
             <Link to="/blog/admin">
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="hover:bg-blue-50 dark:hover:bg-blue-950/30 hover:border-blue-400 dark:hover:border-blue-600">
                 Admin
               </Button>
             </Link>
           </div>
-        </div>
+        </PageHeader>
 
-        {tags.length > 0 && (
-          <div className="mb-8">
-            <div className="flex flex-wrap gap-2">
-              <Button
-                variant={selectedTag === null ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSelectedTag(null)}
-              >
-                All
-              </Button>
-              {tags.map((tag) => (
-                <Button
-                  key={tag}
-                  variant={selectedTag === tag ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setSelectedTag(tag)}
-                >
-                  {tag}
-                </Button>
-              ))}
-            </div>
-          </div>
-        )}
+        {/* Blog Section */}
+        <section className="relative container mx-auto px-4 pb-20">
+          <div className="max-w-7xl mx-auto">
+            {/* Tag Filter with enhanced styling */}
+            {tags.length > 0 && (
+              <div className="mb-12 animate-fade-in" style={{ animationDelay: '0.4s' }}>
+                <div className="flex items-center justify-center gap-3 mb-4">
+                  <Tag className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                  <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-200">Filter by Topic</h2>
+                </div>
+                <div className="flex flex-wrap gap-3 justify-center max-w-4xl mx-auto">
+                  <Button
+                    variant={selectedTag === null ? 'default' : 'outline'}
+                    size="sm"
+                    className={selectedTag === null 
+                      ? 'bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-md hover:shadow-lg transition-all duration-200' 
+                      : 'hover:border-blue-400 dark:hover:border-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-all duration-200'
+                    }
+                    onClick={() => {
+                      setSelectedTag(null);
+                      setCurrentPage(1);
+                    }}
+                  >
+                    All Posts
+                  </Button>
+                  {tags.map((tag) => (
+                    <Button
+                      key={tag}
+                      variant={selectedTag === tag ? 'default' : 'outline'}
+                      size="sm"
+                      className={selectedTag === tag 
+                        ? 'bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-md hover:shadow-lg transition-all duration-200' 
+                        : 'hover:border-blue-400 dark:hover:border-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-all duration-200'
+                      }
+                      onClick={() => {
+                        setSelectedTag(tag);
+                        setCurrentPage(1);
+                      }}
+                    >
+                      {tag}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            )}
 
-        {posts.length === 0 ? (
-          <div className="text-center py-16">
-            <p className="text-xl text-gray-600 mb-4">No blog posts yet.</p>
-            <p className="text-gray-500">Check back soon for new content!</p>
-          </div>
-        ) : (
-          <div className="space-y-8">
-            {posts.map((post) => (
-              <Card
-                key={post.id}
-                className="p-6 hover:shadow-lg transition-shadow"
-              >
-                <Link
-                  to="/blog/$slug"
-                  params={{ slug: post.slug }}
-                  className="block group"
-                >
-                  {post.featured_image && (
-                    <img
-                      src={post.featured_image}
-                      alt={post.title}
-                      className="w-full h-64 object-cover rounded-lg mb-4"
-                    />
-                  )}
-                  <h2 className="text-2xl font-bold mb-2 group-hover:text-blue-600 transition-colors">
-                    {post.title}
-                  </h2>
-                  <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
-                    {post.published_at && (
-                      <span>{formatDate(post.published_at)}</span>
-                    )}
-                    {post.tags && post.tags.length > 0 && (
-                      <div className="flex gap-2">
-                        {post.tags.map((tag) => (
-                          <Badge key={tag} variant="secondary">
-                            {tag}
-                          </Badge>
-                        ))}
-                      </div>
-                    )}
+            {posts.length > 0 ? (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                  {posts.map((post, index) => (
+                    <Link 
+                      key={post.id} 
+                      to={`/blog/$slug`} 
+                      params={{ slug: post.slug }} 
+                      className="block group animate-fade-in" 
+                      style={{ animationDelay: `${0.5 + index * 0.05}s` }}
+                    >
+                      <Card className="group relative p-7 hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden h-full bg-white/80 dark:bg-slate-900/50 backdrop-blur-sm border-slate-200/50 dark:border-slate-700/50 hover:border-blue-300 dark:hover:border-blue-700 hover:bg-white dark:hover:bg-slate-800/70">
+                        {/* Decorative linear overlay */}
+                        <div className="absolute inset-0 bg-linear-to-br from-blue-500/0 via-purple-500/0 to-blue-500/0 group-hover:from-blue-500/5 group-hover:via-purple-500/5 group-hover:to-cyan-500/5 transition-all duration-500"></div>
+                        
+                        {/* Animated corner accent */}
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-linear-to-br from-blue-400/10 to-purple-400/10 rounded-full -mr-16 -mt-16 group-hover:scale-150 group-hover:from-blue-400/20 group-hover:to-purple-400/20 transition-all duration-700"></div>
+                        
+                        {/* Shimmer effect on hover */}
+                        <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-linear-to-r from-transparent via-white/10 to-transparent"></div>
+                        
+                        <div className="relative space-y-4">
+                          {/* Featured image placeholder with linear */}
+                          {post.featured_image && (
+                            <div className="w-full h-48 -mx-7 -mt-7 mb-4 overflow-hidden">
+                              <img 
+                                src={post.featured_image} 
+                                alt={post.title}
+                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                              />
+                            </div>
+                          )}
+                          
+                          {!post.featured_image && (
+                            <div className="w-full h-2 -mx-7 -mt-7 mb-4 bg-linear-to-r from-blue-500 via-purple-500 to-cyan-500 opacity-70 group-hover:opacity-100 transition-opacity"></div>
+                          )}
+                          
+                          <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 leading-tight">
+                            {post.title}
+                          </h2>
+                          
+                          {post.excerpt && (
+                            <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-3 leading-relaxed">
+                              {post.excerpt}
+                            </p>
+                          )}
+                          
+                          <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-slate-200/50 dark:border-slate-700/50">
+                            <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-500">
+                              <Calendar className="w-3.5 h-3.5" />
+                              <span>{formatDate(post.published_at || post.created_at)}</span>
+                            </div>
+                            
+                            {post.tags && post.tags.length > 0 && (
+                              <Badge className="text-xs bg-linear-to-r from-blue-500/20 to-purple-500/20 text-white dark:text-blue-300 hover:from-blue-500/30 hover:to-purple-500/30 border-0 font-medium">
+                                {post.tags[0]}
+                              </Badge>
+                            )}
+                            
+                            {post.tags && post.tags.length > 1 && (
+                              <span className="text-xs text-slate-400 dark:text-slate-600">
+                                +{post.tags.length - 1} more
+                              </span>
+                            )}
+                          </div>
+                          
+                          {/* Read more indicator */}
+                          <div className="flex items-center gap-2 text-sm font-medium text-blue-600 dark:text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <span>Read article</span>
+                            <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                          </div>
+                        </div>
+                      </Card>
+                    </Link>
+                  ))}
+                </div>
+
+                {/* Enhanced Pagination */}
+                {totalPages > 1 && (
+                  <div className="flex justify-center items-center gap-3 mt-16 animate-fade-in">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                      disabled={currentPage === 1}
+                      className="hover:bg-blue-50 dark:hover:bg-blue-950/30 hover:border-blue-400 dark:hover:border-blue-600 disabled:opacity-30 transition-all"
+                    >
+                      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                      </svg>
+                      Previous
+                    </Button>
+                    
+                    <div className="flex items-center gap-2">
+                      {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                        let page;
+                        if (totalPages <= 5) {
+                          page = i + 1;
+                        } else if (currentPage <= 3) {
+                          page = i + 1;
+                        } else if (currentPage >= totalPages - 2) {
+                          page = totalPages - 4 + i;
+                        } else {
+                          page = currentPage - 2 + i;
+                        }
+                        return (
+                          <Button
+                            key={page}
+                            variant={currentPage === page ? 'default' : 'outline'}
+                            size="sm"
+                            onClick={() => setCurrentPage(page)}
+                            className={currentPage === page 
+                              ? 'bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-md' 
+                              : 'hover:bg-blue-50 dark:hover:bg-blue-950/30 hover:border-blue-400 dark:hover:border-blue-600 transition-all'
+                            }
+                          >
+                            {page}
+                          </Button>
+                        );
+                      })}
+                    </div>
+                    
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+                      disabled={currentPage === totalPages}
+                      className="hover:bg-blue-50 dark:hover:bg-blue-950/30 hover:border-blue-400 dark:hover:border-blue-600 disabled:opacity-30 transition-all"
+                    >
+                      Next
+                      <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Button>
                   </div>
-                  {post.excerpt && (
-                    <p className="text-gray-700 mb-4">{post.excerpt}</p>
-                  )}
-                  <span className="text-blue-600 font-medium group-hover:underline">
-                    Read more →
-                  </span>
-                </Link>
-              </Card>
-            ))}
+                )}
+              </>
+            ) : (
+              <div className="text-center py-20 animate-fade-in">
+                <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-linear-to-br from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 flex items-center justify-center">
+                  <Tag className="w-10 h-10 text-blue-600 dark:text-blue-400" />
+                </div>
+                <p className="text-xl font-medium text-slate-700 dark:text-slate-300 mb-2">
+                  {selectedTag
+                    ? `No posts found with tag "${selectedTag}"`
+                    : 'No blog posts published yet.'}
+                </p>
+                <p className="text-sm text-slate-500 dark:text-slate-500">
+                  {selectedTag ? 'Try selecting a different topic' : 'Check back soon for new content!'}
+                </p>
+              </div>
+            )}
           </div>
-        )}
-
-        {totalPages > 1 && (
-          <div className="flex justify-center items-center gap-4 mt-12">
-            <Button
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              disabled={currentPage === 1}
-              variant="outline"
-            >
-              Previous
-            </Button>
-            <span className="text-sm">
-              Page {currentPage} of {totalPages}
-            </span>
-            <Button
-              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-              disabled={currentPage === totalPages}
-              variant="outline"
-            >
-              Next
-            </Button>
-          </div>
-        )}
+        </section>
       </div>
     </>
   );
