@@ -49,25 +49,25 @@ export function NavigationCard({
 
   return (
     <Link to={to} className="group">
-      <div className={`relative p-8 rounded-2xl bg-white/80 dark:bg-slate-900/50 backdrop-blur-sm border-2 border-slate-200/50 dark:border-slate-700/50 ${colors.hoverBorder} transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 overflow-hidden`}>
+      <div className={`relative p-5 sm:p-6 md:p-8 rounded-2xl bg-white/80 dark:bg-slate-900/50 backdrop-blur-sm border-2 border-slate-200/50 dark:border-slate-700/50 ${colors.hoverBorder} transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 overflow-hidden`}>
         {/* Decorative gradient overlay */}
         <div className={`absolute inset-0 bg-linear-to-br ${colors.gradient} transition-all duration-500`}></div>
         
         {/* Icon */}
-        <div className={`relative mb-4 inline-flex p-4 rounded-xl ${colors.iconBg} group-hover:scale-110 transition-transform duration-300`}>
-          <Icon className={`w-8 h-8 ${colors.iconColor}`} />
+        <div className={`relative mb-3 md:mb-4 inline-flex p-3 md:p-4 rounded-xl ${colors.iconBg} group-hover:scale-110 transition-transform duration-300`}>
+          <Icon className={`w-6 h-6 md:w-8 md:h-8 ${colors.iconColor}`} />
         </div>
         
-        <h2 className={`relative text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2 ${colors.titleHover} transition-colors`}>
+        <h2 className={`relative text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2 ${colors.titleHover} transition-colors`}>
           {title}
         </h2>
-        <p className="relative text-slate-600 dark:text-slate-400 mb-4">
+        <p className="relative text-sm md:text-base text-slate-600 dark:text-slate-400 mb-3 md:mb-4">
           {description}
         </p>
         
-        <div className={`relative flex items-center gap-2 ${colors.actionColor} font-medium group-hover:gap-3 transition-all`}>
+        <div className={`relative flex items-center gap-2 ${colors.actionColor} text-sm md:text-base font-medium group-hover:gap-3 transition-all`}>
           <span>{actionText}</span>
-          <ArrowRight className="w-4 h-4" />
+          <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
         </div>
       </div>
     </Link>

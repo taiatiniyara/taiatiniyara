@@ -31,13 +31,13 @@ function Index() {
         <div className="relative container mx-auto px-4">
           <div className="max-w-5xl mx-auto text-center">
             {/* Greeting badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 mb-8 animate-fade-in">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-blue-100 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 mb-6 md:mb-8 animate-fade-in">
               <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-              <span className="text-sm font-medium text-blue-700 dark:text-blue-300">Available for opportunities</span>
+              <span className="text-xs md:text-sm font-medium text-blue-700 dark:text-blue-300">Available for opportunities</span>
             </div>
             
             {/* Main heading with linear */}
-            <h1 className="text-6xl md:text-7xl lg:text-8xl font-extrabold mb-6 animate-fade-in">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-extrabold mb-4 md:mb-6 animate-fade-in">
               <span className="text-slate-800 dark:text-slate-100">Hi, I'm</span>
               <br />
               <span className="bg-linear-to-r from-blue-600 via-blue-700 to-purple-600 dark:from-blue-400 dark:via-blue-500 dark:to-purple-400 bg-clip-text text-transparent">
@@ -45,12 +45,12 @@ function Index() {
               </span>
             </h1>
             
-            <p className="text-xl md:text-2xl text-slate-600 dark:text-slate-400 mb-12 max-w-3xl mx-auto leading-relaxed animate-fade-in" style={{ animationDelay: '0.1s' }}>
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-slate-600 dark:text-slate-400 mb-8 md:mb-12 max-w-3xl mx-auto leading-relaxed px-4 animate-fade-in" style={{ animationDelay: '0.1s' }}>
               Full-Stack Software Developer crafting elegant solutions through clean code, innovative design, and scalable architecture
             </p>
 
             {/* Navigation Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto animate-fade-in" style={{ animationDelay: '0.2s' }}>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 max-w-4xl mx-auto px-4 animate-fade-in" style={{ animationDelay: '0.2s' }}>
               <NavigationCard
                 to="/blog"
                 icon={BookOpen}
