@@ -24,7 +24,7 @@ function Index() {
           url: window.location.origin,
         }}
       />
-      <div className="h-screen flex items-center justify-center overflow-hidden">
+      <div className="min-h-screen flex items-center justify-center overflow-hidden pt-20">
         <DecorativeBackground />
 
         {/* Hero Content */}
