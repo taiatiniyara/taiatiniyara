@@ -1,7 +1,8 @@
 import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { useState } from "react";
 import circle from "@/components/img/circle.svg";
+import { useAnalytics } from "@/hooks/useAnalytics";
+
 interface MenuListItem {
   name: string;
   to: string;
@@ -16,6 +17,9 @@ const menuItems: MenuListItem[] = [
 
 const RootLayout = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
+  // Track page views with Google Analytics
+  useAnalytics();
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -146,7 +150,6 @@ const RootLayout = () => {
           </div>
         </div>
       </footer>
-      <TanStackRouterDevtools />
     </div>
   );
 };
