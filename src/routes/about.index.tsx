@@ -14,21 +14,21 @@ function RouteComponent() {
     'Express', 'Next.js', 'React', 'Django', '.NET Core'
   ]
 
-  const coreCompetencies = [
-    'Systems Architecture & Design',
-    'Database Design',
-    'Software Development',
-    'API Design & Development',
-    'UI/UX Design',
-    'Multi-tenant Systems',
-    'SaaS Development'
+  const howIHelp = [
+    'Scale Your Business with Robust Architecture',
+    'Optimize Your Data for Performance',
+    'Build Custom Software Solutions',
+    'Connect Your Systems with Powerful APIs',
+    'Create Intuitive User Experiences',
+    'Launch Multi-tenant SaaS Platforms',
+    'Modernize Legacy Applications'
   ]
 
   return (
     <>
       <SEO
-        title="About - Taia Tiniyara"
-        description="Learn more about Taia Tiniyara, a Full-Stack Software Developer specializing in systems architecture, database design, and SaaS development."
+        title="How I Can Help - Taia Tiniyara"
+        description="Need scalable software solutions? I help businesses build robust SaaS applications, design efficient systems, and develop APIs that power growth."
         ogImageAlt="Taia Tiniyara - Full-Stack Software Developer"
       />
       <StructuredData
@@ -114,7 +114,7 @@ function RouteComponent() {
                   Full-Stack Software Developer
                 </p>
                 <p className="text-lg text-slate-600 dark:text-slate-400 animate-fade-in" style={{ animationDelay: "0.2s" }}>
-                  Crafting elegant solutions through code
+                  Helping businesses grow with elegant, scalable software solutions
                 </p>
               </div>
             </div>
@@ -126,20 +126,20 @@ function RouteComponent() {
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-3">
-                About Me
+                How I Can Help You
               </h2>
               <div className="h-1 w-16 bg-blue-600 mx-auto rounded-full mb-6"></div>
             </div>
             <Card className="p-8 bg-white/80 dark:bg-slate-900/50 backdrop-blur-sm border-slate-200/50 dark:border-slate-700/50 shadow-xl hover:shadow-2xl transition-all duration-300">
               <p className="text-lg text-slate-700 dark:text-slate-300 leading-relaxed mb-6">
-                I'm a passionate Full-Stack Software Developer with expertise in building scalable, multi-tenant systems and SaaS applications. 
-                My approach combines strong technical skills with a keen eye for design, ensuring that the solutions I create are not only 
-                functional but also intuitive and user-friendly.
+                Whether you're launching a new product or scaling an existing one, I'll help you build software that grows with your business. 
+                My expertise in multi-tenant systems and SaaS architecture means you'll get solutions that are not only powerful and scalable, 
+                but also cost-effective and maintainable.
               </p>
               <p className="text-lg text-slate-700 dark:text-slate-300 leading-relaxed">
-                With experience across multiple programming languages and frameworks, I specialize in systems architecture, database design, 
-                and API development. I'm committed to writing clean, maintainable code and staying current with the latest technologies and 
-                best practices in software development.
+                You deserve software that works seamlessly. I combine strong technical architecture with user-centered design to create 
+                applications your customers will love to use. From API development to full-stack applications, I'll turn your vision into 
+                clean, reliable code that stands the test of time.
               </p>
             </Card>
           </div>
@@ -150,12 +150,12 @@ function RouteComponent() {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-3">
-                Core Competencies
+                Solutions I Provide
               </h2>
-              <p className="text-slate-600 dark:text-slate-400">Areas of expertise and specialization</p>
+              <p className="text-slate-600 dark:text-slate-400">Ways I can help your business succeed</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {coreCompetencies.map((competency, index) => (
+              {howIHelp.map((competency, index) => (
                 <Card key={competency} className={`group relative p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 overflow-hidden ${index % 2 === 0 ? `bg-blue-50/80 dark:bg-blue-950/30 border-blue-200/50 dark:border-blue-800/50` : `bg-slate-100/80 dark:bg-slate-900/30 border-slate-200/50 dark:border-slate-700/50`} backdrop-blur-sm`}>
                   <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/10 rounded-bl-full"></div>
                   {/* Shimmer effect on hover */}
@@ -174,9 +174,9 @@ function RouteComponent() {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-3">
-                Technical Skills
+                Technology Stack
               </h2>
-              <p className="text-slate-600 dark:text-slate-400">Technologies and frameworks I work with</p>
+              <p className="text-slate-600 dark:text-slate-400">The right tools to bring your project to life</p>
             </div>
             <div className="flex flex-wrap justify-center gap-3">
               {skills.map((skill, index) => (
@@ -196,9 +196,9 @@ function RouteComponent() {
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-3">
-                Get In Touch
+                Let's Work Together
               </h2>
-              <p className="text-slate-600 dark:text-slate-400">Let's connect and collaborate</p>
+              <p className="text-slate-600 dark:text-slate-400">Ready to bring your project to life? Get in touch</p>
             </div>
             <Card className="relative overflow-hidden p-8 bg-blue-50/80 dark:bg-blue-950/20 backdrop-blur-sm border-blue-200/50 dark:border-blue-800/50 shadow-xl hover:shadow-2xl transition-all duration-300">
               <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full -mr-32 -mt-32"></div>
@@ -238,10 +238,10 @@ function RouteComponent() {
               <div className="absolute bottom-0 left-0 w-96 h-96 bg-black/10 rounded-full -ml-48 -mb-48"></div>
               <div className="relative text-center space-y-6">
                 <h2 className="text-3xl md:text-4xl font-bold text-white">
-                  See My Work in Action
+                  See What's Possible
                 </h2>
                 <p className="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto">
-                  Interested in what I've built? Check out my portfolio of projects and creative implementations.
+                  Explore real-world examples of how I've helped businesses solve complex challenges with elegant software solutions.
                 </p>
                 <a 
                   href="/projects" 
