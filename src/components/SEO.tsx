@@ -6,6 +6,9 @@ interface SEOProps {
   canonicalUrl?: string;
   ogType?: 'website' | 'article';
   ogImage?: string;
+  ogImageWidth?: string;
+  ogImageHeight?: string;
+  ogImageAlt?: string;
   publishedTime?: string;
   modifiedTime?: string;
   author?: string;
@@ -19,6 +22,9 @@ export function SEO({
   canonicalUrl,
   ogType = 'website',
   ogImage,
+  ogImageWidth = '1200',
+  ogImageHeight = '630',
+  ogImageAlt,
   publishedTime,
   modifiedTime,
   author = 'Taia Colai Tiniyara',
@@ -90,6 +96,9 @@ export function SEO({
       'og:type': ogType,
       'og:url': currentUrl,
       'og:image': imageUrl,
+      'og:image:width': ogImageWidth,
+      'og:image:height': ogImageHeight,
+      'og:image:alt': ogImageAlt || title,
       'og:site_name': 'Taia Tiniyara',
       'og:locale': 'en_US',
     };
@@ -138,6 +147,7 @@ export function SEO({
       'twitter:title': title,
       'twitter:description': description,
       'twitter:image': imageUrl,
+      'twitter:image:alt': ogImageAlt || title,
       'twitter:creator': '@taiatiniyara',
       'twitter:site': '@taiatiniyara',
     };
@@ -154,7 +164,7 @@ export function SEO({
 }
 
 interface StructuredDataProps {
-  type: 'Person' | 'Article' | 'WebSite' | 'BlogPosting';
+  type: 'Person' | 'Article' | 'WebSite' | 'BlogPosting' | 'Organization' | 'BreadcrumbList';
   data: Record<string, any>;
 }
 

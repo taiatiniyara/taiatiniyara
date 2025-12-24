@@ -71,6 +71,7 @@ function BlogPostPage() {
         canonicalUrl={postUrl}
         ogType="article"
         ogImage={post.featured_image || undefined}
+        ogImageAlt={post.title}
         publishedTime={post.published_at || undefined}
         modifiedTime={post.updated_at}
         tags={post.tags}
@@ -98,6 +99,31 @@ function BlogPostPage() {
             '@id': postUrl,
           },
           keywords: post.tags?.join(', '),
+        }}
+      />
+      <StructuredData
+        type="BreadcrumbList"
+        data={{
+          itemListElement: [
+            {
+              '@type': 'ListItem',
+              position: 1,
+              name: 'Home',
+              item: siteUrl,
+            },
+            {
+              '@type': 'ListItem',
+              position: 2,
+              name: 'Blog',
+              item: `${siteUrl}/blog`,
+            },
+            {
+              '@type': 'ListItem',
+              position: 3,
+              name: post.title,
+              item: postUrl,
+            },
+          ],
         }}
       />
       <div className="container mx-auto px-4 py-16">

@@ -1,4 +1,4 @@
-# Robots.txt for taiatiniyara.web.app
+# Robots.txt for taia.blog
 # Full-Stack Software Developer Portfolio
 
 User-agent: *
@@ -19,9 +19,18 @@ Allow: *.jpeg
 Allow: *.png
 Allow: *.svg
 Allow: *.webp
+Allow: *.woff2
+Allow: *.woff
+
+# Sitemap location
+Sitemap: https://taia.blog/sitemap.xml
+
+# Crawl delay (in seconds) - be respectful to server resources
+Crawl-delay: 1
+Allow: *.webp
 
 # Crawl delay (optional, be respectful to crawlers)
 Crawl-delay: 0
 
 # Sitemap
-Sitemap: https://taiatiniyara.web.app/sitemap.xml
+Sitemap: https://taia.blog/sitemap.xml

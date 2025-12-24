@@ -56,6 +56,7 @@ function ProjectDetail() {
         canonicalUrl={projectUrl}
         ogType="article"
         ogImage={project.thumbnail || undefined}
+        ogImageAlt={`${project.title} - Project by Taia Tiniyara`}
         publishedTime={project.published_at || undefined}
         modifiedTime={project.updated_at}
         tags={project.technologies || []}
@@ -82,6 +83,31 @@ function ProjectDetail() {
             "@type": "WebPage",
             "@id": projectUrl,
           },
+        }}
+      />
+      <StructuredData
+        type="BreadcrumbList"
+        data={{
+          itemListElement: [
+            {
+              '@type': 'ListItem',
+              position: 1,
+              name: 'Home',
+              item: siteUrl,
+            },
+            {
+              '@type': 'ListItem',
+              position: 2,
+              name: 'Projects',
+              item: `${siteUrl}/projects`,
+            },
+            {
+              '@type': 'ListItem',
+              position: 3,
+              name: project.title,
+              item: projectUrl,
+            },
+          ],
         }}
       />
     <div className="container mx-auto px-4 py-16 max-w-4xl">

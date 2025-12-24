@@ -26,14 +26,21 @@ export default defineConfig({
         manualChunks: {
           'react-vendor': ['react', 'react-dom'],
           'router': ['@tanstack/react-router'],
+          'query': ['@tanstack/react-query'],
+          'supabase': ['@supabase/supabase-js'],
           'ui': ['lucide-react', 'react-spinners'],
+          'editor': ['@tiptap/react', '@tiptap/starter-kit'],
         },
       },
     },
     // Optimize assets
     assetsInlineLimit: 4096,
-    // Enable minification
+    // Enable minification for smaller bundle sizes (esbuild is faster than terser)
     minify: 'esbuild',
+    // Optimize chunk size
+    chunkSizeWarningLimit: 1000,
+    // Disable source maps for production
+    sourcemap: false,
   },
   esbuild: {
     drop: ['console', 'debugger'],

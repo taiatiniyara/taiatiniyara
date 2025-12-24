@@ -29,6 +29,7 @@ function RouteComponent() {
       <SEO
         title="About - Taia Tiniyara"
         description="Learn more about Taia Colai Tiniyara, a Full-Stack Software Developer specializing in systems architecture, database design, and SaaS development."
+        ogImageAlt="Taia Tiniyara - Full-Stack Software Developer"
       />
       <StructuredData
         type="Person"
@@ -42,6 +43,42 @@ function RouteComponent() {
           sameAs: [
             'https://github.com/taiatiniyara',
           ],
+        }}
+      />
+      <StructuredData
+        type="BreadcrumbList"
+        data={{
+          itemListElement: [
+            {
+              '@type': 'ListItem',
+              position: 1,
+              name: 'Home',
+              item: window.location.origin,
+            },
+            {
+              '@type': 'ListItem',
+              position: 2,
+              name: 'About',
+              item: `${window.location.origin}/about`,
+            },
+          ],
+        }}
+      />
+      <StructuredData
+        type="Organization"
+        data={{
+          name: 'Taia Tiniyara',
+          url: window.location.origin,
+          logo: `${window.location.origin}/circle.svg`,
+          sameAs: [
+            'https://github.com/taiatiniyara',
+          ],
+          contactPoint: {
+            '@type': 'ContactPoint',
+            telephone: '+679 986 0831',
+            contactType: 'Professional',
+            email: 'taiatiniyara@gmail.com',
+          },
         }}
       />
       <div className="min-h-screen">
