@@ -79,7 +79,7 @@ function BlogIndex() {
           url: `${window.location.origin}/blog`,
           author: {
             "@type": "Person",
-            name: "Taia Colai Tiniyara",
+            name: "Taia Tiniyara",
           },
         }}
       />

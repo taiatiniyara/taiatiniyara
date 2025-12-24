@@ -1,6 +1,6 @@
 # Taia Tiniyara - Portfolio & Blog
 
-Personal portfolio and blogging website for Taia Colai Tiniyara, a Full-Stack Software Developer.
+Personal portfolio and blogging website for Taia Tiniyara, a Full-Stack Software Developer.
 
 ## About
 
@@ -249,7 +249,7 @@ Potential features to implement:
 
 ## Contact
 
-**Taia Colai Tiniyara**
+**Taia Tiniyara**
 - Email: taiatiniyara@gmail.com
 - Phone: +679 986 0831
 - GitHub: [@taiatiniyara](https://github.com/taiatiniyara)
@@ -258,4 +258,4 @@ For inquiries or collaboration opportunities, please reach out through the conta
 
 ## License
 
-© 2025 Taia Colai Tiniyara. All rights reserved.
+© 2025 Taia Tiniyara. All rights reserved.

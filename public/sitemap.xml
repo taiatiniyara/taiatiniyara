@@ -34,6 +34,36 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://taia.blog/blog/my-journey-as-a-software-developer-in-fiji-2uc2g4</loc>
+    <lastmod>2025-12-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://www.michaelpage.com.au/sites/michaelpage.com.au/files/2022-01/Software%20Developer.jpg</image:loc>
+      <image:title>My Journey as a Software Developer in Fiji</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://taia.blog/blog/fijis-map-data-challenge-kyi947</loc>
+    <lastmod>2025-12-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://media.istockphoto.com/id/1367976700/vector/fiji-islands-highly-detailed-physical-map.jpg?s=612x612&w=0&k=20&c=sVAqKbzfmvtyM6870nGPRk_MMtLOld4E0v6iZB3-UPs=</image:loc>
+      <image:title>Fiji’s Map Data Challenge</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://taia.blog/blog/digitizing-the-fiji-court-system-building-justice-for-the-digital-age-3fex3m</loc>
+    <lastmod>2025-12-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://www.fijivillage.com/news_images/2322097055acb1bb0dcb3e6ca488dc.jpg</image:loc>
+      <image:title>Digitizing the Fiji Court System: Building Justice for the Digital Age</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://taia.blog/blog/why-good-architecture-really-matters-in-cloud-software-6n58al</loc>
     <lastmod>2025-12-24</lastmod>
     <changefreq>monthly</changefreq>
@@ -61,16 +91,6 @@
     <image:image>
       <image:loc>https://scontent.fsuv1-1.fna.fbcdn.net/v/t39.30808-6/571142839_825327696658543_3457244095849651116_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=f727a1&_nc_ohc=RzOTzcrK3KMQ7kNvwFhSew2&_nc_oc=Adn2JYMolmjZ3rvhUCGHqBo-msR6JT5WDKvokTOUBE3Iep7XL4O_7GnAtlTf4AtPz1lo0LcxpInl8p43wnjeF_u6&_nc_zt=23&_nc_ht=scontent.fsuv1-1.fna&_nc_gid=NB1Jx4i19HIkuI5pFz_WDA&oh=00_AfkUVrNyfrdasjfbYKwvh06JyH7xqQPKan8Z49IXMBVUXA&oe=6948199E</image:loc>
       <image:title>Who is Taia the Software Developer?</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://taia.blog/blog/my-journey-as-a-software-developer-in-fiji-2uc2g4</loc>
-    <lastmod>2025-12-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cdn.britannica.com/10/3310-050-A11EA54A/features-Fiji.jpg?w=400&h=225&c=crop</image:loc>
-      <image:title>My Journey as a Software Developer in Fiji</image:title>
     </image:image>
   </url>
   <url>

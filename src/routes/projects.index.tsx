@@ -35,7 +35,7 @@ function ProjectsIndex() {
           url: `${window.location.origin}/projects`,
           author: {
             "@type": "Person",
-            name: "Taia Colai Tiniyara",
+            name: "Taia Tiniyara",
           },
         }}
       />

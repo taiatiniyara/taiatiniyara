@@ -19,7 +19,7 @@ function Index() {
       <StructuredData
         type="Person"
         data={{
-          name: "Taia Colai Tiniyara",
+          name: "Taia Tiniyara",
           jobTitle: "Full-Stack Software Developer",
           url: window.location.origin,
         }}

@@ -86,12 +86,12 @@ function BlogPostPage() {
           dateModified: post.updated_at,
           author: {
             '@type': 'Person',
-            name: 'Taia Colai Tiniyara',
+            name: 'Taia Tiniyara',
             url: siteUrl,
           },
           publisher: {
             '@type': 'Person',
-            name: 'Taia Colai Tiniyara',
+            name: 'Taia Tiniyara',
             url: siteUrl,
           },
           mainEntityOfPage: {

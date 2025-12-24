@@ -28,13 +28,13 @@ function RouteComponent() {
     <>
       <SEO
         title="About - Taia Tiniyara"
-        description="Learn more about Taia Colai Tiniyara, a Full-Stack Software Developer specializing in systems architecture, database design, and SaaS development."
+        description="Learn more about Taia Tiniyara, a Full-Stack Software Developer specializing in systems architecture, database design, and SaaS development."
         ogImageAlt="Taia Tiniyara - Full-Stack Software Developer"
       />
       <StructuredData
         type="Person"
         data={{
-          name: 'Taia Colai Tiniyara',
+          name: 'Taia Tiniyara',
           jobTitle: 'Full-Stack Software Developer',
           url: window.location.origin,
           email: 'taiatiniyara@gmail.com',
@@ -105,7 +105,7 @@ function RouteComponent() {
                 <div className="space-y-2">
                   <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight animate-fade-in">
                     <span className="text-blue-600 dark:text-blue-400">
-                      Taia Colai Tiniyara
+                      Taia Tiniyara
                     </span>
                   </h1>
                   <div className="h-1 w-24 bg-blue-600 mx-auto lg:mx-0 rounded-full"></div>

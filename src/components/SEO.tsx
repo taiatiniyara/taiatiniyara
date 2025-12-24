@@ -27,7 +27,7 @@ export function SEO({
   ogImageAlt,
   publishedTime,
   modifiedTime,
-  author = 'Taia Colai Tiniyara',
+  author = 'Taia Tiniyara',
   tags = [],
   noindex = false,
 }: SEOProps) {

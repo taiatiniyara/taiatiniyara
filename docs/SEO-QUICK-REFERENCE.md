@@ -57,7 +57,7 @@ function MyPage() {
     image: post.featured_image,
     datePublished: post.published_at,
     dateModified: post.updated_at,
-    author: { '@type': 'Person', name: 'Taia Colai Tiniyara' },
+    author: { '@type': 'Person', name: 'Taia Tiniyara' },
   }}
 />
 <StructuredData
@@ -89,7 +89,7 @@ function MyPage() {
 | `ogImageAlt` | string | ❌ | Image alt text (accessibility) |
 | `publishedTime` | string | ❌ | ISO date for articles |
 | `modifiedTime` | string | ❌ | ISO date for last update |
-| `author` | string | ❌ | Author name (default: 'Taia Colai Tiniyara') |
+| `author` | string | ❌ | Author name (default: 'Taia Tiniyara') |
 | `tags` | string[] | ❌ | Keywords/tags array |
 | `noindex` | boolean | ❌ | Prevent indexing (default: false) |
 
@@ -108,7 +108,7 @@ function MyPage() {
 <StructuredData
   type="Person"
   data={{
-    name: 'Taia Colai Tiniyara',
+    name: 'Taia Tiniyara',
     jobTitle: 'Full-Stack Software Developer',
     url: window.location.origin,
     email: 'taiatiniyara@gmail.com',

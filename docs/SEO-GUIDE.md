@@ -228,4 +228,4 @@ With these SEO optimizations, you can expect:
 ---
 
 **Last Updated:** December 19, 2025  
-**Maintained by:** Taia Colai Tiniyara
+**Maintained by:** Taia Tiniyara
