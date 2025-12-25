@@ -8,6 +8,8 @@ export async function getPublishedPosts(page = 1, pageSize = 10): Promise<BlogPo
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
+  console.log('Fetching published posts', { page, pageSize, from, to });
+
   const { data, error, count } = await supabase
     .from('blog_posts')
     .select('*', { count: 'exact' })
@@ -16,8 +18,11 @@ export async function getPublishedPosts(page = 1, pageSize = 10): Promise<BlogPo
     .range(from, to);
 
   if (error) {
+    console.error('Error fetching published posts:', error);
     throw new Error(`Failed to fetch blog posts: ${error.message}`);
   }
+
+  console.log('Successfully fetched published posts', { count: data?.length, total: count });
 
   return {
     posts: data as BlogPost[],

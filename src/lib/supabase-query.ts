@@ -131,8 +131,17 @@ export function useQuery<TData>(options: {
   const abortControllerRef = useRef<AbortController | null>(null);
   const lastFetchedKeyRef = useRef<string | null>(null);
 
-  const fetchData = useCallback(async () => {
-    if (!enabled) return;
+  // Fetch data when query key changes
+  useEffect(() => {
+    if (!enabled) {
+      setIsPending(false);
+      return;
+    }
+
+    // Only fetch if query key has changed
+    if (lastFetchedKeyRef.current === cacheKey) {
+      return;
+    }
 
     // Cancel previous request
     if (abortControllerRef.current) {
@@ -143,34 +152,30 @@ export function useQuery<TData>(options: {
     setIsPending(true);
     setError(null);
 
-    try {
-      const result = await queryFn();
+    const fetchData = async () => {
+      try {
+        const result = await queryFn();
 
-      if (isMountedRef.current) {
-        setData(result);
-        setError(null);
-        lastFetchedKeyRef.current = cacheKey;
+        if (isMountedRef.current) {
+          setData(result);
+          setError(null);
+          lastFetchedKeyRef.current = cacheKey;
+        }
+      } catch (err) {
+        if (isMountedRef.current && err instanceof Error && err.name !== 'AbortError') {
+          console.error('Query error:', err);
+          setError(err instanceof Error ? err : new Error('An error occurred'));
+          setData(undefined);
+        }
+      } finally {
+        if (isMountedRef.current) {
+          setIsPending(false);
+        }
       }
-    } catch (err) {
-      if (isMountedRef.current && err instanceof Error && err.name !== 'AbortError') {
-        setError(err instanceof Error ? err : new Error('An error occurred'));
-        setData(undefined);
-      }
-    } finally {
-      if (isMountedRef.current) {
-        setIsPending(false);
-      }
-    }
-  }, [queryFn, enabled, cacheKey]);
+    };
 
-  // Fetch only when query key changes or when first enabled
-  useEffect(() => {
-    if (enabled && lastFetchedKeyRef.current !== cacheKey) {
-      fetchData();
-    } else if (!enabled) {
-      setIsPending(false);
-    }
-  }, [cacheKey, enabled, fetchData]);
+    fetchData();
+  }, [cacheKey, enabled, queryFn]);
 
   // Cache subscription removed - no caching enabled
 
@@ -187,8 +192,29 @@ export function useQuery<TData>(options: {
 
   const refetch = useCallback(async () => {
     lastFetchedKeyRef.current = null; // Reset to allow refetch
-    await fetchData();
-  }, [fetchData]);
+    setIsPending(true);
+    setError(null);
+
+    try {
+      const result = await queryFn();
+
+      if (isMountedRef.current) {
+        setData(result);
+        setError(null);
+        lastFetchedKeyRef.current = cacheKey;
+      }
+    } catch (err) {
+      if (isMountedRef.current) {
+        console.error('Refetch error:', err);
+        setError(err instanceof Error ? err : new Error('An error occurred'));
+        setData(undefined);
+      }
+    } finally {
+      if (isMountedRef.current) {
+        setIsPending(false);
+      }
+    }
+  }, [queryFn, cacheKey]);
 
   return {
     data,

@@ -4,6 +4,10 @@ const url = import.meta.env.VITE_SUPABASE_URL;
 const publishableKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY;
 
 if (!url || !publishableKey) {
+  console.error('Missing Supabase environment variables', {
+    url: url ? 'present' : 'missing',
+    publishableKey: publishableKey ? 'present' : 'missing'
+  });
   throw new Error("Missing Supabase environment variables");
 }
 

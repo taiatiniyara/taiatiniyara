@@ -8,6 +8,8 @@ export async function getPublishedProjects(page = 1, pageSize = 10): Promise<Pro
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
+  console.log('Fetching published projects', { page, pageSize, from, to });
+
   const { data, error, count } = await supabase
     .from('projects')
     .select('*', { count: 'exact' })
@@ -16,8 +18,11 @@ export async function getPublishedProjects(page = 1, pageSize = 10): Promise<Pro
     .range(from, to);
 
   if (error) {
+    console.error('Error fetching published projects:', error);
     throw new Error(`Failed to fetch projects: ${error.message}`);
   }
+
+  console.log('Successfully fetched published projects', { count: data?.length, total: count });
 
   return {
     projects: data as Project[],

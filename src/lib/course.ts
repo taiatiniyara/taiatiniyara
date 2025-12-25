@@ -22,6 +22,8 @@ export async function getPublishedCourses(page = 1, pageSize = 10): Promise<Cour
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
+  console.log('Fetching published courses', { page, pageSize, from, to });
+
   const { data, error, count } = await supabase
     .from('courses')
     .select('*', { count: 'exact' })
@@ -30,8 +32,11 @@ export async function getPublishedCourses(page = 1, pageSize = 10): Promise<Cour
     .range(from, to);
 
   if (error) {
+    console.error('Error fetching published courses:', error);
     throw new Error(`Failed to fetch courses: ${error.message}`);
   }
+
+  console.log('Successfully fetched published courses', { count: data?.length, total: count });
 
   return {
     courses: data as Course[],
