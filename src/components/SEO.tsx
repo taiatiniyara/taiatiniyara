@@ -164,7 +164,7 @@ export function SEO({
 }
 
 interface StructuredDataProps {
-  type: 'Person' | 'Article' | 'WebSite' | 'BlogPosting' | 'Organization' | 'BreadcrumbList';
+  type: 'Person' | 'Article' | 'WebSite' | 'BlogPosting' | 'Organization' | 'BreadcrumbList' | "Course";
   data: Record<string, any>;
 }
 

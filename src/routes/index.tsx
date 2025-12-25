@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { SEO, StructuredData } from '@/components/SEO'
-import { BookOpen, FolderGit2, User } from 'lucide-react'
+import { BookOpen, FolderGit2, User, GraduationCap } from 'lucide-react'
 import { DecorativeBackground } from '@/components/DecorativeBackground'
 import { NavigationCard } from '@/components/NavigationCard'
 
@@ -50,7 +50,7 @@ function Index() {
             </p>
 
             {/* Navigation Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 max-w-4xl mx-auto px-4 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 max-w-5xl mx-auto px-4 animate-fade-in" style={{ animationDelay: '0.2s' }}>
               <NavigationCard
                 to="/blog"
                 icon={BookOpen}
@@ -66,6 +66,15 @@ function Index() {
                 title="Projects"
                 description="Portfolio of work and creative implementations"
                 actionText="View portfolio"
+                colorTheme="purple"
+              />
+
+              <NavigationCard
+                to="/courses"
+                icon={GraduationCap}
+                title="Courses"
+                description="Learn software development skills"
+                actionText="Start learning"
                 colorTheme="purple"
               />
 

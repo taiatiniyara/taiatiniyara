@@ -2,6 +2,8 @@ import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
 import { useState } from "react";
 import circle from "@/components/img/circle.svg";
 import { useAnalytics } from "@/hooks/useAnalytics";
+import { useUser } from "@/hooks/useUser";
+import { User } from "lucide-react";
 
 interface MenuListItem {
   name: string;
@@ -13,10 +15,12 @@ const menuItems: MenuListItem[] = [
   { name: "Blog", to: "/blog" },
   { name: "About", to: "/about" },
   { name: "Projects", to: "/projects" },
+  { name: "Courses", to: "/courses" },
 ];
 
 const RootLayout = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { isAuthenticated } = useUser();
   
   // Track page views with Google Analytics
   useAnalytics();
@@ -44,7 +48,7 @@ const RootLayout = () => {
               </a>
 
               {/* Desktop Navigation */}
-              <div className="hidden md:flex gap-6">
+              <div className="hidden md:flex gap-6 items-center">
                 {menuItems.map((item) => (
                   <a  
                     key={item.to}
@@ -54,6 +58,16 @@ const RootLayout = () => {
                     {item.name}
                   </a>
                 ))}
+                {isAuthenticated && (
+                  <Link
+                    to="/dashboard"
+                    className="flex items-center gap-2 px-3 py-2 rounded-md bg-purple-600 text-white hover:bg-purple-700 transition-colors"
+                    activeProps={{ className: "bg-purple-700" }}
+                  >
+                    <User className="w-4 h-4" />
+                    Dashboard
+                  </Link>
+                )}
               </div>
 
               {/* Mobile Menu Button */}
@@ -131,6 +145,25 @@ const RootLayout = () => {
                   >
                     Projects
                   </Link>
+                  <Link
+                    to="/courses"
+                    className="hover:text-blue-600 transition-colors py-2"
+                    activeProps={{ className: "text-blue-600 font-medium" }}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Courses
+                  </Link>
+                  {isAuthenticated && (
+                    <Link
+                      to="/dashboard"
+                      className="flex items-center gap-2 px-3 py-2 rounded-md bg-purple-600 text-white hover:bg-purple-700 transition-colors"
+                      activeProps={{ className: "bg-purple-700" }}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <User className="w-4 h-4" />
+                      Dashboard
+                    </Link>
+                  )}
                 </div>
               </div>
             )}
