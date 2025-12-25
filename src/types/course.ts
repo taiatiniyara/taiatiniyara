@@ -36,6 +36,7 @@ export interface CourseEnrollment {
   id: string;
   course_id: string;
   user_id: string;
+  user_email: string;
   enrolled_at: string;
   completed_at: string | null;
   progress: number;
@@ -113,6 +114,7 @@ export interface CoursesResponse {
 export interface EnrollmentInput {
   course_id: string;
   user_id: string;
+  user_email: string;
 }
 
 export interface UpdateEnrollmentInput {

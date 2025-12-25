@@ -104,11 +104,12 @@ export async function getCourseBySlug(slug: string): Promise<CourseWithModules |
     throw new Error(`Failed to fetch course: ${courseError.message}`);
   }
 
-  // Fetch modules for this course
+  // Fetch modules for this course (only published ones for public view)
   const { data: modulesData, error: modulesError } = await supabase
     .from('course_modules')
     .select('*')
     .eq('course_id', courseData.id)
+    .eq('published', true)
     .order('order_index', { ascending: true });
 
   if (modulesError) {

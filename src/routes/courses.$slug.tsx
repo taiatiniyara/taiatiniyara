@@ -80,6 +80,7 @@ function CourseDetail() {
       await enrollMutation.mutateAsync({
         course_id: course.id,
         user_id: user.id,
+        user_email: user.email || '',
       });
       
       // Navigate to first module
