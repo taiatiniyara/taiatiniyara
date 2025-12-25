@@ -33,8 +33,15 @@ export default defineConfig({
         },
       },
     },
-    // Optimize assets
-    assetsInlineLimit: 4096,
+    // Optimize assets - inline small images/fonts but never JS modules
+    assetsInlineLimit: (filePath) => {
+      // Never inline JS files as it breaks module loading with data URLs
+      if (filePath.endsWith('.js') || filePath.endsWith('.mjs')) {
+        return false;
+      }
+      // Inline other small assets (images, fonts, etc.) under 4KB
+      return true;
+    },
     // Enable minification for smaller bundle sizes (esbuild is faster than terser)
     minify: 'esbuild',
     // Optimize chunk size
