@@ -2,39 +2,39 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
-    <loc>https://taia.blog</loc>
+    <loc>https://taiatiniyara.com</loc>
     <lastmod>2025-12-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1</priority>
     <image:image>
-      <image:loc>https://taia.blog/taia.jpg</image:loc>
+      <image:loc>https://taiatiniyara.com/taia.jpg</image:loc>
       <image:title>Taia Tiniyara - Full-Stack Software Developer</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://taia.blog/about</loc>
+    <loc>https://taiatiniyara.com/about</loc>
     <lastmod>2025-12-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://taia.blog/taia.jpg</image:loc>
+      <image:loc>https://taiatiniyara.com/taia.jpg</image:loc>
       <image:title>Taia Tiniyara</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://taia.blog/blog</loc>
+    <loc>https://taiatiniyara.com/blog</loc>
     <lastmod>2025-12-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://taia.blog/projects</loc>
+    <loc>https://taiatiniyara.com/projects</loc>
     <lastmod>2025-12-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://taia.blog/blog/my-journey-as-a-software-developer-in-fiji-2uc2g4</loc>
+    <loc>https://taiatiniyara.com/blog/my-journey-as-a-software-developer-in-fiji-2uc2g4</loc>
     <lastmod>2025-12-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -44,7 +44,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://taia.blog/blog/fijis-map-data-challenge-kyi947</loc>
+    <loc>https://taiatiniyara.com/blog/fijis-map-data-challenge-kyi947</loc>
     <lastmod>2025-12-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -54,7 +54,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://taia.blog/blog/digitizing-the-fiji-court-system-building-justice-for-the-digital-age-3fex3m</loc>
+    <loc>https://taiatiniyara.com/blog/digitizing-the-fiji-court-system-building-justice-for-the-digital-age-3fex3m</loc>
     <lastmod>2025-12-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -64,7 +64,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://taia.blog/blog/why-good-architecture-really-matters-in-cloud-software-6n58al</loc>
+    <loc>https://taiatiniyara.com/blog/why-good-architecture-really-matters-in-cloud-software-6n58al</loc>
     <lastmod>2025-12-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -74,7 +74,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://taia.blog/blog/why-hakwa-cannot-be-built-like-uber-for-fiji-m0eqdz</loc>
+    <loc>https://taiatiniyara.com/blog/why-hakwa-cannot-be-built-like-uber-for-fiji-m0eqdz</loc>
     <lastmod>2025-12-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -84,7 +84,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://taia.blog/blog/who-am-i-blog-v17xjm</loc>
+    <loc>https://taiatiniyara.com/blog/who-am-i-blog-v17xjm</loc>
     <lastmod>2025-12-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -94,7 +94,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://taia.blog/blog/why-i-love-typescript-2c367y</loc>
+    <loc>https://taiatiniyara.com/blog/why-i-love-typescript-2c367y</loc>
     <lastmod>2025-12-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -104,7 +104,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://taia.blog/projects/hakwa</loc>
+    <loc>https://taiatiniyara.com/projects/hakwa</loc>
     <lastmod>2025-12-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -114,7 +114,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://taia.blog/projects/totolaw</loc>
+    <loc>https://taiatiniyara.com/projects/totolaw</loc>
     <lastmod>2025-12-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -124,7 +124,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://taia.blog/projects/niucut</loc>
+    <loc>https://taiatiniyara.com/projects/niucut</loc>
     <lastmod>2025-12-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -134,7 +134,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://taia.blog/projects/pacific-power-association-performance-benchmarking</loc>
+    <loc>https://taiatiniyara.com/projects/pacific-power-association-performance-benchmarking</loc>
     <lastmod>2025-12-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -144,7 +144,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://taia.blog/projects/samoa-tourism-product-database</loc>
+    <loc>https://taiatiniyara.com/projects/samoa-tourism-product-database</loc>
     <lastmod>2025-12-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

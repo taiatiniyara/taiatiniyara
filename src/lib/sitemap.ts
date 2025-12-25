@@ -149,7 +149,7 @@ ${urls
 
 // CLI script to generate and save sitemap
 export async function saveSitemap() {
-  const sitemap = await generateSitemap('https://taia.blog');
+  const sitemap = await generateSitemap('https://taiatiniyara.com');
   
   // You can write this to a file or return it
   return sitemap;

@@ -47,7 +47,7 @@ function loadEnvFile() {
 const env = loadEnvFile();
 const SUPABASE_URL = env.VITE_SUPABASE_URL;
 const SUPABASE_ANON_KEY = env.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY;
-const BASE_URL = 'https://taia.blog';
+const BASE_URL = 'https://taiatiniyara.com';
 
 if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
   console.error('❌ Missing Supabase credentials in .env.local');

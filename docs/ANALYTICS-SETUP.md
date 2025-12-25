@@ -17,7 +17,7 @@
 
 1. After creating the property, you'll see **Data Streams**
 2. Click **Add stream** → **Web**
-3. Enter your website URL: `https://taia.blog`
+3. Enter your website URL: `https://taiatiniyara.com`
 4. Stream name: `Taia Tiniyara Website`
 5. Click **Create stream**
 6. Copy the **Measurement ID** (format: `G-XXXXXXXXXX`)
