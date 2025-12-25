@@ -1,9 +1,19 @@
 import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
 import { useState } from "react";
-import circle from "@/components/img/circle.svg";
+import circle from "@/components/img/logo.svg";
 import { useAnalytics } from "@/hooks/useAnalytics";
-import { useUser } from "@/hooks/useUser";
-import { User } from "lucide-react";
+import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import { AlertDialogProvider } from "@/components/AlertDialogProvider";
+import { User, LogOut, BookOpen } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { AuthModal } from "@/components/AuthModal";
 
 interface MenuListItem {
   name: string;
@@ -18,12 +28,17 @@ const menuItems: MenuListItem[] = [
   { name: "Courses", to: "/courses" },
 ];
 
-const RootLayout = () => {
+const Navigation = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { isAuthenticated } = useUser();
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const { user, isAuthenticated, signOut } = useAuth();
   
   // Track page views with Google Analytics
   useAnalytics();
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -58,15 +73,35 @@ const RootLayout = () => {
                     {item.name}
                   </a>
                 ))}
-                {isAuthenticated && (
-                  <Link
-                    to="/dashboard"
-                    className="flex items-center gap-2 px-3 py-2 rounded-md bg-purple-600 text-white hover:bg-purple-700 transition-colors"
-                    activeProps={{ className: "bg-purple-700" }}
-                  >
-                    <User className="w-4 h-4" />
-                    Dashboard
-                  </Link>
+                {isAuthenticated ? (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="icon" className="rounded-full">
+                        <User className="w-4 h-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-56">
+                      <div className="px-2 py-1.5 text-sm font-medium">
+                        {user?.email}
+                      </div>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link to="/dashboard" className="cursor-pointer">
+                          <BookOpen className="mr-2 h-4 w-4" />
+                          My Courses
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-red-600">
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Sign Out
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : (
+                  <Button onClick={() => setShowAuthModal(true)}>
+                    Sign In
+                  </Button>
                 )}
               </div>
 
@@ -153,16 +188,35 @@ const RootLayout = () => {
                   >
                     Courses
                   </Link>
-                  {isAuthenticated && (
-                    <Link
-                      to="/dashboard"
-                      className="flex items-center gap-2 px-3 py-2 rounded-md bg-purple-600 text-white hover:bg-purple-700 transition-colors"
-                      activeProps={{ className: "bg-purple-700" }}
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      <User className="w-4 h-4" />
-                      Dashboard
-                    </Link>
+                  {isAuthenticated ? (
+                    <>
+                      <Link
+                        to="/dashboard"
+                        className="flex items-center gap-2 px-3 py-2 rounded-md bg-purple-600 text-white hover:bg-purple-700 transition-colors"
+                        activeProps={{ className: "bg-purple-700" }}
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <BookOpen className="w-4 h-4" />
+                        My Courses
+                      </Link>
+                      <button
+                        onClick={() => {
+                          handleSignOut();
+                          setMobileMenuOpen(false);
+                        }}
+                        className="flex items-center gap-2 px-3 py-2 rounded-md text-red-600 hover:bg-red-50 transition-colors text-left"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        Sign Out
+                      </button>
+                    </>
+                  ) : (
+                    <Button onClick={() => {
+                      setShowAuthModal(true);
+                      setMobileMenuOpen(false);
+                    }}>
+                      Sign In
+                    </Button>
                   )}
                 </div>
               </div>
@@ -183,7 +237,21 @@ const RootLayout = () => {
           </div>
         </div>
       </footer>
+      <AuthModal 
+        isOpen={showAuthModal} 
+        onClose={() => setShowAuthModal(false)} 
+      />
     </div>
+  );
+};
+
+const RootLayout = () => {
+  return (
+    <AuthProvider>
+      <AlertDialogProvider>
+        <Navigation />
+      </AlertDialogProvider>
+    </AuthProvider>
   );
 };
 

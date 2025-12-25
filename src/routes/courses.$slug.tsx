@@ -2,17 +2,8 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { useCourse, useEnrollInCourse } from "@/hooks/useCourseQueries";
-import { useUser } from "@/hooks/useUser";
+import { useCourse, useEnrollInCourse, useEnrollment } from "@/hooks/useCourseQueries";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   ArrowLeft,
   Clock,
@@ -20,11 +11,12 @@ import {
   Award,
   PlayCircle,
   CheckCircle2,
-  LogIn,
 } from "lucide-react";
 import { SEO, StructuredData } from "@/components/SEO";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { useState } from "react";
+import { AuthModal } from "@/components/AuthModal";
+import { useAlertDialog } from "@/components/AlertDialogProvider";
 
 export const Route = createFileRoute("/courses/$slug")({
   component: CourseDetail,
@@ -33,16 +25,18 @@ export const Route = createFileRoute("/courses/$slug")({
 function CourseDetail() {
   const { slug } = Route.useParams();
   const navigate = useNavigate();
+  const { showAlert } = useAlertDialog();
   const { data: course, isLoading, error } = useCourse(slug);
-  const { user, isAuthenticated, login } = useUser();
+  const { user, isAuthenticated } = useAuth();
   const enrollMutation = useEnrollInCourse();
-  const [showLoginDialog, setShowLoginDialog] = useState(false);
-  const [loginEmail, setLoginEmail] = useState("");
-  const [loginName, setLoginName] = useState("");
-
-  // Check if user is enrolled (using localStorage for demo)
-  const enrolledCourses = JSON.parse(localStorage.getItem('enrolled_courses') || '[]');
-  const userEnrolled = user && enrolledCourses.includes(course?.id);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  
+  // Check if user is enrolled
+  const { data: enrollment } = useEnrollment(
+    course?.id || '',
+    user?.id || '',
+  );
+  const userEnrolled = !!enrollment;
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -65,13 +59,13 @@ function CourseDetail() {
   }
 
   const handleStartLearning = async () => {
-    if (!isAuthenticated) {
-      setShowLoginDialog(true);
+    if (!isAuthenticated || !user) {
+      setShowAuthModal(true);
       return;
     }
 
     if (userEnrolled) {
-      // Navigate to first module
+      // Navigate to first module or last accessed module
       if (course.modules && course.modules.length > 0) {
         navigate({
           to: '/courses/$courseSlug/$moduleSlug',
@@ -85,13 +79,8 @@ function CourseDetail() {
     try {
       await enrollMutation.mutateAsync({
         course_id: course.id,
-        user_email: user!.email,
+        user_id: user.id,
       });
-      
-      // Store enrollment locally for demo
-      const enrolled = JSON.parse(localStorage.getItem('enrolled_courses') || '[]');
-      enrolled.push(course.id);
-      localStorage.setItem('enrolled_courses', JSON.stringify(enrolled));
       
       // Navigate to first module
       if (course.modules && course.modules.length > 0) {
@@ -102,16 +91,19 @@ function CourseDetail() {
       }
     } catch (err) {
       console.error('Enrollment failed:', err);
-      alert('Failed to enroll in course. Please try again.');
-    }
-  };
-
-  const handleLogin = () => {
-    if (loginEmail) {
-      login(loginEmail, loginName || undefined);
-      setShowLoginDialog(false);
-      setLoginEmail("");
-      setLoginName("");
+      const errorMessage = err instanceof Error ? err.message : 'Failed to enroll in course. Please try again.';
+      
+      // If already enrolled, just navigate to the course
+      if (errorMessage.includes('already enrolled')) {
+        if (course.modules && course.modules.length > 0) {
+          navigate({
+            to: '/courses/$courseSlug/$moduleSlug',
+            params: { courseSlug: course.slug, moduleSlug: course.modules[0].slug },
+          });
+        }
+      } else {
+        showAlert("Enrollment Error", errorMessage);
+      }
     }
   };
 
@@ -324,10 +316,7 @@ function CourseDetail() {
                 ) : userEnrolled ? (
                   "Continue Learning"
                 ) : (
-                  <>
-                    {!isAuthenticated && <LogIn className="w-4 h-4 mr-2" />}
-                    Start Learning
-                  </>
+                  "Start Learning"
                 )}
               </Button>
 
@@ -385,57 +374,11 @@ function CourseDetail() {
         </div>
       </div>
 
-      {/* Login Dialog */}
-      <AlertDialog open={showLoginDialog} onOpenChange={setShowLoginDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Login to Start Learning</AlertDialogTitle>
-            <AlertDialogDescription>
-              Enter your email to enroll in this course. This is a temporary login system.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email *</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="your.email@example.com"
-                value={loginEmail}
-                onChange={(e) => setLoginEmail(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="name">Name (optional)</Label>
-              <Input
-                id="name"
-                type="text"
-                placeholder="Your Name"
-                value={loginName}
-                onChange={(e) => setLoginName(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
-              />
-            </div>
-          </div>
-          <div className="flex gap-3">
-            <Button
-              variant="outline"
-              onClick={() => setShowLoginDialog(false)}
-              className="flex-1"
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleLogin}
-              disabled={!loginEmail}
-              className="flex-1"
-            >
-              Login & Enroll
-            </Button>
-          </div>
-        </AlertDialogContent>
-      </AlertDialog>
+      <AuthModal 
+        isOpen={showAuthModal} 
+        onClose={() => setShowAuthModal(false)}
+        onSuccess={handleStartLearning}
+      />
     </>
   );
 }

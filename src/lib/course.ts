@@ -378,6 +378,13 @@ export async function deleteModule(id: string): Promise<void> {
  * Enroll a user in a course
  */
 export async function enrollInCourse(input: EnrollmentInput): Promise<CourseEnrollment> {
+  // First check if user is already enrolled
+  const existingEnrollment = await getEnrollment(input.course_id, input.user_id);
+  
+  if (existingEnrollment) {
+    throw new Error('You are already enrolled in this course');
+  }
+
   const { data, error } = await supabase
     .from('course_enrollments')
     .insert(input)
@@ -385,6 +392,10 @@ export async function enrollInCourse(input: EnrollmentInput): Promise<CourseEnro
     .single();
 
   if (error) {
+    // Check if it's a duplicate key error
+    if (error.code === '23505') {
+      throw new Error('You are already enrolled in this course');
+    }
     throw new Error(`Failed to enroll in course: ${error.message}`);
   }
 
@@ -394,11 +405,11 @@ export async function enrollInCourse(input: EnrollmentInput): Promise<CourseEnro
 /**
  * Get user's enrollments
  */
-export async function getUserEnrollments(userEmail: string): Promise<CourseEnrollment[]> {
+export async function getUserEnrollments(userId: string): Promise<CourseEnrollment[]> {
   const { data, error } = await supabase
     .from('course_enrollments')
     .select('*')
-    .eq('user_email', userEmail)
+    .eq('user_id', userId)
     .order('enrolled_at', { ascending: false });
 
   if (error) {
@@ -411,12 +422,12 @@ export async function getUserEnrollments(userEmail: string): Promise<CourseEnrol
 /**
  * Get a specific enrollment
  */
-export async function getEnrollment(courseId: string, userEmail: string): Promise<CourseEnrollment | null> {
+export async function getEnrollment(courseId: string, userId: string): Promise<CourseEnrollment | null> {
   const { data, error } = await supabase
     .from('course_enrollments')
     .select('*')
     .eq('course_id', courseId)
-    .eq('user_email', userEmail)
+    .eq('user_id', userId)
     .single();
 
   if (error) {
@@ -434,14 +445,14 @@ export async function getEnrollment(courseId: string, userEmail: string): Promis
  */
 export async function updateEnrollment(
   courseId: string,
-  userEmail: string,
+  userId: string,
   input: UpdateEnrollmentInput
 ): Promise<CourseEnrollment> {
   const { data, error } = await supabase
     .from('course_enrollments')
     .update(input)
     .eq('course_id', courseId)
-    .eq('user_email', userEmail)
+    .eq('user_id', userId)
     .select()
     .single();
 

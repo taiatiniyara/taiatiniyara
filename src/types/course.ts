@@ -35,10 +35,11 @@ export interface CourseModule {
 export interface CourseEnrollment {
   id: string;
   course_id: string;
-  user_email: string;
+  user_id: string;
   enrolled_at: string;
   completed_at: string | null;
   progress: number;
+  last_accessed_module_id?: string | null;
 }
 
 export interface CourseWithModules extends Course {
@@ -111,10 +112,11 @@ export interface CoursesResponse {
 
 export interface EnrollmentInput {
   course_id: string;
-  user_email: string;
+  user_id: string;
 }
 
 export interface UpdateEnrollmentInput {
   progress?: number;
   completed_at?: string;
+  last_accessed_module_id?: string;
 }

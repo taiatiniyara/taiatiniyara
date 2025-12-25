@@ -69,7 +69,7 @@ function RouteComponent() {
         data={{
           name: 'Taia Tiniyara',
           url: window.location.origin,
-          logo: `${window.location.origin}/circle.svg`,
+          logo: `${window.location.origin}/logo.svg`,
           sameAs: [
             'https://github.com/taiatiniyara',
           ],

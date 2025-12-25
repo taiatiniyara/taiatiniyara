@@ -20,6 +20,7 @@ import {
 import type { Course, CreateCourseInput, CourseModule, CreateModuleInput } from "@/types/course";
 import { RichTextEditor } from "@/components/RichTextEditor";
 import { Pencil, Trash2, Plus, X, GraduationCap, BookOpen, Video } from "lucide-react";
+import { useAlertDialog } from "@/components/AlertDialogProvider";
 
 export const Route = createFileRoute("/courses/admin")({
   component: CoursesAdmin,
@@ -36,6 +37,7 @@ function generateSlug(title: string): string {
 
 function CoursesAdmin() {
   const navigate = useNavigate();
+  const { showAlert, showConfirm } = useAlertDialog();
   const [editingCourse, setEditingCourse] = useState<Course | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
@@ -156,18 +158,22 @@ function CoursesAdmin() {
   };
 
   const handleDeleteModule = async (id: string) => {
-    if (window.confirm("Are you sure you want to delete this module?")) {
-      try {
-        await deleteModuleMutation.mutateAsync({
-          id,
-          courseId: selectedCourse!.id,
-        });
-        alert("Module deleted successfully!");
-      } catch (error) {
-        console.error("Error deleting module:", error);
-        alert("Failed to delete module. Check console for details.");
+    showConfirm(
+      "Delete Module",
+      "Are you sure you want to delete this module? This action cannot be undone.",
+      async () => {
+        try {
+          await deleteModuleMutation.mutateAsync({
+            id,
+            courseId: selectedCourse!.id,
+          });
+          showAlert("Success", "Module deleted successfully!");
+        } catch (error) {
+          console.error("Error deleting module:", error);
+          showAlert("Error", "Failed to delete module. Check console for details.");
+        }
       }
-    }
+    );
   };
 
   const handleSubmitModule = async (e: React.FormEvent) => {
@@ -192,15 +198,15 @@ function CoursesAdmin() {
           id: editingModule.id,
           input: moduleData,
         });
-        alert("Module updated successfully!");
+        showAlert("Success", "Module updated successfully!");
       } else {
         await createModuleMutation.mutateAsync(moduleData);
-        alert("Module created successfully!");
+        showAlert("Success", "Module created successfully!");
       }
       resetModuleForm();
     } catch (error) {
       console.error("Error saving module:", error);
-      alert("Failed to save module. Check console for details.");
+      showAlert("Error", "Failed to save module. Check console for details.");
     }
   };
 
@@ -221,15 +227,19 @@ function CoursesAdmin() {
   };
 
   const handleDelete = async (id: string) => {
-    if (window.confirm("Are you sure you want to delete this course?")) {
-      try {
-        await deleteCourseMutation.mutateAsync(id);
-        alert("Course deleted successfully!");
-      } catch (error) {
-        console.error("Error deleting course:", error);
-        alert("Failed to delete course. Check console for details.");
+    showConfirm(
+      "Delete Course",
+      "Are you sure you want to delete this course? This action cannot be undone.",
+      async () => {
+        try {
+          await deleteCourseMutation.mutateAsync(id);
+          showAlert("Success", "Course deleted successfully!");
+        } catch (error) {
+          console.error("Error deleting course:", error);
+          showAlert("Error", "Failed to delete course. Check console for details.");
+        }
       }
-    }
+    );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -256,15 +266,15 @@ function CoursesAdmin() {
           id: editingCourse.id,
           input: courseData,
         });
-        alert("Course updated successfully!");
+        showAlert("Success", "Course updated successfully!");
       } else {
         await createCourseMutation.mutateAsync(courseData);
-        alert("Course created successfully!");
+        showAlert("Success", "Course created successfully!");
       }
       resetForm();
     } catch (error) {
       console.error("Error saving course:", error);
-      alert("Failed to save course. Check console for details.");
+      showAlert("Error", "Failed to save course. Check console for details.");
     }
   };
 

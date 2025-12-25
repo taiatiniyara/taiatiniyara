@@ -17,6 +17,7 @@ import { generateSlug } from "@/lib/blog";
 import type { BlogPost, CreateBlogPostInput } from "@/types/blog";
 import { RichTextEditor } from "@/components/RichTextEditor";
 import { useSessionStorage } from "@/hooks/useSessionStorage";
+import { useAlertDialog } from "@/components/AlertDialogProvider";
 
 const blogKey = import.meta.env.VITE_BLOG_KEY;
 
@@ -26,6 +27,7 @@ export const Route = createFileRoute("/blog/admin")({
 
 function BlogAdmin() {
   const navigate = useNavigate();
+  const { showAlert, showConfirm } = useAlertDialog();
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
   const [isCreating, setIsCreating] = useState(false);
 
@@ -115,20 +117,22 @@ function BlogAdmin() {
       }
       resetForm();
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed to save post");
+      showAlert("Error", err instanceof Error ? err.message : "Failed to save post");
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this post?")) {
-      return;
-    }
-
-    try {
-      await deletePostMutation.mutateAsync(id);
-    } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed to delete post");
-    }
+    showConfirm(
+      "Delete Post",
+      "Are you sure you want to delete this post? This action cannot be undone.",
+      async () => {
+        try {
+          await deletePostMutation.mutateAsync(id);
+        } catch (err) {
+          showAlert("Error", err instanceof Error ? err.message : "Failed to delete post");
+        }
+      }
+    );
   };
 
   const formatDate = (dateString: string) => {

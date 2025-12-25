@@ -17,6 +17,7 @@ import { generateSlug } from "@/lib/project";
 import type { Project, CreateProjectInput } from "@/types/project";
 import { RichTextEditor } from "@/components/RichTextEditor";
 import { useSessionStorage } from "@/hooks/useSessionStorage";
+import { useAlertDialog } from "@/components/AlertDialogProvider";
 
 const adminKey = import.meta.env.VITE_BLOG_KEY;
 
@@ -26,6 +27,7 @@ export const Route = createFileRoute("/projects/admin")({
 
 function ProjectsAdmin() {
   const navigate = useNavigate();
+  const { showAlert, showConfirm } = useAlertDialog();
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [isCreating, setIsCreating] = useState(false);
 
@@ -127,20 +129,22 @@ function ProjectsAdmin() {
       }
       resetForm();
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed to save project");
+      showAlert("Error", err instanceof Error ? err.message : "Failed to save project");
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this project?")) {
-      return;
-    }
-
-    try {
-      await deleteProjectMutation.mutateAsync(id);
-    } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed to delete project");
-    }
+    showConfirm(
+      "Delete Project",
+      "Are you sure you want to delete this project? This action cannot be undone.",
+      async () => {
+        try {
+          await deleteProjectMutation.mutateAsync(id);
+        } catch (err) {
+          showAlert("Error", err instanceof Error ? err.message : "Failed to delete project");
+        }
+      }
+    );
   };
 
   const formatDate = (dateString: string) => {

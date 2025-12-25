@@ -12,7 +12,7 @@ Your project has been comprehensively optimized for SEO, performance, and search
 
 Added preload hints for critical resources to improve Largest Contentful Paint (LCP):
 - Preload hero image (`/taia.jpg`) with high priority
-- Preload logo SVG (`/circle.svg`)
+- Preload logo SVG (`/logo.svg`)
 - Module preload for main JavaScript entry point
 - Existing preconnect tags for Google Fonts
 

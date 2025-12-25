@@ -1,49 +1,25 @@
-import { useState, useEffect } from 'react';
-
 /**
- * Simple user state hook for enrollment
- * This is a temporary solution using localStorage
- * Replace with proper authentication (Supabase Auth, Auth0, etc.) in production
+ * User hook that wraps Supabase authentication
+ * @deprecated Use useAuth from '@/contexts/AuthContext' instead
+ * This hook is kept for backward compatibility
  */
-
-interface User {
-  email: string;
-  name?: string;
-}
+import { useAuth } from '@/contexts/AuthContext';
 
 export function useUser() {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    // Load user from localStorage
-    const storedUser = localStorage.getItem('temp_user');
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (e) {
-        console.error('Failed to parse stored user', e);
-      }
-    }
-    setIsLoading(false);
-  }, []);
-
-  const login = (email: string, name?: string) => {
-    const newUser = { email, name };
-    setUser(newUser);
-    localStorage.setItem('temp_user', JSON.stringify(newUser));
-  };
-
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('temp_user');
-  };
-
+  const auth = useAuth();
+  
   return {
-    user,
-    isAuthenticated: !!user,
-    isLoading,
-    login,
-    logout,
+    user: auth.user ? {
+      email: auth.user.email!,
+      name: auth.user.user_metadata?.name,
+      id: auth.user.id,
+    } : null,
+    isAuthenticated: auth.isAuthenticated,
+    isLoading: auth.isLoading,
+    login: async (email: string, password: string) => {
+      const { error } = await auth.signIn(email, password);
+      if (error) throw error;
+    },
+    logout: auth.signOut,
   };
 }

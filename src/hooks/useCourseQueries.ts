@@ -51,9 +51,9 @@ export const courseKeys = {
   module: (id: string) => [...courseKeys.all, 'module', id] as const,
   moduleBySlug: (courseId: string, slug: string) =>
     [...courseKeys.all, 'module', courseId, slug] as const,
-  enrollments: (userEmail: string) => [...courseKeys.all, 'enrollments', userEmail] as const,
-  enrollment: (courseId: string, userEmail: string) =>
-    [...courseKeys.all, 'enrollment', courseId, userEmail] as const,
+  enrollments: (userId: string) => [...courseKeys.all, 'enrollments', userId] as const,
+  enrollment: (courseId: string, userId: string) =>
+    [...courseKeys.all, 'enrollment', courseId, userId] as const,
   enrollmentCount: (courseId: string) =>
     [...courseKeys.all, 'enrollmentCount', courseId] as const,
 };
@@ -196,24 +196,24 @@ export function useModuleBySlug(courseId: string, slug: string) {
 /**
  * Hook to fetch user's enrollments
  */
-export function useUserEnrollments(userEmail: string) {
+export function useUserEnrollments(userId: string) {
   return useQuery({
-    queryKey: courseKeys.enrollments(userEmail),
-    queryFn: () => getUserEnrollments(userEmail),
+    queryKey: courseKeys.enrollments(userId),
+    queryFn: () => getUserEnrollments(userId),
     staleTime: 2 * 60 * 1000,
-    enabled: !!userEmail,
+    enabled: !!userId,
   });
 }
 
 /**
  * Hook to fetch a specific enrollment
  */
-export function useEnrollment(courseId: string, userEmail: string) {
+export function useEnrollment(courseId: string, userId: string) {
   return useQuery({
-    queryKey: courseKeys.enrollment(courseId, userEmail),
-    queryFn: () => getEnrollment(courseId, userEmail),
+    queryKey: courseKeys.enrollment(courseId, userId),
+    queryFn: () => getEnrollment(courseId, userId),
     staleTime: 2 * 60 * 1000,
-    enabled: !!courseId && !!userEmail,
+    enabled: !!courseId && !!userId,
   });
 }
 
@@ -336,10 +336,10 @@ export function useEnrollInCourse() {
     mutationFn: (input: EnrollmentInput) => enrollInCourse(input),
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
-        queryKey: courseKeys.enrollments(variables.user_email),
+        queryKey: courseKeys.enrollments(variables.user_id),
       });
       queryClient.invalidateQueries({
-        queryKey: courseKeys.enrollment(variables.course_id, variables.user_email),
+        queryKey: courseKeys.enrollment(variables.course_id, variables.user_id),
       });
       queryClient.invalidateQueries({
         queryKey: courseKeys.enrollmentCount(variables.course_id),
@@ -357,19 +357,19 @@ export function useUpdateEnrollment() {
   return useMutation({
     mutationFn: ({
       courseId,
-      userEmail,
+      userId,
       input,
     }: {
       courseId: string;
-      userEmail: string;
+      userId: string;
       input: UpdateEnrollmentInput;
-    }) => updateEnrollment(courseId, userEmail, input),
+    }) => updateEnrollment(courseId, userId, input),
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
-        queryKey: courseKeys.enrollments(variables.userEmail),
+        queryKey: courseKeys.enrollments(variables.userId),
       });
       queryClient.invalidateQueries({
-        queryKey: courseKeys.enrollment(variables.courseId, variables.userEmail),
+        queryKey: courseKeys.enrollment(variables.courseId, variables.userId),
       });
     },
   });
