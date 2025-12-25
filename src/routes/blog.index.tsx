@@ -69,18 +69,45 @@ function BlogIndex() {
   return (
     <>
       <SEO
-        title="Blog"
-        description="Thoughts on software development, architecture, and technology. Articles about web development, system design, and programming best practices."
+        title="Blog - Software Development Insights & Tutorials"
+        description="In-depth articles on software development, systems architecture, web development, database design, and programming best practices. Learn from real-world experiences building scalable applications."
+        canonicalUrl="https://taiatiniyara.com/blog"
+        ogType="website"
       />
       <StructuredData
         type="WebSite"
         data={{
           name: "Taia Tiniyara Blog",
+          description: "Software development insights, tutorials, and best practices",
           url: `${window.location.origin}/blog`,
           author: {
             "@type": "Person",
             name: "Taia Tiniyara",
+            url: window.location.origin,
           },
+          publisher: {
+            "@type": "Person",
+            name: "Taia Tiniyara",
+          },
+        }}
+      />
+      <StructuredData
+        type="BreadcrumbList"
+        data={{
+          itemListElement: [
+            {
+              "@type": "ListItem",
+              position: 1,
+              name: "Home",
+              item: window.location.origin,
+            },
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: "Blog",
+              item: `${window.location.origin}/blog`,
+            },
+          ],
         }}
       />
       <div className="min-h-screen">

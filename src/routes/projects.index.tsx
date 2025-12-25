@@ -25,18 +25,41 @@ function ProjectsIndex() {
   return (
     <>
       <SEO
-        title="Projects"
-        description="Portfolio of software projects by Taia Tiniyara including web applications, SaaS platforms, and system architecture implementations. Featuring work with React, TypeScript, .NET, and modern web technologies."
+        title="Projects - Full-Stack Development Portfolio"
+        description="Software development portfolio showcasing SaaS applications, multi-tenant systems, web applications, and system architecture projects. Built with React, TypeScript, .NET Core, Python, and modern technologies."
+        canonicalUrl="https://taiatiniyara.com/projects"
+        ogType="website"
       />
       <StructuredData
         type="WebSite"
         data={{
-          name: "Taia Tiniyara Projects",
+          name: "Taia Tiniyara Projects Portfolio",
+          description: "Software development portfolio and project showcase",
           url: `${window.location.origin}/projects`,
           author: {
             "@type": "Person",
             name: "Taia Tiniyara",
+            url: window.location.origin,
           },
+        }}
+      />
+      <StructuredData
+        type="BreadcrumbList"
+        data={{
+          itemListElement: [
+            {
+              "@type": "ListItem",
+              position: 1,
+              name: "Home",
+              item: window.location.origin,
+            },
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: "Projects",
+              item: `${window.location.origin}/projects`,
+            },
+          ],
         }}
       />
       <div className="min-h-screen">

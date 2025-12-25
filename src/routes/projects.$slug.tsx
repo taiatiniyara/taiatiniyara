@@ -79,10 +79,7 @@ function ProjectDetail() {
             name: "Taia Tiniyara",
             url: siteUrl,
           },
-          mainEntityOfPage: {
-            "@type": "WebPage",
-            "@id": projectUrl,
-          },
+          keywords: project.technologies?.join(', '),
         }}
       />
       <StructuredData
@@ -90,19 +87,19 @@ function ProjectDetail() {
         data={{
           itemListElement: [
             {
-              '@type': 'ListItem',
+              "@type": "ListItem",
               position: 1,
-              name: 'Home',
+              name: "Home",
               item: siteUrl,
             },
             {
-              '@type': 'ListItem',
+              "@type": "ListItem",
               position: 2,
-              name: 'Projects',
+              name: "Projects",
               item: `${siteUrl}/projects`,
             },
             {
-              '@type': 'ListItem',
+              "@type": "ListItem",
               position: 3,
               name: project.title,
               item: projectUrl,
@@ -110,7 +107,7 @@ function ProjectDetail() {
           ],
         }}
       />
-    <div className="container mx-auto px-4 py-16 max-w-4xl">
+      <div className="container mx-auto px-4 py-16 max-w-4xl">
       <Button
         onClick={() => navigate({ to: "/projects" })}
         variant="ghost"

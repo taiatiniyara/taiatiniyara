@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/logo.svg" />
@@ -16,10 +17,18 @@
     <meta name="keywords" content="Software Developer, Full-Stack Developer, Software Engineer, Web Development, React, TypeScript, C#, Python, GO, Systems Architecture, Database Design, SaaS Development, Multi-tenant Systems, API Design, UI/UX Design, .NET Core, Django, Next.js, Express" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="googlebot" content="index, follow" />
+    <meta name="rating" content="general" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    
+    <!-- Language and Locale -->
+    <meta name="language" content="English" />
+    <meta http-equiv="content-language" content="en-US" />
     
     <!-- Theme Color -->
     <meta name="theme-color" content="#3b82f6" />
     <meta name="msapplication-TileColor" content="#3b82f6" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
@@ -69,7 +78,11 @@
         "Python",
         "React",
         ".NET Core",
-        "SaaS Development"
+        "SaaS Development",
+        "Multi-tenant Systems",
+        "API Development",
+        "Web Development",
+        "Full-Stack Development"
       ],
       "alumniOf": {
         "@type": "Organization",
@@ -78,10 +91,35 @@
     }
     </script>
     
-    <!-- Preconnect for performance -->
+    <!-- Structured Data - Website Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Taia Tiniyara - Full-Stack Developer",
+      "description": "Portfolio and blog of Taia Tiniyara, a full-stack software developer specializing in scalable applications",
+      "url": "https://taiatiniyara.com",
+      "author": {
+        "@type": "Person",
+        "name": "Taia Tiniyara"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://taiatiniyara.com/blog?search={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+    
+    <!-- Performance Optimization -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+    <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
     
     <!-- Preload critical resources for faster initial render -->
     <link rel="preload" href="/taia.jpg" as="image" type="image/jpeg" fetchpriority="high" />

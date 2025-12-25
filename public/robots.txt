@@ -4,33 +4,51 @@
 User-agent: *
 Allow: /
 
-# Disallow admin pages
+# Disallow admin pages and utilities
 Disallow: /blog/admin
 Disallow: /projects/admin
+Disallow: /courses/admin
+Disallow: /courses/modules-admin
 Disallow: /admin
 Disallow: /__
+Disallow: /dashboard
+Disallow: /unauthorized
 
-# Allow all assets
+# Allow all public assets
 Allow: /assets/
-Allow: *.css
-Allow: *.js
-Allow: *.jpg
-Allow: *.jpeg
-Allow: *.png
-Allow: *.svg
-Allow: *.webp
-Allow: *.woff2
-Allow: *.woff
+Allow: /*.css
+Allow: /*.js
+Allow: /*.jpg
+Allow: /*.jpeg
+Allow: /*.png
+Allow: /*.svg
+Allow: /*.webp
+Allow: /*.woff2
+Allow: /*.woff
+Allow: /*.webmanifest
+Allow: /sitemap.xml
+Allow: /robots.txt
+Allow: /ads.txt
 
 # Sitemap location
 Sitemap: https://taiatiniyara.com/sitemap.xml
 
-# Crawl delay (in seconds) - be respectful to server resources
+# Crawl rate - be respectful to server resources
 Crawl-delay: 1
-Allow: *.webp
 
-# Crawl delay (optional, be respectful to crawlers)
-Crawl-delay: 0
+# Google-specific directives
+User-agent: Googlebot
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
 
-# Sitemap
-Sitemap: https://taiatiniyara.com/sitemap.xml
+# Bing-specific directives
+User-agent: Bingbot
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+
+# Respect privacy
+User-agent: *
+Disallow: /api/
+Disallow: /*.json$

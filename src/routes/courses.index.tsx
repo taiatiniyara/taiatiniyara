@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { usePublishedCourses } from "@/hooks/useCourseQueries";
 import { GraduationCap, BookOpen, Award } from "lucide-react";
-import { SEO } from "@/components/SEO";
+import { SEO, StructuredData } from "@/components/SEO";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 
 export const Route = createFileRoute("/courses/")({
@@ -22,8 +22,42 @@ function CoursesIndex() {
   return (
     <>
       <SEO
-        title="Developer Courses"
-        description="Online software development courses by Taia Tiniyara."
+        title="Software Development Courses - Learn Web Development"
+        description="Comprehensive online software development courses covering web development, programming fundamentals, React, TypeScript, system design, and modern development practices. Learn to build real-world applications."
+        canonicalUrl="https://taiatiniyara.com/courses"
+        ogType="website"
+      />
+      <StructuredData
+        type="WebSite"
+        data={{
+          name: "Taia Tiniyara Developer Courses",
+          description: "Online software development courses and tutorials",
+          url: `${window.location.origin}/courses`,
+          author: {
+            "@type": "Person",
+            name: "Taia Tiniyara",
+            url: window.location.origin,
+          },
+        }}
+      />
+      <StructuredData
+        type="BreadcrumbList"
+        data={{
+          itemListElement: [
+            {
+              "@type": "ListItem",
+              position: 1,
+              name: "Home",
+              item: window.location.origin,
+            },
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: "Courses",
+              item: `${window.location.origin}/courses`,
+            },
+          ],
+        }}
       />
       <div className="container mx-auto px-4 py-16">
         <div className="flex items-center justify-between mb-8">

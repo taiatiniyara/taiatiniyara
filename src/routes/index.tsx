@@ -13,8 +13,10 @@ function Index() {
   return (
     <>
       <SEO
-        title="Taia Tiniyara - Full-Stack Developer"
-        description="Welcome to my digital space. Full-stack software developer specializing in systems architecture, database design, and SaaS development."
+        title="Taia Tiniyara - Full-Stack Software Developer & Systems Architect"
+        description="Full-stack software developer specializing in scalable SaaS applications, multi-tenant systems architecture, database design, and modern web development. Expert in C#, TypeScript, React, Python, and .NET Core."
+        canonicalUrl="https://taiatiniyara.com/"
+        ogImage="https://taiatiniyara.com/taia.jpg"
       />
       <StructuredData
         type="Person"

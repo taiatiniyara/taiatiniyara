@@ -99,6 +99,8 @@ function BlogPostPage() {
             '@id': postUrl,
           },
           keywords: post.tags?.join(', '),
+          wordCount: post.content.split(/\s+/).length,
+          articleBody: post.content.replace(/<[^>]*>/g, '').substring(0, 500),
         }}
       />
       <StructuredData

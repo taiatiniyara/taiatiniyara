@@ -73,8 +73,13 @@ export function SEO({
     if (noindex) {
       metaTags.robots = 'noindex, nofollow';
     } else {
-      metaTags.robots = 'index, follow';
+      metaTags.robots = 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
     }
+
+    // Additional SEO meta tags
+    metaTags['googlebot'] = noindex ? 'noindex, nofollow' : 'index, follow';
+    metaTags['rating'] = 'general';
+    metaTags['referrer'] = 'no-referrer-when-downgrade';
 
     Object.entries(metaTags).forEach(([name, content]) => {
       const meta = document.createElement('meta');

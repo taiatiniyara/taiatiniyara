@@ -27,8 +27,10 @@ function RouteComponent() {
   return (
     <>
       <SEO
-        title="How I Can Help - Taia Tiniyara"
-        description="Need scalable software solutions? I help businesses build robust SaaS applications, design efficient systems, and develop APIs that power growth."
+        title="About - Full-Stack Software Developer & Systems Architect"
+        description="Experienced full-stack software developer specializing in scalable SaaS applications, multi-tenant systems, database architecture, and API development. Expert in C#, TypeScript, React, Python, .NET Core, and modern web technologies. Building robust solutions for businesses."
+        canonicalUrl="https://taiatiniyara.com/about"
+        ogImage="https://taiatiniyara.com/taia.jpg"
         ogImageAlt="Taia Tiniyara - Full-Stack Software Developer"
       />
       <StructuredData

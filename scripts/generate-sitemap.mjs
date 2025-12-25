@@ -92,6 +92,12 @@ async function generateSitemap() {
       changefreq: 'weekly',
       priority: 0.8,
     },
+    {
+      loc: `${BASE_URL}/courses`,
+      lastmod: new Date().toISOString().split('T')[0],
+      changefreq: 'weekly',
+      priority: 0.8,
+    },
   ];
 
   // Fetch blog posts
@@ -160,6 +166,40 @@ async function generateSitemap() {
     }
   } catch (error) {
     console.error('❌ Error fetching projects:', error.message);
+  }
+
+  // Fetch courses
+  try {
+    const { data: courses, error } = await supabase
+      .from('courses')
+      .select('slug, updated_at, published_at, title, thumbnail')
+      .eq('published', true)
+      .order('published_at', { ascending: false });
+
+    if (error) throw error;
+    
+    if (courses) {
+      console.log(`✅ Found ${courses.length} courses`);
+      courses.forEach((course) => {
+        const url = {
+          loc: `${BASE_URL}/courses/${course.slug}`,
+          lastmod: course.updated_at.split('T')[0],
+          changefreq: 'monthly',
+          priority: 0.7,
+        };
+        
+        if (course.thumbnail) {
+          url.image = {
+            loc: course.thumbnail,
+            title: course.title,
+          };
+        }
+        
+        urls.push(url);
+      });
+    }
+  } catch (error) {
+    console.error('❌ Error fetching courses:', error.message);
   }
 
   // Generate XML
