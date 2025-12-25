@@ -334,6 +334,8 @@ export async function getModuleBySlug(courseId: string, slug: string): Promise<C
  * Create a new module
  */
 export async function createModule(input: CreateModuleInput): Promise<CourseModule> {
+  console.log('createModule called with input:', input);
+  
   const { data, error } = await supabase
     .from('course_modules')
     .insert(input)
@@ -341,9 +343,11 @@ export async function createModule(input: CreateModuleInput): Promise<CourseModu
     .single();
 
   if (error) {
+    console.error('createModule - Supabase error:', error);
     throw new Error(`Failed to create module: ${error.message}`);
   }
 
+  console.log('createModule - Success, data returned:', data);
   return data as CourseModule;
 }
 
@@ -351,6 +355,8 @@ export async function createModule(input: CreateModuleInput): Promise<CourseModu
  * Update a module
  */
 export async function updateModule(id: string, input: UpdateModuleInput): Promise<CourseModule> {
+  console.log('updateModule called with id:', id, 'input:', input);
+  
   const { data, error } = await supabase
     .from('course_modules')
     .update(input)
@@ -359,9 +365,11 @@ export async function updateModule(id: string, input: UpdateModuleInput): Promis
     .single();
 
   if (error) {
+    console.error('updateModule - Supabase error:', error);
     throw new Error(`Failed to update module: ${error.message}`);
   }
 
+  console.log('updateModule - Success, data returned:', data);
   return data as CourseModule;
 }
 

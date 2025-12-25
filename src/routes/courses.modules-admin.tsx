@@ -14,7 +14,7 @@ import {
   useUpdateModule,
   useDeleteModule,
 } from "@/hooks/useCourseQueries";
-import type { Course, CourseModule, CreateModuleInput } from "@/types/course";
+import type { Course, CourseModule, CreateModuleInput, UpdateModuleInput } from "@/types/course";
 import { RichTextEditor } from "@/components/RichTextEditor";
 import { Pencil, Trash2, Plus, X, BookOpen, Video, GraduationCap, ArrowLeft } from "lucide-react";
 import { useAlertDialog } from "@/components/AlertDialogProvider";
@@ -113,34 +113,76 @@ function ModulesAdmin() {
 
   const handleSubmitModule = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedCourse) return;
+    
+    console.log('=== Module Admin handleSubmitModule called ===');
+    
+    if (!selectedCourse) {
+      console.error('No course selected!');
+      showAlert("Error", "Please select a course first.");
+      return;
+    }
 
-    const moduleData: CreateModuleInput = {
-      course_id: selectedCourse.id,
+    console.log('Selected course:', selectedCourse);
+    console.log('Form values:', {
       title: moduleTitle,
       slug: moduleSlug,
-      description: moduleDescription || undefined,
-      content: moduleContent,
-      video_url: moduleVideoUrl || undefined,
+      description: moduleDescription,
+      content: moduleContent.substring(0, 50) + '...',
+      video_url: moduleVideoUrl,
       duration_minutes: moduleDuration,
       order_index: moduleOrderIndex,
-      published: modulePublished,
-    };
+      published: modulePublished
+    });
 
     try {
+      console.log('About to call mutation...');
       if (editingModule) {
-        await updateModuleMutation.mutateAsync({
+        console.log('Updating existing module:', editingModule.id);
+        
+        const updateData: UpdateModuleInput = {
+          title: moduleTitle,
+          slug: moduleSlug,
+          description: moduleDescription || undefined,
+          content: moduleContent,
+          video_url: moduleVideoUrl || undefined,
+          duration_minutes: moduleDuration,
+          order_index: moduleOrderIndex,
+          published: modulePublished,
+        };
+        
+        console.log('updateData prepared:', updateData);
+        const result = await updateModuleMutation.mutateAsync({
           id: editingModule.id,
-          input: moduleData,
+          input: updateData,
         });
+        console.log('Update result:', result);
         showAlert("Success", "Module updated successfully!");
       } else {
-        await createModuleMutation.mutateAsync(moduleData);
+        console.log('Creating new module');
+        
+        const createData: CreateModuleInput = {
+          course_id: selectedCourse.id,
+          title: moduleTitle,
+          slug: moduleSlug,
+          description: moduleDescription || undefined,
+          content: moduleContent,
+          video_url: moduleVideoUrl || undefined,
+          duration_minutes: moduleDuration,
+          order_index: moduleOrderIndex,
+          published: modulePublished,
+        };
+        
+        console.log('createData prepared:', createData);
+        const result = await createModuleMutation.mutateAsync(createData);
+        console.log('Create result:', result);
         showAlert("Success", "Module created successfully!");
       }
+      console.log('Mutation completed successfully, resetting form');
       resetModuleForm();
     } catch (error) {
-      showAlert("Error", "Failed to save module.");
+      console.error('=== handleSubmitModule caught error ===', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to save module.';
+      showAlert("Error", errorMessage);
     }
   };
 

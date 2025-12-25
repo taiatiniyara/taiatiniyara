@@ -290,10 +290,17 @@ export function useCreateModule() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (input: CreateModuleInput) => createModule(input),
-    onSuccess: (_, variables) => {
+    mutationFn: (input: CreateModuleInput) => {
+      console.log('useCreateModule mutationFn called with:', input);
+      return createModule(input);
+    },
+    onSuccess: (data, variables) => {
+      console.log('Module created successfully:', data);
       queryClient.invalidateQueries({ queryKey: courseKeys.modules(variables.course_id) });
       queryClient.invalidateQueries({ queryKey: courseKeys.courseById(variables.course_id) });
+    },
+    onError: (error) => {
+      console.error('Error in useCreateModule mutation:', error);
     },
   });
 }
@@ -305,12 +312,18 @@ export function useUpdateModule() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, input }: { id: string; input: UpdateModuleInput }) =>
-      updateModule(id, input),
+    mutationFn: ({ id, input }: { id: string; input: UpdateModuleInput }) => {
+      console.log('useUpdateModule mutationFn called with:', id, input);
+      return updateModule(id, input);
+    },
     onSuccess: (data) => {
+      console.log('Module updated successfully:', data);
       queryClient.invalidateQueries({ queryKey: courseKeys.modules(data.course_id) });
       queryClient.invalidateQueries({ queryKey: courseKeys.module(data.id) });
       queryClient.invalidateQueries({ queryKey: courseKeys.courseById(data.course_id) });
+    },
+    onError: (error) => {
+      console.error('Error in useUpdateModule mutation:', error);
     },
   });
 }
