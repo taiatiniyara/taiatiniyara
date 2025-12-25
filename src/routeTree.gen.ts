@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as CoursesRouteImport } from './routes/courses'
 import { Route as BlogRouteImport } from './routes/blog'
@@ -20,12 +21,18 @@ import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as AboutIndexRouteImport } from './routes/about.index'
 import { Route as ProjectsAdminRouteImport } from './routes/projects.admin'
 import { Route as ProjectsSlugRouteImport } from './routes/projects.$slug'
+import { Route as CoursesModulesAdminRouteImport } from './routes/courses.modules-admin'
 import { Route as CoursesAdminRouteImport } from './routes/courses.admin'
 import { Route as CoursesSlugRouteImport } from './routes/courses.$slug'
 import { Route as BlogAdminRouteImport } from './routes/blog.admin'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as CoursesCourseSlugModuleSlugRouteImport } from './routes/courses.$courseSlug.$moduleSlug'
 
+const UnauthorizedRoute = UnauthorizedRouteImport.update({
+  id: '/unauthorized',
+  path: '/unauthorized',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProjectsRoute = ProjectsRouteImport.update({
   id: '/projects',
   path: '/projects',
@@ -81,6 +88,11 @@ const ProjectsSlugRoute = ProjectsSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => ProjectsRoute,
 } as any)
+const CoursesModulesAdminRoute = CoursesModulesAdminRouteImport.update({
+  id: '/modules-admin',
+  path: '/modules-admin',
+  getParentRoute: () => CoursesRoute,
+} as any)
 const CoursesAdminRoute = CoursesAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -113,10 +125,12 @@ export interface FileRoutesByFullPath {
   '/blog': typeof BlogRouteWithChildren
   '/courses': typeof CoursesRouteWithChildren
   '/projects': typeof ProjectsRouteWithChildren
+  '/unauthorized': typeof UnauthorizedRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/admin': typeof BlogAdminRoute
   '/courses/$slug': typeof CoursesSlugRoute
   '/courses/admin': typeof CoursesAdminRoute
+  '/courses/modules-admin': typeof CoursesModulesAdminRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/projects/admin': typeof ProjectsAdminRoute
   '/about': typeof AboutIndexRoute
@@ -128,10 +142,12 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/unauthorized': typeof UnauthorizedRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/admin': typeof BlogAdminRoute
   '/courses/$slug': typeof CoursesSlugRoute
   '/courses/admin': typeof CoursesAdminRoute
+  '/courses/modules-admin': typeof CoursesModulesAdminRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/projects/admin': typeof ProjectsAdminRoute
   '/about': typeof AboutIndexRoute
@@ -147,10 +163,12 @@ export interface FileRoutesById {
   '/blog': typeof BlogRouteWithChildren
   '/courses': typeof CoursesRouteWithChildren
   '/projects': typeof ProjectsRouteWithChildren
+  '/unauthorized': typeof UnauthorizedRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/admin': typeof BlogAdminRoute
   '/courses/$slug': typeof CoursesSlugRoute
   '/courses/admin': typeof CoursesAdminRoute
+  '/courses/modules-admin': typeof CoursesModulesAdminRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/projects/admin': typeof ProjectsAdminRoute
   '/about/': typeof AboutIndexRoute
@@ -167,10 +185,12 @@ export interface FileRouteTypes {
     | '/blog'
     | '/courses'
     | '/projects'
+    | '/unauthorized'
     | '/blog/$slug'
     | '/blog/admin'
     | '/courses/$slug'
     | '/courses/admin'
+    | '/courses/modules-admin'
     | '/projects/$slug'
     | '/projects/admin'
     | '/about'
@@ -182,10 +202,12 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/unauthorized'
     | '/blog/$slug'
     | '/blog/admin'
     | '/courses/$slug'
     | '/courses/admin'
+    | '/courses/modules-admin'
     | '/projects/$slug'
     | '/projects/admin'
     | '/about'
@@ -200,10 +222,12 @@ export interface FileRouteTypes {
     | '/blog'
     | '/courses'
     | '/projects'
+    | '/unauthorized'
     | '/blog/$slug'
     | '/blog/admin'
     | '/courses/$slug'
     | '/courses/admin'
+    | '/courses/modules-admin'
     | '/projects/$slug'
     | '/projects/admin'
     | '/about/'
@@ -219,12 +243,20 @@ export interface RootRouteChildren {
   BlogRoute: typeof BlogRouteWithChildren
   CoursesRoute: typeof CoursesRouteWithChildren
   ProjectsRoute: typeof ProjectsRouteWithChildren
+  UnauthorizedRoute: typeof UnauthorizedRoute
   AboutIndexRoute: typeof AboutIndexRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/unauthorized': {
+      id: '/unauthorized'
+      path: '/unauthorized'
+      fullPath: '/unauthorized'
+      preLoaderRoute: typeof UnauthorizedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/projects': {
       id: '/projects'
       path: '/projects'
@@ -302,6 +334,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectsSlugRouteImport
       parentRoute: typeof ProjectsRoute
     }
+    '/courses/modules-admin': {
+      id: '/courses/modules-admin'
+      path: '/modules-admin'
+      fullPath: '/courses/modules-admin'
+      preLoaderRoute: typeof CoursesModulesAdminRouteImport
+      parentRoute: typeof CoursesRoute
+    }
     '/courses/admin': {
       id: '/courses/admin'
       path: '/admin'
@@ -357,6 +396,7 @@ const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 interface CoursesRouteChildren {
   CoursesSlugRoute: typeof CoursesSlugRoute
   CoursesAdminRoute: typeof CoursesAdminRoute
+  CoursesModulesAdminRoute: typeof CoursesModulesAdminRoute
   CoursesIndexRoute: typeof CoursesIndexRoute
   CoursesCourseSlugModuleSlugRoute: typeof CoursesCourseSlugModuleSlugRoute
 }
@@ -364,6 +404,7 @@ interface CoursesRouteChildren {
 const CoursesRouteChildren: CoursesRouteChildren = {
   CoursesSlugRoute: CoursesSlugRoute,
   CoursesAdminRoute: CoursesAdminRoute,
+  CoursesModulesAdminRoute: CoursesModulesAdminRoute,
   CoursesIndexRoute: CoursesIndexRoute,
   CoursesCourseSlugModuleSlugRoute: CoursesCourseSlugModuleSlugRoute,
 }
@@ -392,6 +433,7 @@ const rootRouteChildren: RootRouteChildren = {
   BlogRoute: BlogRouteWithChildren,
   CoursesRoute: CoursesRouteWithChildren,
   ProjectsRoute: ProjectsRouteWithChildren,
+  UnauthorizedRoute: UnauthorizedRoute,
   AboutIndexRoute: AboutIndexRoute,
   DashboardIndexRoute: DashboardIndexRoute,
 }

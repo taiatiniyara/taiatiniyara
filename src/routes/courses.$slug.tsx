@@ -91,7 +91,6 @@ function CourseDetail() {
         });
       }
     } catch (err) {
-      console.error('Enrollment failed:', err);
       const errorMessage = err instanceof Error ? err.message : 'Failed to enroll in course. Please try again.';
       
       // If already enrolled, just navigate to the course
@@ -245,7 +244,7 @@ function CourseDetail() {
                   <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
                     <Clock className="w-5 h-5" />
                     <span className="text-sm">
-                      {course.duration_hours} hours
+                      {Math.round(course.total_duration_minutes / 60)} hours
                     </span>
                   </div>
                   <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
@@ -268,17 +267,6 @@ function CourseDetail() {
                   </p>
                 )}
               </div>
-            </Card>
-
-            {/* Course Description */}
-            <Card className="p-8">
-              <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-4">
-                About This Course
-              </h2>
-              <div
-                className="prose prose-slate dark:prose-invert max-w-none"
-                dangerouslySetInnerHTML={{ __html: course.content }}
-              />
             </Card>
 
             {/* Technologies */}
@@ -332,7 +320,7 @@ function CourseDetail() {
                 </div>
                 <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
                   <CheckCircle2 className="w-4 h-4 text-green-500" />
-                  <span>{course.duration_hours} hours of content</span>
+                  <span>{Math.round(course.total_duration_minutes / 60)} hours of content</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
                   <CheckCircle2 className="w-4 h-4 text-green-500" />

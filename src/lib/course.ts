@@ -151,16 +151,22 @@ export async function getCourseById(id: string): Promise<Course | null> {
  * Create a new course
  */
 export async function createCourse(input: CreateCourseInput): Promise<Course> {
+  console.log("createCourse called with input:", input);
+  
   const { data, error } = await supabase
     .from('courses')
     .insert(input)
     .select()
     .single();
 
+  console.log("Supabase response:", { data, error });
+
   if (error) {
+    console.error("Supabase error:", error);
     throw new Error(`Failed to create course: ${error.message}`);
   }
 
+  console.log("Course created successfully:", data);
   return data as Course;
 }
 

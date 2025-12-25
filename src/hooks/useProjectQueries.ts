@@ -107,10 +107,17 @@ export function useCreateProject() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (input: CreateProjectInput) => createProject(input),
-    onSuccess: () => {
+    mutationFn: (input: CreateProjectInput) => {
+      console.log('useCreateProject mutationFn called with:', input);
+      return createProject(input);
+    },
+    onSuccess: (data) => {
+      console.log('Project created successfully:', data);
       // Invalidate and refetch project queries
       queryClient.invalidateQueries({ queryKey: projectKeys.projects() });
+    },
+    onError: (error) => {
+      console.error('Error in useCreateProject mutation:', error);
     },
   });
 }
@@ -122,13 +129,19 @@ export function useUpdateProject() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, input }: { id: string; input: UpdateProjectInput }) =>
-      updateProject(id, input),
+    mutationFn: ({ id, input }: { id: string; input: UpdateProjectInput }) => {
+      console.log('useUpdateProject mutationFn called with:', id, input);
+      return updateProject(id, input);
+    },
     onSuccess: (data) => {
+      console.log('Project updated successfully:', data);
       // Invalidate related queries
       queryClient.invalidateQueries({ queryKey: projectKeys.projects() });
       queryClient.invalidateQueries({ queryKey: projectKeys.project(data.slug) });
       queryClient.invalidateQueries({ queryKey: projectKeys.projectById(data.id) });
+    },
+    onError: (error) => {
+      console.error('Error in useUpdateProject mutation:', error);
     },
   });
 }

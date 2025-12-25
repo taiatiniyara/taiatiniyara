@@ -1,23 +1,24 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { ClipLoader } from "react-spinners";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
 import {
   useAllProjects,
   useCreateProject,
   useUpdateProject,
   useDeleteProject,
 } from "@/hooks/useProjectQueries";
-import { generateSlug } from "@/lib/project";
 import type { Project, CreateProjectInput } from "@/types/project";
 import { RichTextEditor } from "@/components/RichTextEditor";
-import { useSessionStorage } from "@/hooks/useSessionStorage";
 import { useAlertDialog } from "@/components/AlertDialogProvider";
+import { AdminLayout } from "@/components/AdminLayout";
+import { AdminListItem } from "@/components/AdminListItem";
+import { TagInput } from "@/components/TagInput";
+import { generateSlug } from "@/lib/admin-utils";
+import { AdminRoute } from "@/components/ProtectedRoute";
 
 const adminKey = import.meta.env.VITE_BLOG_KEY;
 
@@ -47,7 +48,6 @@ function ProjectsAdmin() {
   const [content, setContent] = useState("");
   const [thumbnail, setThumbnail] = useState("");
   const [technologies, setTechnologies] = useState<string[]>([]);
-  const [techInput, setTechInput] = useState("");
   const [githubUrl, setGithubUrl] = useState("");
   const [demoUrl, setDemoUrl] = useState("");
   const [featured, setFeatured] = useState(false);
@@ -60,7 +60,6 @@ function ProjectsAdmin() {
     setContent("");
     setThumbnail("");
     setTechnologies([]);
-    setTechInput("");
     setGithubUrl("");
     setDemoUrl("");
     setFeatured(false);
@@ -76,11 +75,8 @@ function ProjectsAdmin() {
     }
   };
 
-  const handleAddTechnology = () => {
-    if (techInput.trim() && !technologies.includes(techInput.trim())) {
-      setTechnologies([...technologies, techInput.trim()]);
-      setTechInput("");
-    }
+  const handleAddTechnology = (tech: string) => {
+    setTechnologies([...technologies, tech]);
   };
 
   const handleRemoveTechnology = (tech: string) => {
@@ -147,62 +143,18 @@ function ProjectsAdmin() {
     );
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
-  const sessionStorage = useSessionStorage<string | null>(
-    "projects_admin_key",
-    null
-  );
-  const [storedKey, setStoredKey] = sessionStorage;
-
-  if (storedKey !== adminKey) {
-    return (
-      <div className="container mx-auto px-4 py-16 max-w-md">
-        <Card className="p-6">
-          <h2 className="text-2xl font-bold mb-4">Admin Access</h2>
-          <p className="mb-4">
-            Please enter the admin key to access the projects administration panel.
-          </p>
-          <Input
-            type="password"
-            placeholder="Enter admin key"
-            value={storedKey || ""}
-            onChange={(e) => setStoredKey(e.target.value)}
-          />
-        </Card>
-      </div>
-    );
-  }
-
-  if (loading) {
-    return (
-      <div className="container mx-auto px-4 py-16">
-        <div className="flex justify-center items-center min-h-100">
-          <ClipLoader color="#3b82f6" size={50} />
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="container mx-auto px-4 py-16 max-w-6xl">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-bold">Projects Administration</h1>
-        <div className="flex gap-4">
-          <Button onClick={() => navigate({ to: "/projects" })} variant="outline">
-            View Projects
-          </Button>
-          {!isCreating && (
-            <Button onClick={() => setIsCreating(true)}>Create New Project</Button>
-          )}
-        </div>
-      </div>
+    <AdminRoute>
+      <AdminLayout
+        title="Projects Administration"
+        viewPath="/projects"
+        viewLabel="View Projects"
+        isLoading={loading}
+        adminKey={adminKey}
+        storageKey="projects_admin_key"
+        onCreateNew={() => setIsCreating(true)}
+        showCreateButton={!isCreating}
+      >
 
       {isCreating ? (
         <Card className="p-6 mb-8">
@@ -274,40 +226,14 @@ function ProjectsAdmin() {
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="technologies">Technologies</Label>
-              <div className="flex gap-2">
-                <Input
-                  id="technologies"
-                  value={techInput}
-                  onChange={(e) => setTechInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      handleAddTechnology();
-                    }
-                  }}
-                  placeholder="Add a technology"
-                />
-                <Button type="button" onClick={handleAddTechnology} variant="outline">
-                  Add
-                </Button>
-              </div>
-              {technologies.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {technologies.map((tech) => (
-                    <Badge
-                      key={tech}
-                      variant="secondary"
-                      className="cursor-pointer"
-                      onClick={() => handleRemoveTechnology(tech)}
-                    >
-                      {tech} ×
-                    </Badge>
-                  ))}
-                </div>
-              )}
-            </div>
+            <TagInput
+              label="Technologies"
+              tags={technologies}
+              onAddTag={handleAddTechnology}
+              onRemoveTag={handleRemoveTechnology}
+              placeholder="Add a technology"
+              id="technologies"
+            />
 
             <div className="space-y-2">
               <Label htmlFor="githubUrl">GitHub URL</Label>
@@ -352,8 +278,16 @@ function ProjectsAdmin() {
             </div>
 
             <div className="flex gap-4">
-              <Button type="submit" className="flex-1">
-                {editingProject ? "Update Project" : "Create Project"}
+              <Button 
+                type="submit" 
+                className="flex-1"
+                disabled={createProjectMutation.isPending || updateProjectMutation.isPending}
+              >
+                {createProjectMutation.isPending || updateProjectMutation.isPending
+                  ? "Saving..."
+                  : editingProject
+                  ? "Update Project"
+                  : "Create Project"}
               </Button>
               <Button type="button" onClick={resetForm} variant="outline">
                 Cancel
@@ -369,60 +303,22 @@ function ProjectsAdmin() {
           <p className="text-gray-600">No projects yet. Create your first project!</p>
         ) : (
           projects.map((project) => (
-            <Card key={project.id} className="p-4">
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <h3 className="text-xl font-bold mb-2">{project.title}</h3>
-                  <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
-                    <span>{formatDate(project.created_at)}</span>
-                    <Badge variant={project.published ? "default" : "secondary"}>
-                      {project.published ? "Published" : "Draft"}
-                    </Badge>
-                    {project.featured && (
-                      <Badge variant="default">Featured</Badge>
-                    )}
-                    {project.technologies && project.technologies.length > 0 && (
-                      <div className="flex gap-1">
-                        {project.technologies.map((tech) => (
-                          <Badge key={tech} variant="outline">
-                            {tech}
-                          </Badge>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                  <p className="text-gray-700 text-sm">{project.description}</p>
-                </div>
-                <div className="flex gap-2">
-                  {project.published && (
-                    <Button
-                      onClick={() => navigate({ to: `/projects/${project.slug}` })}
-                      variant="outline"
-                      size="sm"
-                    >
-                      View
-                    </Button>
-                  )}
-                  <Button
-                    onClick={() => handleEdit(project)}
-                    variant="outline"
-                    size="sm"
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    onClick={() => handleDelete(project.id)}
-                    variant="outline"
-                    size="sm"
-                  >
-                    Delete
-                  </Button>
-                </div>
-              </div>
-            </Card>
+            <AdminListItem
+              key={project.id}
+              title={project.title}
+              createdAt={project.created_at}
+              published={project.published}
+              featured={project.featured}
+              tags={project.technologies}
+              excerpt={project.description}
+              onView={() => navigate({ to: `/projects/${project.slug}` })}
+              onEdit={() => handleEdit(project)}
+              onDelete={() => handleDelete(project.id)}
+            />
           ))
         )}
       </div>
-    </div>
+    </AdminLayout>
+    </AdminRoute>
   );
 }

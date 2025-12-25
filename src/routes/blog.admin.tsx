@@ -1,23 +1,24 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { ClipLoader } from "react-spinners";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
 import {
   useAllPosts,
   useCreatePost,
   useUpdatePost,
   useDeletePost,
 } from "@/hooks/useBlogQueries";
-import { generateSlug } from "@/lib/blog";
 import type { BlogPost, CreateBlogPostInput } from "@/types/blog";
 import { RichTextEditor } from "@/components/RichTextEditor";
-import { useSessionStorage } from "@/hooks/useSessionStorage";
 import { useAlertDialog } from "@/components/AlertDialogProvider";
+import { AdminLayout } from "@/components/AdminLayout";
+import { AdminListItem } from "@/components/AdminListItem";
+import { TagInput } from "@/components/TagInput";
+import { generateSlug } from "@/lib/admin-utils";
+import { AdminRoute } from "@/components/ProtectedRoute";
 
 const blogKey = import.meta.env.VITE_BLOG_KEY;
 
@@ -47,7 +48,6 @@ function BlogAdmin() {
   const [excerpt, setExcerpt] = useState("");
   const [featuredImage, setFeaturedImage] = useState("");
   const [tags, setTags] = useState<string[]>([]);
-  const [tagInput, setTagInput] = useState("");
   const [published, setPublished] = useState(false);
 
   const resetForm = () => {
@@ -57,7 +57,6 @@ function BlogAdmin() {
     setExcerpt("");
     setFeaturedImage("");
     setTags([]);
-    setTagInput("");
     setPublished(false);
     setEditingPost(null);
     setIsCreating(false);
@@ -70,11 +69,8 @@ function BlogAdmin() {
     }
   };
 
-  const handleAddTag = () => {
-    if (tagInput.trim() && !tags.includes(tagInput.trim())) {
-      setTags([...tags, tagInput.trim()]);
-      setTagInput("");
-    }
+  const handleAddTag = (tag: string) => {
+    setTags([...tags, tag]);
   };
 
   const handleRemoveTag = (tagToRemove: string) => {
@@ -96,6 +92,9 @@ function BlogAdmin() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    console.log('=== Blog Admin handleSubmit called ===');
+    console.log('Form values:', { title, slug, content: content.substring(0, 50) + '...', excerpt, featuredImage, tags, published });
+
     const postData: CreateBlogPostInput = {
       title,
       slug,
@@ -106,17 +105,26 @@ function BlogAdmin() {
       published,
     };
 
+    console.log('postData prepared:', postData);
+
     try {
+      console.log('About to call mutation...');
       if (editingPost) {
-        await updatePostMutation.mutateAsync({
+        console.log('Updating existing post:', editingPost.id);
+        const result = await updatePostMutation.mutateAsync({
           id: editingPost.id,
           input: postData,
         });
+        console.log('Update result:', result);
       } else {
-        await createPostMutation.mutateAsync(postData);
+        console.log('Creating new post');
+        const result = await createPostMutation.mutateAsync(postData);
+        console.log('Create result:', result);
       }
+      console.log('Mutation completed successfully, resetting form');
       resetForm();
     } catch (err) {
+      console.error('=== handleSubmit caught error ===', err);
       showAlert("Error", err instanceof Error ? err.message : "Failed to save post");
     }
   };
@@ -135,63 +143,18 @@ function BlogAdmin() {
     );
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
-  const sessionStorage = useSessionStorage<string | null>(
-    "blog_admin_key",
-    null
-  );
-  const [storedKey, setStoredKey] = sessionStorage;
-  console.log("Stored Key:", blogKey);
-
-  if (storedKey !== blogKey) {
-    return (
-      <div className="container mx-auto px-4 py-16 max-w-md">
-        <Card className="p-6">
-          <h2 className="text-2xl font-bold mb-4">Admin Access</h2>
-          <p className="mb-4">
-            Please enter the admin key to access the blog administration panel.
-          </p>
-          <Input
-            type="password"
-            placeholder="Enter admin key"
-            value={storedKey || ""}
-            onChange={(e) => setStoredKey(e.target.value)}
-          />
-        </Card>
-      </div>
-    );
-  }
-
-  if (loading) {
-    return (
-      <div className="container mx-auto px-4 py-16">
-        <div className="flex justify-center items-center min-h-100">
-          <ClipLoader color="#3b82f6" size={50} />
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="container mx-auto px-4 py-16 max-w-6xl">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-bold">Blog Administration</h1>
-        <div className="flex gap-4">
-          <Button onClick={() => navigate({ to: "/blog" })} variant="outline">
-            View Blog
-          </Button>
-          {!isCreating && (
-            <Button onClick={() => setIsCreating(true)}>Create New Post</Button>
-          )}
-        </div>
-      </div>
+    <AdminRoute>
+      <AdminLayout
+        title="Blog Administration"
+        viewPath="/blog"
+        viewLabel="View Blog"
+        isLoading={loading}
+        adminKey={blogKey}
+        storageKey="blog_admin_key"
+        onCreateNew={() => setIsCreating(true)}
+        showCreateButton={!isCreating}
+      >
 
       {isCreating ? (
         <Card className="p-6 mb-8">
@@ -262,40 +225,13 @@ function BlogAdmin() {
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="tags">Tags</Label>
-              <div className="flex gap-2">
-                <Input
-                  id="tags"
-                  value={tagInput}
-                  onChange={(e) => setTagInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      handleAddTag();
-                    }
-                  }}
-                  placeholder="Add a tag"
-                />
-                <Button type="button" onClick={handleAddTag} variant="outline">
-                  Add
-                </Button>
-              </div>
-              {tags.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {tags.map((tag) => (
-                    <Badge
-                      key={tag}
-                      variant="secondary"
-                      className="cursor-pointer"
-                      onClick={() => handleRemoveTag(tag)}
-                    >
-                      {tag} ×
-                    </Badge>
-                  ))}
-                </div>
-              )}
-            </div>
+            <TagInput
+              label="Tags"
+              tags={tags}
+              onAddTag={handleAddTag}
+              onRemoveTag={handleRemoveTag}
+              placeholder="Add a tag"
+            />
 
             <div className="flex items-center gap-2">
               <input
@@ -309,8 +245,16 @@ function BlogAdmin() {
             </div>
 
             <div className="flex gap-4">
-              <Button type="submit" className="flex-1">
-                {editingPost ? "Update Post" : "Create Post"}
+              <Button 
+                type="submit" 
+                className="flex-1"
+                disabled={createPostMutation.isPending || updatePostMutation.isPending}
+              >
+                {createPostMutation.isPending || updatePostMutation.isPending
+                  ? "Saving..."
+                  : editingPost
+                  ? "Update Post"
+                  : "Create Post"}
               </Button>
               <Button type="button" onClick={resetForm} variant="outline">
                 Cancel
@@ -326,59 +270,21 @@ function BlogAdmin() {
           <p className="text-gray-600">No posts yet. Create your first post!</p>
         ) : (
           posts.map((post) => (
-            <Card key={post.id} className="p-4">
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <h3 className="text-xl font-bold mb-2">{post.title}</h3>
-                  <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
-                    <span>{formatDate(post.created_at)}</span>
-                    <Badge variant={post.published ? "default" : "secondary"}>
-                      {post.published ? "Published" : "Draft"}
-                    </Badge>
-                    {post.tags && post.tags.length > 0 && (
-                      <div className="flex gap-1">
-                        {post.tags.map((tag) => (
-                          <Badge key={tag} variant="outline">
-                            {tag}
-                          </Badge>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                  {post.excerpt && (
-                    <p className="text-gray-700 text-sm">{post.excerpt}</p>
-                  )}
-                </div>
-                <div className="flex gap-2">
-                  {post.published && (
-                    <Button
-                      onClick={() => navigate({ to: `/blog/${post.slug}` })}
-                      variant="outline"
-                      size="sm"
-                    >
-                      View
-                    </Button>
-                  )}
-                  <Button
-                    onClick={() => handleEdit(post)}
-                    variant="outline"
-                    size="sm"
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    onClick={() => handleDelete(post.id)}
-                    variant="outline"
-                    size="sm"
-                  >
-                    Delete
-                  </Button>
-                </div>
-              </div>
-            </Card>
+            <AdminListItem
+              key={post.id}
+              title={post.title}
+              createdAt={post.created_at}
+              published={post.published}
+              tags={post.tags}
+              excerpt={post.excerpt || undefined}
+              onView={() => navigate({ to: `/blog/${post.slug}` })}
+              onEdit={() => handleEdit(post)}
+              onDelete={() => handleDelete(post.id)}
+            />
           ))
         )}
       </div>
-    </div>
+    </AdminLayout>
+    </AdminRoute>
   );
 }

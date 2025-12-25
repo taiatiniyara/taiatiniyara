@@ -81,7 +81,7 @@ export async function generateSitemap(baseUrl: string): Promise<string> {
       });
     }
   } catch (error) {
-    console.error('Error fetching blog posts for sitemap:', error);
+    // Silently fail if blog posts cannot be fetched
   }
 
   // Fetch all published projects
@@ -112,7 +112,7 @@ export async function generateSitemap(baseUrl: string): Promise<string> {
       });
     }
   } catch (error) {
-    console.error('Error fetching projects for sitemap:', error);
+    // Silently fail if projects cannot be fetched
   }
 
   // Generate XML with image support
@@ -154,11 +154,3 @@ export async function saveSitemap() {
   // You can write this to a file or return it
   return sitemap;
 }
-
-// Example usage in Node.js:
-// import { saveSitemap } from './sitemap';
-// import fs from 'fs';
-// saveSitemap().then(xml => {
-//   fs.writeFileSync('public/sitemap.xml', xml);
-//   console.log('Sitemap generated successfully!');
-// });

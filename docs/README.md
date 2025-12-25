@@ -162,7 +162,7 @@ npm install
 Create a `.env` file in the root directory:
 ```env
 VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY=your_supabase_anon_key
+VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_anon_key
 ```
 
 4. Run the development server:
@@ -223,7 +223,7 @@ This command:
 
 Required environment variables:
 - `VITE_SUPABASE_URL` - Your Supabase project URL
-- `VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY` - Supabase anonymous key
+- `VITE_SUPABASE_PUBLISHABLE_KEY` - Supabase anonymous key
 
 ## Browser Support
 

@@ -3,11 +3,9 @@ export interface Course {
   title: string;
   slug: string;
   description: string;
-  content: string;
   thumbnail: string | null;
   category: string | null;
   level: 'beginner' | 'intermediate' | 'advanced' | null;
-  duration_hours: number;
   technologies: string[];
   featured: boolean;
   published: boolean;
@@ -26,7 +24,6 @@ export interface CourseModule {
   video_url: string | null;
   duration_minutes: number;
   order_index: number;
-  is_free: boolean;
   published: boolean;
   created_at: string;
   updated_at: string;
@@ -53,11 +50,9 @@ export interface CreateCourseInput {
   title: string;
   slug: string;
   description: string;
-  content: string;
   thumbnail?: string;
   category?: string;
   level?: 'beginner' | 'intermediate' | 'advanced';
-  duration_hours?: number;
   technologies?: string[];
   featured?: boolean;
   published?: boolean;
@@ -68,11 +63,9 @@ export interface UpdateCourseInput {
   title?: string;
   slug?: string;
   description?: string;
-  content?: string;
   thumbnail?: string;
   category?: string;
   level?: 'beginner' | 'intermediate' | 'advanced';
-  duration_hours?: number;
   technologies?: string[];
   featured?: boolean;
   published?: boolean;

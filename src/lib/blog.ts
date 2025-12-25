@@ -98,10 +98,14 @@ export async function getPostById(id: string): Promise<BlogPost | null> {
  * Create a new blog post
  */
 export async function createPost(input: CreateBlogPostInput): Promise<BlogPost> {
+  console.log('createPost called with input:', input);
+  
   const postData = {
     ...input,
     published_at: input.published && !input.published_at ? new Date().toISOString() : input.published_at,
   };
+
+  console.log('createPost - postData to insert:', postData);
 
   const { data, error } = await supabase
     .from('blog_posts')
@@ -110,9 +114,11 @@ export async function createPost(input: CreateBlogPostInput): Promise<BlogPost> 
     .single();
 
   if (error) {
+    console.error('createPost - Supabase error:', error);
     throw new Error(`Failed to create blog post: ${error.message}`);
   }
 
+  console.log('createPost - Success, data returned:', data);
   return data as BlogPost;
 }
 
@@ -120,11 +126,15 @@ export async function createPost(input: CreateBlogPostInput): Promise<BlogPost> 
  * Update an existing blog post
  */
 export async function updatePost(id: string, input: UpdateBlogPostInput): Promise<BlogPost> {
+  console.log('updatePost called with id:', id, 'input:', input);
+  
   const updateData = {
     ...input,
     // If publishing for the first time, set published_at
     ...(input.published && !input.published_at ? { published_at: new Date().toISOString() } : {}),
   };
+
+  console.log('updatePost - updateData:', updateData);
 
   const { data, error } = await supabase
     .from('blog_posts')
@@ -134,9 +144,11 @@ export async function updatePost(id: string, input: UpdateBlogPostInput): Promis
     .single();
 
   if (error) {
+    console.error('updatePost - Supabase error:', error);
     throw new Error(`Failed to update blog post: ${error.message}`);
   }
 
+  console.log('updatePost - Success, data returned:', data);
   return data as BlogPost;
 }
 

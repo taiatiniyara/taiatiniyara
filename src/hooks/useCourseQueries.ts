@@ -237,10 +237,16 @@ export function useCourseEnrollmentCount(courseId: string) {
 export function useCreateCourse() {
   const queryClient = useQueryClient();
 
+  console.log('useCreateCourse called', queryClient);
+
   return useMutation({
     mutationFn: (input: CreateCourseInput) => createCourse(input),
     onSuccess: () => {
+      console.log('Course created successfully');
       queryClient.invalidateQueries({ queryKey: courseKeys.courses() });
+    },
+    onError: (error) => {
+      console.error('Error in useCreateCourse mutation:', error);
     },
   });
 }

@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { usePublishedCourses } from "@/hooks/useCourseQueries";
-import { GraduationCap, Clock, BookOpen, Award } from "lucide-react";
+import { GraduationCap, BookOpen, Award } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 
@@ -36,9 +36,14 @@ function CoursesIndex() {
               Learn software development with comprehensive courses
             </p>
           </div>
-          <Link to="/courses/admin">
-            <Button>Admin</Button>
-          </Link>
+          <div className="flex gap-2">
+            <Link to="/courses/admin">
+              <Button variant="outline">Courses Admin</Button>
+            </Link>
+            <Link to="/courses/modules-admin">
+              <Button variant="outline">Modules Admin</Button>
+            </Link>
+          </div>
         </div>
 
         {courses.length === 0 ? (
@@ -72,15 +77,9 @@ function CoursesIndex() {
                   </div>
                   <h3 className="text-xl font-bold mb-2">{course.title}</h3>
                   <p className="text-sm text-slate-600 mb-4">{course.description}</p>
-                  <div className="flex items-center gap-4 text-xs text-slate-500">
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
-                      <span>{course.duration_hours}h</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <BookOpen className="w-4 h-4" />
-                      <span>Course</span>
-                    </div>
+                  <div className="flex items-center gap-2 text-xs text-slate-500">
+                    <BookOpen className="w-4 h-4" />
+                    <span>Online Course</span>
                   </div>
                 </Card>
               </Link>

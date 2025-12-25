@@ -34,123 +34,43 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://taiatiniyara.com/blog/my-journey-as-a-software-developer-in-fiji-2uc2g4</loc>
-    <lastmod>2025-12-24</lastmod>
+    <loc>https://taiatiniyara.com/blog/test</loc>
+    <lastmod>2025-12-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://www.michaelpage.com.au/sites/michaelpage.com.au/files/2022-01/Software%20Developer.jpg</image:loc>
-      <image:title>My Journey as a Software Developer in Fiji</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://taiatiniyara.com/blog/fijis-map-data-challenge-kyi947</loc>
-    <lastmod>2025-12-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://media.istockphoto.com/id/1367976700/vector/fiji-islands-highly-detailed-physical-map.jpg?s=612x612&w=0&k=20&c=sVAqKbzfmvtyM6870nGPRk_MMtLOld4E0v6iZB3-UPs=</image:loc>
-      <image:title>Fiji’s Map Data Challenge</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://taiatiniyara.com/blog/digitizing-the-fiji-court-system-building-justice-for-the-digital-age-3fex3m</loc>
-    <lastmod>2025-12-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://www.fijivillage.com/news_images/2322097055acb1bb0dcb3e6ca488dc.jpg</image:loc>
-      <image:title>Digitizing the Fiji Court System: Building Justice for the Digital Age</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://taiatiniyara.com/blog/why-good-architecture-really-matters-in-cloud-software-6n58al</loc>
-    <lastmod>2025-12-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://bernardmarr.com/img/The%205%20Biggest%20Cloud%20Computing%20Trends%20In%202021.jpg</image:loc>
-      <image:title>Why Good Architecture Really Matters in Cloud Software</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://taiatiniyara.com/blog/why-hakwa-cannot-be-built-like-uber-for-fiji-m0eqdz</loc>
-    <lastmod>2025-12-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cn-geo1.uber.com/image-proc/crop/resizecrop/udam/format=auto/width=672/height=448/srcb64=aHR0cHM6Ly90Yi1zdGF0aWMudWJlci5jb20vcHJvZC91ZGFtLWFzc2V0cy9hM2NmODU2NC1lMmE2LTQxOGMtYjliMC02NWRkMjg1YzEwMGIuanBn</image:loc>
-      <image:title>Why Hakwa Cannot Be Built Like Uber for Fiji</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://taiatiniyara.com/blog/who-am-i-blog-v17xjm</loc>
-    <lastmod>2025-12-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://scontent.fsuv1-1.fna.fbcdn.net/v/t39.30808-6/571142839_825327696658543_3457244095849651116_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=f727a1&_nc_ohc=RzOTzcrK3KMQ7kNvwFhSew2&_nc_oc=Adn2JYMolmjZ3rvhUCGHqBo-msR6JT5WDKvokTOUBE3Iep7XL4O_7GnAtlTf4AtPz1lo0LcxpInl8p43wnjeF_u6&_nc_zt=23&_nc_ht=scontent.fsuv1-1.fna&_nc_gid=NB1Jx4i19HIkuI5pFz_WDA&oh=00_AfkUVrNyfrdasjfbYKwvh06JyH7xqQPKan8Z49IXMBVUXA&oe=6948199E</image:loc>
-      <image:title>Who is Taia the Software Developer?</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://taiatiniyara.com/blog/why-i-love-typescript-2c367y</loc>
-    <lastmod>2025-12-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cdn.thenewstack.io/media/2022/01/10b88c68-typescript-logo.png</image:loc>
-      <image:title>Why I Love TypeScript</image:title>
+      <image:loc>https://www.oxfordwebstudio.com/user/pages/06.da-li-znate/sta-je-html/sta-je-html.jpg</image:loc>
+      <image:title>Test</image:title>
     </image:image>
   </url>
   <url>
     <loc>https://taiatiniyara.com/projects/hakwa</loc>
-    <lastmod>2025-12-24</lastmod>
+    <lastmod>2025-12-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://www.quytech.com/blog/wp-content/uploads/2019/12/rideshring-app-development-scaled.jpg</image:loc>
-      <image:title>Hakwa</image:title>
-    </image:image>
   </url>
   <url>
     <loc>https://taiatiniyara.com/projects/totolaw</loc>
-    <lastmod>2025-12-18</lastmod>
+    <lastmod>2025-12-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://judiciary.gov.fj/wp-content/uploads/2020/08/Judiciary-slider.jpg</image:loc>
-      <image:title>Totolaw</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://taiatiniyara.com/projects/niucut</loc>
-    <lastmod>2025-12-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://images.fijisun.com.fj/media/e2181200-bbf4-4214-955a-924d87f385af</image:loc>
-      <image:title>Niucut</image:title>
-    </image:image>
   </url>
   <url>
     <loc>https://taiatiniyara.com/projects/pacific-power-association-performance-benchmarking</loc>
-    <lastmod>2025-12-18</lastmod>
+    <lastmod>2025-12-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://www.ppa.org.fj/wp-content/uploads/2023/08/PPA-Staff-Photo-Aug-2023-e1690858627392.jpg</image:loc>
-      <image:title>Pacific Power Association Performance Benchmarking</image:title>
-    </image:image>
   </url>
   <url>
     <loc>https://taiatiniyara.com/projects/samoa-tourism-product-database</loc>
-    <lastmod>2025-12-18</lastmod>
+    <lastmod>2025-12-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://www.samoa.travel/Content/SiteResources/PAGE/490/1c683367-7009-4ece-8d78-c1ada0939c3e/9-to-sua.jpg</image:loc>
-      <image:title>Samoa Tourism Product Database</image:title>
-    </image:image>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/projects/niucut</loc>
+    <lastmod>2025-12-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
 </urlset>

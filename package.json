@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "generate-sitemap": "node scripts/generate-sitemap.mjs",
+    "seed-admin": "node scripts/seed-admin.mjs",
     "predeploy": "npm run generate-sitemap",
     "deploy": "node scripts/generate-sitemap.mjs && tsc -b && vite build && firebase deploy && git add . && git commit -m 'deploy' && git push"
   },

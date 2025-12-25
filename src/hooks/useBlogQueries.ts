@@ -122,11 +122,18 @@ export function useCreatePost() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (input: CreateBlogPostInput) => createPost(input),
-    onSuccess: () => {
+    mutationFn: (input: CreateBlogPostInput) => {
+      console.log('useCreatePost mutationFn called with:', input);
+      return createPost(input);
+    },
+    onSuccess: (data) => {
+      console.log('Blog post created successfully:', data);
       // Invalidate all post lists to refetch
       queryClient.invalidateQueries({ queryKey: blogKeys.posts() });
       queryClient.invalidateQueries({ queryKey: blogKeys.tags() });
+    },
+    onError: (error) => {
+      console.error('Error in useCreatePost mutation:', error);
     },
   });
 }
@@ -138,14 +145,20 @@ export function useUpdatePost() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, input }: { id: string; input: UpdateBlogPostInput }) => 
-      updatePost(id, input),
+    mutationFn: ({ id, input }: { id: string; input: UpdateBlogPostInput }) => {
+      console.log('useUpdatePost mutationFn called with:', id, input);
+      return updatePost(id, input);
+    },
     onSuccess: (data) => {
+      console.log('Blog post updated successfully:', data);
       // Invalidate all post lists and the specific post
       queryClient.invalidateQueries({ queryKey: blogKeys.posts() });
       queryClient.invalidateQueries({ queryKey: blogKeys.post(data.slug) });
       queryClient.invalidateQueries({ queryKey: blogKeys.postById(data.id) });
       queryClient.invalidateQueries({ queryKey: blogKeys.tags() });
+    },
+    onError: (error) => {
+      console.error('Error in useUpdatePost mutation:', error);
     },
   });
 }
