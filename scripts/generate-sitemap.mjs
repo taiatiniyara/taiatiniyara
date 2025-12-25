@@ -24,7 +24,7 @@ function loadEnvFile() {
     console.error('❌ .env.local file not found!');
     console.log('💡 Please create .env.local with:');
     console.log('   VITE_SUPABASE_URL=your-supabase-url');
-    console.log('   VITE_SUPABASE_PUBLISHABLE_KEY=your-supabase-key');
+    console.log('   VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY=your-supabase-key');
     process.exit(1);
   }
   
@@ -46,7 +46,7 @@ function loadEnvFile() {
 
 const env = loadEnvFile();
 const SUPABASE_URL = env.VITE_SUPABASE_URL;
-const SUPABASE_ANON_KEY = env.VITE_SUPABASE_PUBLISHABLE_KEY;
+const SUPABASE_ANON_KEY = env.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY;
 const BASE_URL = 'https://taiatiniyara.com';
 
 if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {

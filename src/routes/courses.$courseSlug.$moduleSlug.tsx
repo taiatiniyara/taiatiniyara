@@ -25,7 +25,7 @@ export const Route = createFileRoute("/courses/$courseSlug/$moduleSlug")({
 function ModuleLearning() {
   const { courseSlug, moduleSlug } = Route.useParams();
   const navigate = useNavigate();
-  const { data: course, isLoading, error } = useCourse(courseSlug);
+  const { data: course, isPending, isError } = useCourse(courseSlug);
   const { user, isAuthenticated } = useUser();
   const [showSidebar, setShowSidebar] = useState(true);
   const [completedModules, setCompletedModules] = useState<Set<string>>(
@@ -61,11 +61,11 @@ function ModuleLearning() {
     }
   }, [isAuthenticated, course, courseSlug, navigate]);
 
-  if (isLoading) {
+  if (isPending) {
     return <LoadingSpinner />;
   }
 
-  if (error || !course) {
+  if (isError || !course) {
     return (
       <div className="container mx-auto px-4 py-16 max-w-4xl">
         <Card className="p-8 text-center">

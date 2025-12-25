@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, STALE_TIME, queryCache } from '@/lib/supabase-query';
 import {
   getPublishedPosts,
   getAllPosts,
@@ -11,7 +11,7 @@ import {
   getPostsByTag,
   searchPosts,
 } from '@/lib/blog';
-import type { CreateBlogPostInput, UpdateBlogPostInput } from '@/types/blog';
+import type { UpdateBlogPostInput } from '@/types/blog';
 
 // Query Keys
 export const blogKeys = {
@@ -35,146 +35,121 @@ export const blogKeys = {
 /**
  * Hook to fetch published blog posts with pagination
  */
-export function usePublishedPosts(page = 1, pageSize = 10) {
+export const usePublishedPosts = (page = 1, pageSize = 10) => {
   return useQuery({
     queryKey: blogKeys.publishedPosts(page, pageSize),
     queryFn: () => getPublishedPosts(page, pageSize),
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: STALE_TIME.MEDIUM,
   });
-}
+};
 
 /**
  * Hook to fetch all blog posts (including drafts) with pagination
  */
-export function useAllPosts(page = 1, pageSize = 10) {
+export const useAllPosts = (page = 1, pageSize = 10) => {
   return useQuery({
     queryKey: blogKeys.allPosts(page, pageSize),
     queryFn: () => getAllPosts(page, pageSize),
-    staleTime: 2 * 60 * 1000, // 2 minutes
+    staleTime: STALE_TIME.SHORT,
   });
-}
+};
 
 /**
  * Hook to fetch a single blog post by slug
  */
-export function usePostBySlug(slug: string) {
+export const usePostBySlug = (slug: string) => {
   return useQuery({
     queryKey: blogKeys.post(slug),
     queryFn: () => getPostBySlug(slug),
+    staleTime: STALE_TIME.MEDIUM,
     enabled: !!slug,
-    staleTime: 5 * 60 * 1000, // 5 minutes
   });
-}
+};
 
 /**
  * Hook to fetch a single blog post by ID
  */
-export function usePostById(id: string) {
+export const usePostById = (id: string) => {
   return useQuery({
     queryKey: blogKeys.postById(id),
     queryFn: () => getPostById(id),
+    staleTime: STALE_TIME.MEDIUM,
     enabled: !!id,
-    staleTime: 5 * 60 * 1000, // 5 minutes
   });
-}
+};
 
 /**
  * Hook to fetch all tags
  */
-export function useAllTags() {
+export const useAllTags = () => {
   return useQuery({
     queryKey: blogKeys.tags(),
     queryFn: getAllTags,
-    staleTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: STALE_TIME.LONG,
   });
-}
+};
 
 /**
  * Hook to fetch posts by tag
  */
-export function usePostsByTag(tag: string | null, page = 1, pageSize = 10) {
+export const usePostsByTag = (tag: string, page = 1, pageSize = 10) => {
   return useQuery({
-    queryKey: blogKeys.postsByTag(tag || '', page, pageSize),
-    queryFn: () => getPostsByTag(tag!, page, pageSize),
+    queryKey: blogKeys.postsByTag(tag, page, pageSize),
+    queryFn: () => getPostsByTag(tag, page, pageSize),
+    staleTime: STALE_TIME.MEDIUM,
     enabled: !!tag,
-    staleTime: 5 * 60 * 1000, // 5 minutes
   });
-}
+};
 
 /**
  * Hook to search posts
  */
-export function useSearchPosts(query: string, page = 1, pageSize = 10) {
+export const useSearchPosts = (query: string, page = 1, pageSize = 10) => {
   return useQuery({
     queryKey: blogKeys.search(query, page, pageSize),
     queryFn: () => searchPosts(query, page, pageSize),
+    staleTime: STALE_TIME.MEDIUM,
     enabled: !!query && query.length > 0,
-    staleTime: 5 * 60 * 1000, // 5 minutes
   });
-}
+};
 
 // Mutation Hooks
 
 /**
  * Hook to create a new blog post
  */
-export function useCreatePost() {
-  const queryClient = useQueryClient();
-
+export const useCreatePost = () => {
   return useMutation({
-    mutationFn: (input: CreateBlogPostInput) => {
-      console.log('useCreatePost mutationFn called with:', input);
-      return createPost(input);
+    mutationFn: createPost,
+    onSuccess: () => {
+      queryCache.invalidate('blog');
     },
-    onSuccess: (data) => {
-      console.log('Blog post created successfully:', data);
-      // Invalidate all post lists to refetch
-      queryClient.invalidateQueries({ queryKey: blogKeys.posts() });
-      queryClient.invalidateQueries({ queryKey: blogKeys.tags() });
-    },
-    onError: (error) => {
-      console.error('Error in useCreatePost mutation:', error);
-    },
+    invalidateKeys: [blogKeys.posts(), blogKeys.tags()],
   });
-}
+};
 
 /**
  * Hook to update a blog post
  */
-export function useUpdatePost() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({ id, input }: { id: string; input: UpdateBlogPostInput }) => {
-      console.log('useUpdatePost mutationFn called with:', id, input);
-      return updatePost(id, input);
+export const useUpdatePost = () => {
+  return useMutation<any, { id: string; input: UpdateBlogPostInput }>({
+    mutationFn: ({ id, input }) => updatePost(id, input),
+    onSuccess: () => {
+      queryCache.invalidate('blog');
     },
-    onSuccess: (data) => {
-      console.log('Blog post updated successfully:', data);
-      // Invalidate all post lists and the specific post
-      queryClient.invalidateQueries({ queryKey: blogKeys.posts() });
-      queryClient.invalidateQueries({ queryKey: blogKeys.post(data.slug) });
-      queryClient.invalidateQueries({ queryKey: blogKeys.postById(data.id) });
-      queryClient.invalidateQueries({ queryKey: blogKeys.tags() });
-    },
-    onError: (error) => {
-      console.error('Error in useUpdatePost mutation:', error);
-    },
+    invalidateKeys: [blogKeys.posts(), blogKeys.tags()],
   });
-}
+};
 
 /**
  * Hook to delete a blog post
  */
-export function useDeletePost() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (id: string) => deletePost(id),
+export const useDeletePost = () => {
+  return useMutation<void, string>({
+    mutationFn: deletePost,
     onSuccess: () => {
-      // Invalidate all post lists
-      queryClient.invalidateQueries({ queryKey: blogKeys.posts() });
-      queryClient.invalidateQueries({ queryKey: blogKeys.tags() });
+      queryCache.invalidate('blog');
     },
+    invalidateKeys: [blogKeys.posts(), blogKeys.tags()],
   });
-}
+};

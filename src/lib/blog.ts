@@ -98,35 +98,64 @@ export async function getPostById(id: string): Promise<BlogPost | null> {
  * Create a new blog post
  */
 export async function createPost(input: CreateBlogPostInput): Promise<BlogPost> {
-  console.log('createPost called with input:', input);
+  const requestStartTime = Date.now();
+  console.log('createPost called');
+  console.log('Content length:', input.content.length, 'characters');
+  console.log('Approximate payload size:', new Blob([JSON.stringify(input)]).size, 'bytes');
+  
+  // Check Supabase connection and auth
+  console.log('Checking Supabase connection...');
+  const { data: { session } } = await supabase.auth.getSession();
+  console.log('Current session:', session ? 'Authenticated' : 'No session (public access)');
   
   const postData = {
     ...input,
     published_at: input.published && !input.published_at ? new Date().toISOString() : input.published_at,
   };
 
-  console.log('createPost - postData to insert:', postData);
+  console.log('Sending INSERT request to Supabase blog_posts table...');
+  const insertStartTime = Date.now();
 
-  const { data, error } = await supabase
-    .from('blog_posts')
-    .insert(postData)
-    .select()
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .insert(postData)
+      .select()
+      .single();
 
-  if (error) {
-    console.error('createPost - Supabase error:', error);
-    throw new Error(`Failed to create blog post: ${error.message}`);
+    const insertDuration = Date.now() - insertStartTime;
+    const totalDuration = Date.now() - requestStartTime;
+    console.log('Supabase INSERT completed in', insertDuration, 'ms (total:', totalDuration, 'ms)');
+
+    if (error) {
+      console.error('createPost - Supabase error:', error);
+      console.error('Error code:', error.code);
+      console.error('Error details:', error.details);
+      console.error('Error hint:', error.hint);
+      throw new Error(`Failed to create blog post: ${error.message}`);
+    }
+
+    if (!data) {
+      throw new Error('No data returned from Supabase');
+    }
+
+    console.log('createPost - Success, post ID:', data?.id);
+    return data as BlogPost;
+  } catch (error) {
+    const duration = Date.now() - requestStartTime;
+    console.error('createPost - Exception after', duration, 'ms');
+    console.error('Exception type:', error instanceof Error ? error.constructor.name : typeof error);
+    console.error('Exception details:', error);
+    throw error;
   }
-
-  console.log('createPost - Success, data returned:', data);
-  return data as BlogPost;
 }
 
 /**
  * Update an existing blog post
  */
 export async function updatePost(id: string, input: UpdateBlogPostInput): Promise<BlogPost> {
-  console.log('updatePost called with id:', id, 'input:', input);
+  console.log('updatePost called with id:', id);
+  console.log('Content length:', input.content?.length || 0, 'characters');
   
   const updateData = {
     ...input,
@@ -134,22 +163,27 @@ export async function updatePost(id: string, input: UpdateBlogPostInput): Promis
     ...(input.published && !input.published_at ? { published_at: new Date().toISOString() } : {}),
   };
 
-  console.log('updatePost - updateData:', updateData);
+  console.log('updatePost - updating post (content truncated)');
 
-  const { data, error } = await supabase
-    .from('blog_posts')
-    .update(updateData)
-    .eq('id', id)
-    .select()
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .update(updateData)
+      .eq('id', id)
+      .select()
+      .single();
 
-  if (error) {
-    console.error('updatePost - Supabase error:', error);
-    throw new Error(`Failed to update blog post: ${error.message}`);
+    if (error) {
+      console.error('updatePost - Supabase error:', error);
+      throw new Error(`Failed to update blog post: ${error.message}`);
+    }
+
+    console.log('updatePost - Success, data returned:', data?.id);
+    return data as BlogPost;
+  } catch (error) {
+    console.error('updatePost - Caught exception:', error);
+    throw error;
   }
-
-  console.log('updatePost - Success, data returned:', data);
-  return data as BlogPost;
 }
 
 /**

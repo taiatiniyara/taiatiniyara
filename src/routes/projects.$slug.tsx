@@ -14,13 +14,13 @@ export const Route = createFileRoute("/projects/$slug")({
 function ProjectDetail() {
   const { slug } = Route.useParams();
   const navigate = useNavigate();
-  const { data: project, isLoading, error } = useProjectBySlug(slug);
+  const { data: project, isPending, isError } = useProjectBySlug(slug);
 
-  if (isLoading) {
+  if (isPending) {
     return <LoadingSpinner />;
   }
 
-  if (error || !project) {
+  if (isError || !project) {
     return (
       <div className="container mx-auto px-4 py-16 max-w-4xl">
         <Card className="p-8 text-center">

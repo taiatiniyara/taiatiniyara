@@ -26,7 +26,6 @@ export default defineConfig({
         manualChunks: {
           'react-vendor': ['react', 'react-dom'],
           'router': ['@tanstack/react-router'],
-          'query': ['@tanstack/react-query'],
           'supabase': ['@supabase/supabase-js'],
           'ui': ['lucide-react', 'react-spinners'],
           'editor': ['@tiptap/react', '@tiptap/starter-kit'],

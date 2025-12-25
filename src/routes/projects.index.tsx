@@ -15,11 +15,25 @@ export const Route = createFileRoute("/projects/")({
 });
 
 function ProjectsIndex() {
-  const { data, isLoading } = usePublishedProjects(1, 100);
+  const { data, isPending, isError, error } = usePublishedProjects(1, 100);
   const projects = data?.projects || [];
 
-  if (isLoading) {
+  if (isPending) {
     return <LoadingSpinner />;
+  }
+
+  if (isError) {
+    return (
+      <div className="container mx-auto px-4 py-16">
+        <Card className="p-8 text-center">
+          <h1 className="text-2xl font-bold mb-4">Error Loading Projects</h1>
+          <p className="text-gray-600 mb-6">
+            {error instanceof Error ? error.message : 'Failed to load projects'}
+          </p>
+          <Button onClick={() => window.location.reload()}>Reload Page</Button>
+        </Card>
+      </div>
+    );
   }
 
   return (

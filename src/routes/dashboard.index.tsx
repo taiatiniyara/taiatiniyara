@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { useUser } from "@/hooks/useUser";
 import { SEO } from "@/components/SEO";
 import { BookOpen, Award, LogOut, TrendingUp } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from "@/lib/supabase-query";
 
 export const Route = createFileRoute("/dashboard/")({
   component: Dashboard,

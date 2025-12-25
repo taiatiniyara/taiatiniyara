@@ -14,13 +14,11 @@ import {
 import type { Project, CreateProjectInput } from "@/types/project";
 import { RichTextEditor } from "@/components/RichTextEditor";
 import { useAlertDialog } from "@/components/AlertDialogProvider";
-import { AdminLayout } from "@/components/AdminLayout";
 import { AdminListItem } from "@/components/AdminListItem";
 import { TagInput } from "@/components/TagInput";
 import { generateSlug } from "@/lib/admin-utils";
 import { AdminRoute } from "@/components/ProtectedRoute";
-
-const adminKey = import.meta.env.VITE_BLOG_KEY;
+import { ClipLoader } from "react-spinners";
 
 export const Route = createFileRoute("/projects/admin")({
   component: ProjectsAdmin,
@@ -33,7 +31,7 @@ function ProjectsAdmin() {
   const [isCreating, setIsCreating] = useState(false);
 
   // Fetch all projects (including drafts)
-  const { data: projectsData, isLoading: loading } = useAllProjects(1, 100);
+  const { data: projectsData, isPending: loading } = useAllProjects(1, 100);
   const projects = projectsData?.projects || [];
 
   // Mutations
@@ -145,18 +143,28 @@ function ProjectsAdmin() {
 
   return (
     <AdminRoute>
-      <AdminLayout
-        title="Projects Administration"
-        viewPath="/projects"
-        viewLabel="View Projects"
-        isLoading={loading}
-        adminKey={adminKey}
-        storageKey="projects_admin_key"
-        onCreateNew={() => setIsCreating(true)}
-        showCreateButton={!isCreating}
-      >
+      <div className="container mx-auto px-4 py-16 max-w-6xl">
+        {/* Loading state */}
+        {loading ? (
+          <div className="flex justify-center items-center min-h-100">
+            <ClipLoader color="#3b82f6" size={50} />
+          </div>
+        ) : (
+          <>
+            {/* Header */}
+            <div className="flex justify-between items-center mb-8">
+              <h1 className="text-4xl font-bold">Projects Administration</h1>
+              <div className="flex gap-4">
+                <Button onClick={() => navigate({ to: "/projects" })} variant="outline">
+                  View Projects
+                </Button>
+                {!isCreating && (
+                  <Button onClick={() => setIsCreating(true)}>Create New</Button>
+                )}
+              </div>
+            </div>
 
-      {isCreating ? (
+            {isCreating ? (
         <Card className="p-6 mb-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="flex justify-between items-center mb-4">
@@ -318,7 +326,9 @@ function ProjectsAdmin() {
           ))
         )}
       </div>
-    </AdminLayout>
+          </>
+        )}
+      </div>
     </AdminRoute>
   );
 }

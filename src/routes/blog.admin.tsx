@@ -14,13 +14,11 @@ import {
 import type { BlogPost, CreateBlogPostInput } from "@/types/blog";
 import { RichTextEditor } from "@/components/RichTextEditor";
 import { useAlertDialog } from "@/components/AlertDialogProvider";
-import { AdminLayout } from "@/components/AdminLayout";
 import { AdminListItem } from "@/components/AdminListItem";
 import { TagInput } from "@/components/TagInput";
 import { generateSlug } from "@/lib/admin-utils";
 import { AdminRoute } from "@/components/ProtectedRoute";
-
-const blogKey = import.meta.env.VITE_BLOG_KEY;
+import { ClipLoader } from "react-spinners";
 
 export const Route = createFileRoute("/blog/admin")({
   component: BlogAdmin,
@@ -33,7 +31,7 @@ function BlogAdmin() {
   const [isCreating, setIsCreating] = useState(false);
 
   // Fetch all posts (including drafts)
-  const { data: postsData, isLoading: loading } = useAllPosts(1, 100);
+  const { data: postsData, isPending: loading } = useAllPosts(1, 100);
   const posts = postsData?.posts || [];
 
   // Mutations
@@ -92,8 +90,17 @@ function BlogAdmin() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log('=== Blog Admin handleSubmit called ===');
-    console.log('Form values:', { title, slug, content: content.substring(0, 50) + '...', excerpt, featuredImage, tags, published });
+    const startTime = Date.now();
+    console.log('=== Blog Admin handleSubmit called ===', new Date().toISOString());
+    console.log('Form values:', { 
+      title, 
+      slug, 
+      contentLength: content.length,
+      excerpt, 
+      featuredImage, 
+      tags, 
+      published 
+    });
 
     const postData: CreateBlogPostInput = {
       title,
@@ -105,27 +112,52 @@ function BlogAdmin() {
       published,
     };
 
-    console.log('postData prepared:', postData);
+    console.log('postData prepared - content size:', content.length, 'bytes');
 
     try {
-      console.log('About to call mutation...');
+      console.log('About to call mutation at', Date.now() - startTime, 'ms');
+      
       if (editingPost) {
         console.log('Updating existing post:', editingPost.id);
-        const result = await updatePostMutation.mutateAsync({
+        await updatePostMutation.mutateAsync({
           id: editingPost.id,
           input: postData,
         });
-        console.log('Update result:', result);
+        console.log('Update completed at', Date.now() - startTime, 'ms');
       } else {
         console.log('Creating new post');
-        const result = await createPostMutation.mutateAsync(postData);
-        console.log('Create result:', result);
+        await createPostMutation.mutateAsync(postData);
+        console.log('Create completed at', Date.now() - startTime, 'ms');
       }
-      console.log('Mutation completed successfully, resetting form');
+      
+      console.log('Total time:', Date.now() - startTime, 'ms');
+      console.log('Resetting form...');
       resetForm();
+      console.log('Form reset complete');
+      showAlert("Success", editingPost ? "Post updated successfully!" : "Post created successfully!");
     } catch (err) {
-      console.error('=== handleSubmit caught error ===', err);
-      showAlert("Error", err instanceof Error ? err.message : "Failed to save post");
+      const totalTime = Date.now() - startTime;
+      console.error('=== handleSubmit caught error after', totalTime, 'ms ===');
+      console.error('Error details:', err);
+      console.error('Error type:', typeof err);
+      console.error('Error instance:', err instanceof Error);
+      console.error('Mutation states:', {
+        createPending: createPostMutation.isPending,
+        updatePending: updatePostMutation.isPending,
+        createError: createPostMutation.error,
+        updateError: updatePostMutation.error,
+      });
+      
+      // Check for duplicate slug error (409 Conflict)
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      if (errorMessage.includes('duplicate') || errorMessage.includes('unique') || errorMessage.includes('23505')) {
+        showAlert(
+          "Duplicate Slug Error", 
+          `A post with the slug "${slug}" already exists. Please use a different title or manually edit the slug.`
+        );
+      } else {
+        showAlert("Error", errorMessage || "Failed to save post");
+      }
     }
   };
 
@@ -145,18 +177,28 @@ function BlogAdmin() {
 
   return (
     <AdminRoute>
-      <AdminLayout
-        title="Blog Administration"
-        viewPath="/blog"
-        viewLabel="View Blog"
-        isLoading={loading}
-        adminKey={blogKey}
-        storageKey="blog_admin_key"
-        onCreateNew={() => setIsCreating(true)}
-        showCreateButton={!isCreating}
-      >
+      <div className="container mx-auto px-4 py-16 max-w-6xl">
+        {/* Loading state */}
+        {loading ? (
+          <div className="flex justify-center items-center min-h-100">
+            <ClipLoader color="#3b82f6" size={50} />
+          </div>
+        ) : (
+          <>
+            {/* Header */}
+            <div className="flex justify-between items-center mb-8">
+              <h1 className="text-4xl font-bold">Blog Administration</h1>
+              <div className="flex gap-4">
+                <Button onClick={() => navigate({ to: "/blog" })} variant="outline">
+                  View Blog
+                </Button>
+                {!isCreating && (
+                  <Button onClick={() => setIsCreating(true)}>Create New</Button>
+                )}
+              </div>
+            </div>
 
-      {isCreating ? (
+            {isCreating ? (
         <Card className="p-6 mb-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="flex justify-between items-center mb-4">
@@ -284,7 +326,9 @@ function BlogAdmin() {
           ))
         )}
       </div>
-    </AdminLayout>
+          </>
+        )}
+      </div>
     </AdminRoute>
   );
 }

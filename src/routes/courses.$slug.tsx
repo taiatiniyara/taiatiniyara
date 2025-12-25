@@ -26,23 +26,23 @@ function CourseDetail() {
   const { slug } = Route.useParams();
   const navigate = useNavigate();
   const { showAlert } = useAlertDialog();
-  const { data: course, isLoading, error } = useCourse(slug);
+  const { data: course, isPending, isError } = useCourse(slug);
   const { user, isAuthenticated } = useAuth();
   const enrollMutation = useEnrollInCourse();
   const [showAuthModal, setShowAuthModal] = useState(false);
   
   // Check if user is enrolled
-  const { data: enrollment } = useEnrollment(
-    course?.id || '',
-    user?.id || '',
-  );
+  const { data: enrollment } = useEnrollment({
+    courseId: course?.id || '',
+    userId: user?.id || '',
+  });
   const userEnrolled = !!enrollment;
 
-  if (isLoading) {
+  if (isPending) {
     return <LoadingSpinner />;
   }
 
-  if (error || !course) {
+  if (isError || !course) {
     return (
       <div className="container mx-auto px-4 py-16 max-w-4xl">
         <Card className="p-8 text-center">

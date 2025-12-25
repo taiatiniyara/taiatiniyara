@@ -14,7 +14,7 @@ function BlogPostPage() {
   const { slug } = Route.useParams();
   const navigate = useNavigate();
   
-  const { data: post, isLoading: loading, error: queryError } = usePostBySlug(slug);
+  const { data: post, isPending: loading, error: queryError } = usePostBySlug(slug);
   const { data: postsData } = usePublishedPosts(1, 10);
 
   // Check if post is not found or not published

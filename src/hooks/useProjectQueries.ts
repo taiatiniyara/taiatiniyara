@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, STALE_TIME, queryCache } from '@/lib/supabase-query';
 import {
   getPublishedProjects,
   getAllProjects,
@@ -10,7 +10,7 @@ import {
   deleteProject,
   searchProjects,
 } from '@/lib/project';
-import type { CreateProjectInput, UpdateProjectInput } from '@/types/project';
+import type { UpdateProjectInput } from '@/types/project';
 
 // Query Keys
 export const projectKeys = {
@@ -32,131 +32,109 @@ export const projectKeys = {
 /**
  * Hook to fetch published projects with pagination
  */
-export function usePublishedProjects(page = 1, pageSize = 10) {
+export const usePublishedProjects = (page = 1, pageSize = 10) => {
   return useQuery({
     queryKey: projectKeys.publishedProjects(page, pageSize),
     queryFn: () => getPublishedProjects(page, pageSize),
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: STALE_TIME.MEDIUM,
   });
-}
+};
 
 /**
  * Hook to fetch all projects (including drafts) with pagination
  */
-export function useAllProjects(page = 1, pageSize = 10) {
+export const useAllProjects = (page = 1, pageSize = 10) => {
   return useQuery({
     queryKey: projectKeys.allProjects(page, pageSize),
     queryFn: () => getAllProjects(page, pageSize),
-    staleTime: 2 * 60 * 1000, // 2 minutes
+    staleTime: STALE_TIME.SHORT,
   });
-}
+};
 
 /**
  * Hook to fetch featured projects
  */
-export function useFeaturedProjects() {
+export const useFeaturedProjects = () => {
   return useQuery({
     queryKey: projectKeys.featuredProjects(),
     queryFn: getFeaturedProjects,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: STALE_TIME.MEDIUM,
   });
-}
+};
 
 /**
  * Hook to fetch a single project by slug
  */
-export function useProjectBySlug(slug: string) {
+export const useProjectBySlug = (slug: string) => {
   return useQuery({
     queryKey: projectKeys.project(slug),
     queryFn: () => getProjectBySlug(slug),
+    staleTime: STALE_TIME.MEDIUM,
     enabled: !!slug,
-    staleTime: 5 * 60 * 1000, // 5 minutes
   });
-}
+};
 
 /**
  * Hook to fetch a single project by ID
  */
-export function useProjectById(id: string) {
+export const useProjectById = (id: string) => {
   return useQuery({
     queryKey: projectKeys.projectById(id),
     queryFn: () => getProjectById(id),
+    staleTime: STALE_TIME.MEDIUM,
     enabled: !!id,
-    staleTime: 5 * 60 * 1000, // 5 minutes
   });
-}
+};
 
 /**
  * Hook to search projects
  */
-export function useSearchProjects(query: string | null, page = 1, pageSize = 10) {
+export const useSearchProjects = (query: string, page = 1, pageSize = 10) => {
   return useQuery({
-    queryKey: projectKeys.search(query || '', page, pageSize),
-    queryFn: () => searchProjects(query!, page, pageSize),
-    enabled: !!query,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    queryKey: projectKeys.search(query, page, pageSize),
+    queryFn: () => searchProjects(query, page, pageSize),
+    staleTime: STALE_TIME.MEDIUM,
+    enabled: !!query && query.length > 0,
   });
-}
+};
 
 // Mutation Hooks
 
 /**
  * Hook to create a new project
  */
-export function useCreateProject() {
-  const queryClient = useQueryClient();
-
+export const useCreateProject = () => {
   return useMutation({
-    mutationFn: (input: CreateProjectInput) => {
-      console.log('useCreateProject mutationFn called with:', input);
-      return createProject(input);
+    mutationFn: createProject,
+    onSuccess: () => {
+      queryCache.invalidate('project');
     },
-    onSuccess: (data) => {
-      console.log('Project created successfully:', data);
-      // Invalidate and refetch project queries
-      queryClient.invalidateQueries({ queryKey: projectKeys.projects() });
-    },
-    onError: (error) => {
-      console.error('Error in useCreateProject mutation:', error);
-    },
+    invalidateKeys: [projectKeys.projects()],
   });
-}
+};
 
 /**
  * Hook to update an existing project
  */
-export function useUpdateProject() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({ id, input }: { id: string; input: UpdateProjectInput }) => {
-      console.log('useUpdateProject mutationFn called with:', id, input);
-      return updateProject(id, input);
+export const useUpdateProject = () => {
+  return useMutation<any, { id: string; input: UpdateProjectInput }>({
+    mutationFn: ({ id, input }) => updateProject(id, input),
+    onSuccess: () => {
+      queryCache.invalidate('project');
     },
-    onSuccess: (data) => {
-      console.log('Project updated successfully:', data);
-      // Invalidate related queries
-      queryClient.invalidateQueries({ queryKey: projectKeys.projects() });
-      queryClient.invalidateQueries({ queryKey: projectKeys.project(data.slug) });
-      queryClient.invalidateQueries({ queryKey: projectKeys.projectById(data.id) });
-    },
-    onError: (error) => {
-      console.error('Error in useUpdateProject mutation:', error);
-    },
+    invalidateKeys: [projectKeys.projects()],
   });
-}
+};
 
 /**
  * Hook to delete a project
  */
-export function useDeleteProject() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (id: string) => deleteProject(id),
+export const useDeleteProject = () => {
+  return useMutation<void, string>({
+    mutationFn: deleteProject,
     onSuccess: () => {
-      // Invalidate project list queries
-      queryClient.invalidateQueries({ queryKey: projectKeys.projects() });
+      queryCache.invalidate('project');
     },
+    invalidateKeys: [projectKeys.projects()],
   });
-}
+};

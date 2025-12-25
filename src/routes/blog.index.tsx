@@ -26,7 +26,7 @@ function BlogIndex() {
   // Fetch posts based on selected tag or all published posts
   const {
     data: postsData,
-    isLoading: postsLoading,
+    isPending: postsLoading,
     error: postsError,
   } = selectedTag
     ? usePostsByTag(selectedTag, currentPage, 10)

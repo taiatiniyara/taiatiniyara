@@ -30,7 +30,7 @@ function CoursesAdmin() {
   const [isCreating, setIsCreating] = useState(false);
 
   // Fetch all courses (including drafts)
-  const { data: coursesData, isLoading: loading } = useAllCourses(1, 100);
+  const { data: coursesData, isPending: loading } = useAllCourses(1, 100);
   const courses = coursesData?.courses || [];
 
   // Mutations

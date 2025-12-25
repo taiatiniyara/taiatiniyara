@@ -1,11 +1,24 @@
 import { createClient } from "@supabase/supabase-js";
 
 const url = import.meta.env.VITE_SUPABASE_URL;
-const publishableKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+const publishableKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY;
 
 if (!url || !publishableKey) {
   throw new Error("Missing Supabase environment variables");
 }
 
-// Supabase client - uses Row Level Security policies for access control
-export const supabase = createClient(url, publishableKey);
+// Supabase client with extended timeout for large operations
+export const supabase = createClient(url, publishableKey, {
+  db: {
+    schema: 'public',
+  },
+  global: {
+    headers: {
+      'x-client-info': 'taiatiniyara-web',
+    },
+  },
+  // Increase timeout for large content operations
+  auth: {
+    persistSession: true,
+  },
+});

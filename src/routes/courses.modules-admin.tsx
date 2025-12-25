@@ -33,11 +33,11 @@ function ModulesAdmin() {
   const [editingModule, setEditingModule] = useState<CourseModule | null>(null);
 
   // Fetch all courses
-  const { data: coursesData, isLoading: loadingCourses } = useAllCourses(1, 100);
+  const { data: coursesData, isPending: loadingCourses } = useAllCourses(1, 100);
   const courses = coursesData?.courses || [];
 
   // Fetch modules for selected course
-  const { data: modules = [], isLoading: modulesLoading } = useModulesByCourse(selectedCourse?.id || "");
+  const { data: modules = [], isPending: modulesLoading } = useModulesByCourse(selectedCourse?.id || "");
 
   // Mutations
   const createModuleMutation = useCreateModule();
