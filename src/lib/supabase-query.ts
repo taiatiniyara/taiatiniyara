@@ -108,9 +108,9 @@ const globalCache = new QueryCache();
 // ==================== STALE TIME CONSTANTS ====================
 
 export const STALE_TIME = {
-  SHORT: 30 * 1000,      // 30 seconds
-  MEDIUM: 5 * 60 * 1000,  // 5 minutes
-  LONG: 10 * 60 * 1000,   // 10 minutes
+  SHORT: 0,      // No caching
+  MEDIUM: 0,     // No caching
+  LONG: 0,       // No caching
 } as const;
 
 // ==================== QUERY HOOK ====================
@@ -121,28 +121,18 @@ export function useQuery<TData>(options: {
   staleTime?: number;
   enabled?: boolean;
 }): QueryState<TData> {
-  const { queryKey, queryFn, staleTime = STALE_TIME.MEDIUM, enabled = true } = options;
+  const { queryKey, queryFn, enabled = true } = options;
   const cacheKey = JSON.stringify(queryKey);
-  
-  const [data, setData] = useState<TData | undefined>(() => 
-    enabled ? globalCache.get<TData>(cacheKey) : undefined
-  );
+
+  const [data, setData] = useState<TData | undefined>(undefined);
   const [error, setError] = useState<Error | null>(null);
-  const [isPending, setIsPending] = useState<boolean>(!data && enabled);
+  const [isPending, setIsPending] = useState<boolean>(enabled);
   const isMountedRef = useRef(true);
   const abortControllerRef = useRef<AbortController | null>(null);
+  const lastFetchedKeyRef = useRef<string | null>(null);
 
   const fetchData = useCallback(async () => {
     if (!enabled) return;
-
-    // Check cache first
-    const cached = globalCache.get<TData>(cacheKey);
-    if (cached) {
-      setData(cached);
-      setError(null);
-      setIsPending(false);
-      return;
-    }
 
     // Cancel previous request
     if (abortControllerRef.current) {
@@ -155,11 +145,11 @@ export function useQuery<TData>(options: {
 
     try {
       const result = await queryFn();
-      
+
       if (isMountedRef.current) {
         setData(result);
         setError(null);
-        globalCache.set(cacheKey, result, staleTime);
+        lastFetchedKeyRef.current = cacheKey;
       }
     } catch (err) {
       if (isMountedRef.current && err instanceof Error && err.name !== 'AbortError') {
@@ -171,26 +161,18 @@ export function useQuery<TData>(options: {
         setIsPending(false);
       }
     }
-  }, [cacheKey, queryFn, staleTime, enabled]);
+  }, [queryFn, enabled, cacheKey]);
 
-  // Initial fetch
+  // Fetch only when query key changes or when first enabled
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    if (enabled && lastFetchedKeyRef.current !== cacheKey) {
+      fetchData();
+    } else if (!enabled) {
+      setIsPending(false);
+    }
+  }, [cacheKey, enabled, fetchData]);
 
-  // Subscribe to cache updates
-  useEffect(() => {
-    if (!enabled) return;
-
-    const unsubscribe = globalCache.subscribe(cacheKey, () => {
-      const cached = globalCache.get<TData>(cacheKey);
-      if (cached && isMountedRef.current) {
-        setData(cached);
-      }
-    });
-
-    return unsubscribe;
-  }, [cacheKey, enabled]);
+  // Cache subscription removed - no caching enabled
 
   // Cleanup
   useEffect(() => {
@@ -204,10 +186,9 @@ export function useQuery<TData>(options: {
   }, []);
 
   const refetch = useCallback(async () => {
-    // Clear cache for this query
-    globalCache.invalidate(cacheKey);
+    lastFetchedKeyRef.current = null; // Reset to allow refetch
     await fetchData();
-  }, [cacheKey, fetchData]);
+  }, [fetchData]);
 
   return {
     data,
@@ -269,7 +250,7 @@ export function useMutation<TData, TVariables>(options: {
       return result;
     } catch (err) {
       const error = err instanceof Error ? err : new Error('An error occurred');
-      
+
       if (isMountedRef.current) {
         setError(error);
         setData(undefined);
