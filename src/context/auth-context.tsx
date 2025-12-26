@@ -66,11 +66,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       email: data.user?.email!,
       name: metadata?.fullName as string,
       role: "user",
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      created_at: new Date(),
+      updated_at: new Date(),
     };
     
-    await supabase.from(tables.userProfiles).insert(newProfile);
+    const createProfile = await supabase.from(tables.userProfiles).insert(newProfile);
+    console.log("Profile creation error:", createProfile);
+
     return { error, data };
   };
 
