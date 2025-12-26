@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import { useNavigate, Link } from '@tanstack/react-router';
-import { useAuth } from '@/context/auth-context';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card } from '@/components/ui/card';
+import { useState } from "react";
+import { useNavigate, Link } from "@tanstack/react-router";
+import { useAuth } from "@/context/auth-context";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card } from "@/components/ui/card";
 
 export function LoginForm() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const { signIn } = useAuth();
@@ -25,7 +25,7 @@ export function LoginForm() {
       setError(error.message);
       setLoading(false);
     } else {
-      navigate({ to: '/profile' });
+      navigate({ to: "/profile" });
     }
   };
 
@@ -73,21 +73,21 @@ export function LoginForm() {
           <div className="flex items-center justify-between">
             <Link
               to="/forgot-password"
-              className="text-sm font-medium text-blue-600 hover:text-blue-500"
+              className="text-sm font-medium text-pink-600 hover:text-pink-500"
             >
               Forgot password?
             </Link>
           </div>
 
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? "Signing in..." : "Sign In"}
           </Button>
 
           <div className="text-center text-sm">
             <span className="text-gray-600">Don't have an account? </span>
             <Link
               to="/signup"
-              className="font-medium text-blue-600 hover:text-blue-500"
+              className="font-medium text-pink-600 hover:text-pink-500"
             >
               Sign up
             </Link>

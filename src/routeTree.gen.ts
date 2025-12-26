@@ -9,23 +9,33 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StudentIndexRouteImport } from './routes/student/index'
+import { Route as ProjectsIndexRouteImport } from './routes/projects/index'
 import { Route as CoursesIndexRouteImport } from './routes/courses/index'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
-import { Route as CoursesCourseIdRouteImport } from './routes/courses/$courseId'
-import { Route as BlogBlogPostIdRouteImport } from './routes/blog/$blogPostId'
+import { Route as ProjectsSlugRouteImport } from './routes/projects/$slug'
+import { Route as CoursesSlugRouteImport } from './routes/courses/$slug'
+import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as AdminUsersIndexRouteImport } from './routes/admin/users/index'
+import { Route as AdminProjectsIndexRouteImport } from './routes/admin/projects/index'
 import { Route as AdminCoursesIndexRouteImport } from './routes/admin/courses/index'
 import { Route as AdminBlogsIndexRouteImport } from './routes/admin/blogs/index'
 import { Route as AdminCoursesCategoriesIndexRouteImport } from './routes/admin/courses/categories/index'
 
+const UnauthorizedRoute = UnauthorizedRouteImport.update({
+  id: '/unauthorized',
+  path: '/unauthorized',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
@@ -51,6 +61,11 @@ const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
   path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -59,6 +74,11 @@ const IndexRoute = IndexRouteImport.update({
 const StudentIndexRoute = StudentIndexRouteImport.update({
   id: '/student/',
   path: '/student/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProjectsIndexRoute = ProjectsIndexRouteImport.update({
+  id: '/projects/',
+  path: '/projects/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CoursesIndexRoute = CoursesIndexRouteImport.update({
@@ -76,19 +96,29 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/admin/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CoursesCourseIdRoute = CoursesCourseIdRouteImport.update({
-  id: '/courses/$courseId',
-  path: '/courses/$courseId',
+const ProjectsSlugRoute = ProjectsSlugRouteImport.update({
+  id: '/projects/$slug',
+  path: '/projects/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogBlogPostIdRoute = BlogBlogPostIdRouteImport.update({
-  id: '/blog/$blogPostId',
-  path: '/blog/$blogPostId',
+const CoursesSlugRoute = CoursesSlugRouteImport.update({
+  id: '/courses/$slug',
+  path: '/courses/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminUsersIndexRoute = AdminUsersIndexRouteImport.update({
   id: '/admin/users/',
   path: '/admin/users/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminProjectsIndexRoute = AdminProjectsIndexRouteImport.update({
+  id: '/admin/projects/',
+  path: '/admin/projects/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminCoursesIndexRoute = AdminCoursesIndexRouteImport.update({
@@ -110,56 +140,71 @@ const AdminCoursesCategoriesIndexRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
-  '/blog/$blogPostId': typeof BlogBlogPostIdRoute
-  '/courses/$courseId': typeof CoursesCourseIdRoute
+  '/unauthorized': typeof UnauthorizedRoute
+  '/blog/$slug': typeof BlogSlugRoute
+  '/courses/$slug': typeof CoursesSlugRoute
+  '/projects/$slug': typeof ProjectsSlugRoute
   '/admin': typeof AdminIndexRoute
   '/blog': typeof BlogIndexRoute
   '/courses': typeof CoursesIndexRoute
+  '/projects': typeof ProjectsIndexRoute
   '/student': typeof StudentIndexRoute
   '/admin/blogs': typeof AdminBlogsIndexRoute
   '/admin/courses': typeof AdminCoursesIndexRoute
+  '/admin/projects': typeof AdminProjectsIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
   '/admin/courses/categories': typeof AdminCoursesCategoriesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
-  '/blog/$blogPostId': typeof BlogBlogPostIdRoute
-  '/courses/$courseId': typeof CoursesCourseIdRoute
+  '/unauthorized': typeof UnauthorizedRoute
+  '/blog/$slug': typeof BlogSlugRoute
+  '/courses/$slug': typeof CoursesSlugRoute
+  '/projects/$slug': typeof ProjectsSlugRoute
   '/admin': typeof AdminIndexRoute
   '/blog': typeof BlogIndexRoute
   '/courses': typeof CoursesIndexRoute
+  '/projects': typeof ProjectsIndexRoute
   '/student': typeof StudentIndexRoute
   '/admin/blogs': typeof AdminBlogsIndexRoute
   '/admin/courses': typeof AdminCoursesIndexRoute
+  '/admin/projects': typeof AdminProjectsIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
   '/admin/courses/categories': typeof AdminCoursesCategoriesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
-  '/blog/$blogPostId': typeof BlogBlogPostIdRoute
-  '/courses/$courseId': typeof CoursesCourseIdRoute
+  '/unauthorized': typeof UnauthorizedRoute
+  '/blog/$slug': typeof BlogSlugRoute
+  '/courses/$slug': typeof CoursesSlugRoute
+  '/projects/$slug': typeof ProjectsSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/blog/': typeof BlogIndexRoute
   '/courses/': typeof CoursesIndexRoute
+  '/projects/': typeof ProjectsIndexRoute
   '/student/': typeof StudentIndexRoute
   '/admin/blogs/': typeof AdminBlogsIndexRoute
   '/admin/courses/': typeof AdminCoursesIndexRoute
+  '/admin/projects/': typeof AdminProjectsIndexRoute
   '/admin/users/': typeof AdminUsersIndexRoute
   '/admin/courses/categories/': typeof AdminCoursesCategoriesIndexRoute
 }
@@ -167,80 +212,107 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
     | '/forgot-password'
     | '/login'
     | '/profile'
     | '/reset-password'
     | '/signup'
-    | '/blog/$blogPostId'
-    | '/courses/$courseId'
+    | '/unauthorized'
+    | '/blog/$slug'
+    | '/courses/$slug'
+    | '/projects/$slug'
     | '/admin'
     | '/blog'
     | '/courses'
+    | '/projects'
     | '/student'
     | '/admin/blogs'
     | '/admin/courses'
+    | '/admin/projects'
     | '/admin/users'
     | '/admin/courses/categories'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
     | '/forgot-password'
     | '/login'
     | '/profile'
     | '/reset-password'
     | '/signup'
-    | '/blog/$blogPostId'
-    | '/courses/$courseId'
+    | '/unauthorized'
+    | '/blog/$slug'
+    | '/courses/$slug'
+    | '/projects/$slug'
     | '/admin'
     | '/blog'
     | '/courses'
+    | '/projects'
     | '/student'
     | '/admin/blogs'
     | '/admin/courses'
+    | '/admin/projects'
     | '/admin/users'
     | '/admin/courses/categories'
   id:
     | '__root__'
     | '/'
+    | '/about'
     | '/forgot-password'
     | '/login'
     | '/profile'
     | '/reset-password'
     | '/signup'
-    | '/blog/$blogPostId'
-    | '/courses/$courseId'
+    | '/unauthorized'
+    | '/blog/$slug'
+    | '/courses/$slug'
+    | '/projects/$slug'
     | '/admin/'
     | '/blog/'
     | '/courses/'
+    | '/projects/'
     | '/student/'
     | '/admin/blogs/'
     | '/admin/courses/'
+    | '/admin/projects/'
     | '/admin/users/'
     | '/admin/courses/categories/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
   ProfileRoute: typeof ProfileRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SignupRoute: typeof SignupRoute
-  BlogBlogPostIdRoute: typeof BlogBlogPostIdRoute
-  CoursesCourseIdRoute: typeof CoursesCourseIdRoute
+  UnauthorizedRoute: typeof UnauthorizedRoute
+  BlogSlugRoute: typeof BlogSlugRoute
+  CoursesSlugRoute: typeof CoursesSlugRoute
+  ProjectsSlugRoute: typeof ProjectsSlugRoute
   AdminIndexRoute: typeof AdminIndexRoute
   BlogIndexRoute: typeof BlogIndexRoute
   CoursesIndexRoute: typeof CoursesIndexRoute
+  ProjectsIndexRoute: typeof ProjectsIndexRoute
   StudentIndexRoute: typeof StudentIndexRoute
   AdminBlogsIndexRoute: typeof AdminBlogsIndexRoute
   AdminCoursesIndexRoute: typeof AdminCoursesIndexRoute
+  AdminProjectsIndexRoute: typeof AdminProjectsIndexRoute
   AdminUsersIndexRoute: typeof AdminUsersIndexRoute
   AdminCoursesCategoriesIndexRoute: typeof AdminCoursesCategoriesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/unauthorized': {
+      id: '/unauthorized'
+      path: '/unauthorized'
+      fullPath: '/unauthorized'
+      preLoaderRoute: typeof UnauthorizedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/signup': {
       id: '/signup'
       path: '/signup'
@@ -276,6 +348,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -288,6 +367,13 @@ declare module '@tanstack/react-router' {
       path: '/student'
       fullPath: '/student'
       preLoaderRoute: typeof StudentIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/projects/': {
+      id: '/projects/'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof ProjectsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/courses/': {
@@ -311,18 +397,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/courses/$courseId': {
-      id: '/courses/$courseId'
-      path: '/courses/$courseId'
-      fullPath: '/courses/$courseId'
-      preLoaderRoute: typeof CoursesCourseIdRouteImport
+    '/projects/$slug': {
+      id: '/projects/$slug'
+      path: '/projects/$slug'
+      fullPath: '/projects/$slug'
+      preLoaderRoute: typeof ProjectsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blog/$blogPostId': {
-      id: '/blog/$blogPostId'
-      path: '/blog/$blogPostId'
-      fullPath: '/blog/$blogPostId'
-      preLoaderRoute: typeof BlogBlogPostIdRouteImport
+    '/courses/$slug': {
+      id: '/courses/$slug'
+      path: '/courses/$slug'
+      fullPath: '/courses/$slug'
+      preLoaderRoute: typeof CoursesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/users/': {
@@ -330,6 +423,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/users'
       fullPath: '/admin/users'
       preLoaderRoute: typeof AdminUsersIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/projects/': {
+      id: '/admin/projects/'
+      path: '/admin/projects'
+      fullPath: '/admin/projects'
+      preLoaderRoute: typeof AdminProjectsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/courses/': {
@@ -358,19 +458,24 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
   ProfileRoute: ProfileRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SignupRoute: SignupRoute,
-  BlogBlogPostIdRoute: BlogBlogPostIdRoute,
-  CoursesCourseIdRoute: CoursesCourseIdRoute,
+  UnauthorizedRoute: UnauthorizedRoute,
+  BlogSlugRoute: BlogSlugRoute,
+  CoursesSlugRoute: CoursesSlugRoute,
+  ProjectsSlugRoute: ProjectsSlugRoute,
   AdminIndexRoute: AdminIndexRoute,
   BlogIndexRoute: BlogIndexRoute,
   CoursesIndexRoute: CoursesIndexRoute,
+  ProjectsIndexRoute: ProjectsIndexRoute,
   StudentIndexRoute: StudentIndexRoute,
   AdminBlogsIndexRoute: AdminBlogsIndexRoute,
   AdminCoursesIndexRoute: AdminCoursesIndexRoute,
+  AdminProjectsIndexRoute: AdminProjectsIndexRoute,
   AdminUsersIndexRoute: AdminUsersIndexRoute,
   AdminCoursesCategoriesIndexRoute: AdminCoursesCategoriesIndexRoute,
 }

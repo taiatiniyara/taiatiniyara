@@ -36,7 +36,7 @@ export function SignUpForm() {
 
     const fullName = `${firstName.trim()} ${lastName.trim()}`.trim();
 
-    const { error } = await signUp(email, password, { fullName });
+    const { error } = await signUp(email, password, { fullName, role: "user" });
 
     if (error) {
       setError(error.message);
@@ -170,7 +170,7 @@ export function SignUpForm() {
             <span className="text-gray-600">Already have an account? </span>
             <Link
               to="/login"
-              className="font-medium text-blue-600 hover:text-blue-500"
+              className="font-medium text-pink-600 hover:text-pink-500"
             >
               Sign in
             </Link>

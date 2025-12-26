@@ -34,9 +34,9 @@ export function ForgotPasswordForm() {
       <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
         <Card className="w-full max-w-md p-8">
           <div className="text-center">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-pink-100">
               <svg
-                className="h-6 w-6 text-blue-600"
+                className="h-6 w-6 text-pink-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -103,7 +103,7 @@ export function ForgotPasswordForm() {
           <div className="text-center text-sm">
             <Link
               to="/login"
-              className="font-medium text-blue-600 hover:text-blue-500"
+              className="font-medium text-pink-600 hover:text-pink-500"
             >
               Back to Login
             </Link>

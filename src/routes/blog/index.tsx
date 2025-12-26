@@ -51,7 +51,7 @@ function RouteComponent() {
 
           <a
             href={`/blog/${post.id}`}
-            className="text-blue-500 hover:underline mt-2 inline-block"
+            className="text-pink-500 hover:underline mt-2 inline-block"
           >
             Read more
           </a>

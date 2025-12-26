@@ -11,7 +11,7 @@ function Index() {
   const { user, loading } = useAuth();
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 py-12 px-4">
+    <div className="min-h-screen bg-linear-to-br from-pink-50 to-indigo-100 py-12 px-4">
       <div className="mx-auto max-w-4xl">
         <Card className="p-8">
           <div className="text-center mb-8">
@@ -25,7 +25,7 @@ function Index() {
 
           {loading ? (
             <div className="flex justify-center">
-              <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600"></div>
+              <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-pink-600"></div>
             </div>
           ) : user ? (
             <div className="space-y-6">
@@ -42,8 +42,8 @@ function Index() {
             </div>
           ) : (
             <div className="space-y-6">
-              <div className="rounded-lg bg-blue-50 p-4 text-center">
-                <p className="text-blue-800">
+              <div className="rounded-lg bg-pink-50 p-4 text-center">
+                <p className="text-pink-800">
                   Sign in or create an account to get started
                 </p>
               </div>

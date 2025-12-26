@@ -17,13 +17,20 @@ interface SupabaseQueryOptions<T> {
 
 export function useSupabaseQuery<T>(options: SupabaseQueryOptions<T>) {
     // Implementation goes here
+    console.log("useSupabaseQuery called with options:", options);
     const { data, error, isLoading } = useQuery({
         queryKey: options.queryKey,
         queryFn: async () => {
-            const { data, error } = await supabase
+            let query = supabase
                 .from(options.tableName)
-                .select(options.fields ? options.fields.join(', ') : '*')
-                .eq(options.params?.name as string, options.params?.value);
+                .select('*');
+            
+            // Only apply the .eq() filter if params are provided
+            if (options.params) {
+                query = query.eq(options.params.name as string, options.params.value);
+            }
+            
+            const { data, error } = await query;
             if (error) {
                 throw error;
             }

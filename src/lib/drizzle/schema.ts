@@ -1,5 +1,22 @@
 import { boolean, integer, json, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 
+export const projects = pgTable("projects", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    title: varchar("title", { length: 255 }).notNull(),
+    slug: varchar("slug", { length: 255 }).notNull().unique(),
+    description: varchar("description", { length: 1000 }).notNull(),
+    technologies: json("technologies").notNull().$type<string[]>(),
+    tags: json("tags").notNull().$type<string[]>(),
+    repo_url: varchar("repo_url", { length: 500 }),
+    live_url: varchar("live_url", { length: 500 }),
+    img_url: varchar("img_url", { length: 500 }),
+    is_published: boolean("is_published").notNull().default(false),
+    created_at: timestamp("created_at").notNull().defaultNow(),
+    updated_at: timestamp("updated_at").notNull().defaultNow(),
+});
+export type Project = typeof projects.$inferSelect;
+export type NewProject = typeof projects.$inferInsert;
+
 export const blogPosts = pgTable("blog_posts", {
     id: uuid("id").primaryKey().defaultRandom(),
     title: varchar("title", { length: 255 }).notNull(),

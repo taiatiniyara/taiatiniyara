@@ -5,17 +5,17 @@ import { useSupabaseQuery } from "@/hooks/useSupabaseQuery";
 import type { BlogPost } from "@/lib/drizzle/schema";
 import { createFileRoute, useParams } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/blog/$blogPostId")({
+export const Route = createFileRoute("/blog/$slug")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { blogPostId } = useParams({ from: "/blog/$blogPostId" });
+  const { slug } = useParams({ from: "/blog/$slug" });
 
   const { data, error, isLoading } = useSupabaseQuery<BlogPost>({
-    queryKey: [`blog_post_${blogPostId}`],
+    queryKey: [`blog_post_${slug}`],
     tableName: "blog_posts",
-    params: { name: "id", value: blogPostId },
+    params: { name: "slug", value: slug },
   });
 
   if (isLoading) {
@@ -36,6 +36,16 @@ function RouteComponent() {
     return <EmptyListPlaceholder text="Blog post not found." />;
   }
 
-  
-  return <div>{`Hello "/blog/${blogPostId}"!`}</div>;
+  const blogPost = data[0];
+
+  return (
+    <div>
+      <h1 className="text-4xl font-bold mb-4">{blogPost.title}</h1>
+      <span>Published At: {new Date(blogPost.created_at).toDateString()}</span>
+      <div
+        className="prose max-w-none"
+        dangerouslySetInnerHTML={{ __html: blogPost.content }}
+      />
+    </div>
+  );
 }
