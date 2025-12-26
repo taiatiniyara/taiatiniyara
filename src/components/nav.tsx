@@ -28,7 +28,7 @@ export default function TopNavigation() {
 
   const { user, signOut } = useAuth();
   return (
-    <div className="flex gap-4 p-4 mx-auto container items-center justify-between bg-white/20 backdrop-blur-xl sticky top-0 z-10">
+    <div className="flex gap-4 p-4 items-center justify-between bg-white/20 backdrop-blur-xl sticky top-0 z-10">
       <a href="/">
         <img src="/logo.svg" alt="Logo" width={40} />
       </a>
@@ -37,7 +37,7 @@ export default function TopNavigation() {
           <a
             key={item.href}
             href={item.href}
-            className={`px-2 mx-2 ${path.split("/")[1] === item.href.slice(1) ? "text-pink-600 font-semibold" : "text-gray-600 hover:text-gray-400 transition-colors"}`}
+            className={`px-2 mx-2 ${path.split("/")[1] === item.href.slice(1) ? "text-pink-600 font-semibold" : "hover:text-gray-400 transition-colors"}`}
           >
             {item.name}
           </a>

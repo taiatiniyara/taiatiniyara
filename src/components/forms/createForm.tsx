@@ -12,11 +12,19 @@ import {
 } from "@/components/ui/select";
 import { useState } from "react";
 import { Button } from "../ui/button";
+import Tiptap from "../tiptap";
 
 interface CreateFormProps<T> {
   fields: {
     name: keyof T;
-    type: "text" | "number" | "email" | "password" | "textarea" | "select";
+    type:
+      | "text"
+      | "number"
+      | "email"
+      | "password"
+      | "textarea"
+      | "select"
+      | "richtext";
     options?: string[]; // for select type
   }[];
   tableName: keyof typeof tables;
@@ -27,6 +35,9 @@ export default function CreateForm<T>(props: CreateFormProps<T>) {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [selectValues, setSelectValues] = useState<Record<string, string>>({});
+  const [richtextValues, setRichtextValues] = useState<Record<string, string>>(
+    {}
+  );
 
   return (
     <form
@@ -39,8 +50,14 @@ export default function CreateForm<T>(props: CreateFormProps<T>) {
         console.log("Form Data Submitted:", formData.entries());
         const data: Partial<T> = {};
         props.fields.forEach((field) => {
-          const value = formData.get(String(field.name));
-          if (value !== null) {
+          let value = formData.get(String(field.name));
+
+          // For richtext fields, use the stored HTML value
+          if (field.type === "richtext") {
+            value = richtextValues[String(field.name)] || "";
+          }
+
+          if (value !== null && value !== undefined) {
             if (field.type === "number") {
               (data as any)[field.name] = Number(value);
             } else {
@@ -74,7 +91,27 @@ export default function CreateForm<T>(props: CreateFormProps<T>) {
               .split("_")
               .join(" ")}
           </Label>
-          {field.type === "textarea" ? (
+          {field.type === "richtext" ? (
+            <>
+              <Tiptap
+                content={
+                  richtextValues[String(field.name)] ||
+                  "<p>Start writing...</p>"
+                }
+                onChange={(html) => {
+                  setRichtextValues((prev) => ({
+                    ...prev,
+                    [String(field.name)]: html,
+                  }));
+                }}
+              />
+              <input
+                type="hidden"
+                name={String(field.name)}
+                value={richtextValues[String(field.name)] || ""}
+              />
+            </>
+          ) : field.type === "textarea" ? (
             <Textarea
               name={String(field.name)}
               placeholder={`Enter ${String(field.name).toLowerCase()} here...`}

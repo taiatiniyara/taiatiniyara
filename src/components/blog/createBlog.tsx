@@ -17,7 +17,7 @@ export default function CreateBlogForm() {
         },
         {
           name: "content",
-          type: "textarea",
+          type: "richtext",
         },
         {
           name: "img_url",

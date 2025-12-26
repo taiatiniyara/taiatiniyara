@@ -13,6 +13,7 @@ interface SupabaseQueryOptions<T> {
     tableName: keyof typeof tables;
     fields?: (keyof T)[];
     params?: Param<T>;
+    numberOfItems?: number;
 }
 
 export function useSupabaseQuery<T>(options: SupabaseQueryOptions<T>) {
@@ -22,7 +23,8 @@ export function useSupabaseQuery<T>(options: SupabaseQueryOptions<T>) {
         queryFn: async () => {
             let query = supabase
                 .from(options.tableName)
-                .select('*');
+                .select('*')
+                .limit(options.numberOfItems || 100);
             
             // Only apply the .eq() filter if params are provided
             if (options.params) {

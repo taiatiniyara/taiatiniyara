@@ -26,7 +26,12 @@ import {
 } from "lucide-react";
 import { useCallback } from "react";
 
-const Tiptap = () => {
+interface TiptapProps {
+  content?: string;
+  onChange?: (html: string) => void;
+}
+
+const Tiptap = ({ content = "<p>Start writing your content here...</p>", onChange }: TiptapProps) => {
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -39,9 +44,14 @@ const Tiptap = () => {
         allowBase64: true,
       }),
     ],
-    content: "<p>Start writing your content here...</p>",
+    content: content,
     autofocus: true,
     editable: true,
+    onUpdate: ({ editor }) => {
+      if (onChange) {
+        onChange(editor.getHTML());
+      }
+    },
     editorProps: {
       attributes: {
         class:

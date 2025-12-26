@@ -13,7 +13,7 @@ function RouteComponent() {
   const { error, data, isLoading } = useSupabaseQuery<BlogPost>({
     queryKey: ["blog_posts"],
     tableName: "blog_posts",
-    fields: ["id", "title", "img_url", "excerpt", "created_at"],
+    fields: ["id", "title", "img_url", "excerpt", "created_at", "slug"],
   });
 
   if (isLoading) {
@@ -33,28 +33,30 @@ function RouteComponent() {
   }
 
   return (
-    <div>
+    <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 container mx-auto p-4">
       {data.map((post) => (
-        <div key={post.id} className="mb-4 p-4 border">
+        <div key={post.id} className="mb-4 bg-white shadow-md border">
           {post.img_url && (
             <img
               src={post.img_url}
               alt={post.title}
-              className="max-w-full h-auto"
+              className="h-48 w-full object-cover"
             />
           )}
-          <h2 className="text-2xl font-bold mt-2">{post.title}</h2>
-          <p className="text-gray-600 text-sm">
-            {new Date(post.created_at).toLocaleDateString()}
-          </p>
-          <p className="mt-2">{post.excerpt}</p>
+          <div className="p-4">
+            <h2 className="text-2xl font-bold">{post.title}</h2>
+            <p className="text-gray-500 text-sm">
+              {new Date(post.created_at).toDateString()}
+            </p>
+            <p className="my-2">{post.excerpt}</p>
 
-          <a
-            href={`/blog/${post.id}`}
-            className="text-pink-500 hover:underline mt-2 inline-block"
-          >
-            Read more
-          </a>
+            <a
+              href={`/blog/${post.slug}`}
+              className="text-pink-500 text-sm font-medium text-right hover:underline w-full inline-block"
+            >
+              Read more
+            </a>
+          </div>
         </div>
       ))}
     </div>
