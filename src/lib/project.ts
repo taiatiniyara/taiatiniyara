@@ -1,67 +1,30 @@
 import { supabase } from './supabase';
-import type { Project, CreateProjectInput, UpdateProjectInput, ProjectsResponse } from '@/types/project';
+import type { Project, CreateProjectInput, UpdateProjectInput } from '@/types/project';
 
-/**
- * Fetch all published projects with pagination
- */
-export async function getPublishedProjects(page = 1, pageSize = 10): Promise<ProjectsResponse> {
-  const from = (page - 1) * pageSize;
-  const to = from + pageSize - 1;
-
-  console.log('Fetching published projects', { page, pageSize, from, to });
-
-  const { data, error, count } = await supabase
+// GET all published projects
+export async function getPublishedProjects(): Promise<Project[]> {
+  const { data, error } = await supabase
     .from('projects')
-    .select('*', { count: 'exact' })
+    .select('*')
     .eq('published', true)
-    .order('published_at', { ascending: false })
-    .range(from, to);
+    .order('published_at', { ascending: false });
 
-  if (error) {
-    console.error('Error fetching published projects:', error);
-    throw new Error(`Failed to fetch projects: ${error.message}`);
-  }
-
-  console.log('Successfully fetched published projects', { count: data?.length, total: count });
-
-  return {
-    projects: data as Project[],
-    total: count || 0,
-    page,
-    pageSize,
-    totalPages: Math.ceil((count || 0) / pageSize),
-  };
+  if (error) throw new Error(error.message);
+  return data as Project[];
 }
 
-/**
- * Fetch all projects (published and drafts) with pagination
- */
-export async function getAllProjects(page = 1, pageSize = 10): Promise<ProjectsResponse> {
-  const from = (page - 1) * pageSize;
-  const to = from + pageSize - 1;
-
-  const { data, error, count } = await supabase
+// GET all projects (including drafts for admin)
+export async function getAllProjects(): Promise<Project[]> {
+  const { data, error } = await supabase
     .from('projects')
-    .select('*', { count: 'exact' })
-    .order('created_at', { ascending: false })
-    .range(from, to);
+    .select('*')
+    .order('created_at', { ascending: false });
 
-  if (error) {
-    throw new Error(`Failed to fetch all projects: ${error.message}`);
-  }
-
-  return {
-    projects: data as Project[],
-    total: count || 0,
-    page,
-    pageSize,
-    totalPages: Math.ceil((count || 0) / pageSize),
-  };
+  if (error) throw new Error(error.message);
+  return data as Project[];
 }
 
-/**
- * Fetch featured projects
- */
+// GET featured projects
 export async function getFeaturedProjects(): Promise<Project[]> {
   const { data, error } = await supabase
     .from('projects')
@@ -70,16 +33,11 @@ export async function getFeaturedProjects(): Promise<Project[]> {
     .eq('featured', true)
     .order('published_at', { ascending: false });
 
-  if (error) {
-    throw new Error(`Failed to fetch featured projects: ${error.message}`);
-  }
-
+  if (error) throw new Error(error.message);
   return data as Project[];
 }
 
-/**
- * Fetch a single project by slug
- */
+// GET single project by slug
 export async function getProjectBySlug(slug: string): Promise<Project | null> {
   const { data, error } = await supabase
     .from('projects')
@@ -88,129 +46,57 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') {
-      return null; // Project not found
-    }
-    throw new Error(`Failed to fetch project: ${error.message}`);
+    if (error.code === 'PGRST116') return null;
+    throw new Error(error.message);
   }
-
   return data as Project;
 }
 
-/**
- * Fetch a single project by ID
- */
-export async function getProjectById(id: string): Promise<Project | null> {
-  const { data, error } = await supabase
-    .from('projects')
-    .select('*')
-    .eq('id', id)
-    .single();
-
-  if (error) {
-    if (error.code === 'PGRST116') {
-      return null; // Project not found
-    }
-    throw new Error(`Failed to fetch project: ${error.message}`);
-  }
-
-  return data as Project;
-}
-
-/**
- * Create a new project
- */
+// CREATE project
 export async function createProject(input: CreateProjectInput): Promise<Project> {
-  const projectData = {
-    ...input,
-    published_at: input.published && !input.published_at ? new Date().toISOString() : input.published_at,
-  };
-
   const { data, error } = await supabase
     .from('projects')
-    .insert(projectData)
+    .insert(input)
     .select()
     .single();
 
-  if (error) {
-    throw new Error(`Failed to create project: ${error.message}`);
-  }
-
+  if (error) throw new Error(error.message);
   return data as Project;
 }
 
-/**
- * Update an existing project
- */
+// UPDATE project
 export async function updateProject(id: string, input: UpdateProjectInput): Promise<Project> {
-  const updateData = {
-    ...input,
-    // If publishing for the first time, set published_at
-    ...(input.published && !input.published_at ? { published_at: new Date().toISOString() } : {}),
-  };
-
   const { data, error } = await supabase
     .from('projects')
-    .update(updateData)
+    .update(input)
     .eq('id', id)
     .select()
     .single();
 
-  if (error) {
-    throw new Error(`Failed to update project: ${error.message}`);
-  }
-
+  if (error) throw new Error(error.message);
   return data as Project;
 }
 
-/**
- * Delete a project
- */
+// DELETE project
 export async function deleteProject(id: string): Promise<void> {
   const { error } = await supabase
     .from('projects')
     .delete()
     .eq('id', id);
 
-  if (error) {
-    throw new Error(`Failed to delete project: ${error.message}`);
-  }
+  if (error) throw new Error(error.message);
 }
 
-/**
- * Search projects by title or description
- */
-export async function searchProjects(query: string, page = 1, pageSize = 10): Promise<ProjectsResponse> {
-  const from = (page - 1) * pageSize;
-  const to = from + pageSize - 1;
-
-  const { data, error, count } = await supabase
-    .from('projects')
-    .select('*', { count: 'exact' })
-    .eq('published', true)
-    .or(`title.ilike.%${query}%,description.ilike.%${query}%`)
-    .order('published_at', { ascending: false })
-    .range(from, to);
-
-  if (error) {
-    throw new Error(`Failed to search projects: ${error.message}`);
-  }
-
-  return {
-    projects: data as Project[],
-    total: count || 0,
-    page,
-    pageSize,
-    totalPages: Math.ceil((count || 0) / pageSize),
-  };
-}
-
-/**
- * Generate a URL-friendly slug from a title
- */
+// Generate slug helper
 export function generateSlug(title: string): string {
-  return title
+  const baseSlug = title
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
+    .trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
     .replace(/^-+|-+$/g, '');
+  
+  const randomString = Math.random().toString(36).substring(2, 8);
+  return `${baseSlug}-${randomString}`;
 }
+

@@ -1,13 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  usePublishedPosts,
-  useAllTags,
-  usePostsByTag,
-} from "@/hooks/useBlogQueries";
+import { getPublishedPosts } from "@/lib/blog";
+import type { BlogPost } from "@/types/blog";
 import { SEO, StructuredData } from "@/components/SEO";
 import { Calendar, Tag, TrendingUp } from "lucide-react";
 import { DecorativeBackground } from "@/components/DecorativeBackground";
@@ -20,29 +17,23 @@ export const Route = createFileRoute("/blog/")({
 });
 
 function BlogIndex() {
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [selectedTag, _setSelectedTag] = useState<string | null>(null);
+  
+  const postsPerPage = 9;
+  const totalPages = Math.ceil(posts.length / postsPerPage);
 
-  // Fetch posts based on selected tag or all published posts
-  const {
-    data: postsData,
-    isPending: postsLoading,
-    error: postsError,
-  } = selectedTag
-    ? usePostsByTag(selectedTag, currentPage, 10)
-    : usePublishedPosts(currentPage, 10);
+  useEffect(() => {
+    getPublishedPosts()
+      .then(setPosts)
+      .catch(err => setError(err.message))
+      .finally(() => setIsLoading(false));
+  }, []);
 
-  // Fetch all tags
-  const { data: tags = [] } = useAllTags();
-
-  const posts = postsData?.posts || [];
-  const totalPages = postsData?.totalPages || 1;
-  const loading = postsLoading;
-  const error = postsError
-    ? postsError instanceof Error
-      ? postsError.message
-      : "Failed to load posts"
-    : null;
+  const loading = isLoading;
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -121,7 +112,6 @@ function BlogIndex() {
           <StatsDisplay
             stats={[
               { value: posts.length, label: "Articles", color: "blue" },
-              { value: tags.length, label: "Topics", color: "blue" },
               { value: "∞", label: "Learning", color: "blue" },
             ]}
           />
@@ -138,53 +128,10 @@ function BlogIndex() {
         {/* Blog Section */}
         <section className="relative container mx-auto px-4 pb-20">
           <div className="max-w-7xl mx-auto">
-            {/* Tag Filter with enhanced styling */}
-            {tags.length > 0 && (
-              <div className="mb-12 animate-fade-in" style={{ animationDelay: '0.4s' }}>
-                <div className="flex items-center justify-center gap-3 mb-4">
-                  <Tag className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                  <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-200">Filter by Topic</h2>
-                </div>
-                <div className="flex flex-wrap gap-3 justify-center max-w-4xl mx-auto">
-                  <Button
-                    variant={selectedTag === null ? 'default' : 'outline'}
-                    size="sm"
-                    className={selectedTag === null 
-                      ? 'bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg transition-all duration-200' 
-                      : 'hover:border-blue-400 dark:hover:border-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-all duration-200'
-                    }
-                    onClick={() => {
-                      setSelectedTag(null);
-                      setCurrentPage(1);
-                    }}
-                  >
-                    All Posts
-                  </Button>
-                  {tags.map((tag) => (
-                    <Button
-                      key={tag}
-                      variant={selectedTag === tag ? 'default' : 'outline'}
-                      size="sm"
-                      className={selectedTag === tag 
-                        ? 'bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg transition-all duration-200' 
-                        : 'hover:border-blue-400 dark:hover:border-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-all duration-200'
-                      }
-                      onClick={() => {
-                        setSelectedTag(tag);
-                        setCurrentPage(1);
-                      }}
-                    >
-                      {tag}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-            )}
-
             {posts.length > 0 ? (
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                  {posts.map((post, index) => (
+                  {posts.map((post: BlogPost, index: number) => (
                     <Link 
                       key={post.id} 
                       to={`/blog/$slug`} 
@@ -266,7 +213,7 @@ function BlogIndex() {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                      onClick={() => setCurrentPage((prev: number) => Math.max(1, prev - 1))}
                       disabled={currentPage === 1}
                       className="hover:bg-blue-50 dark:hover:bg-blue-950/30 hover:border-blue-400 dark:hover:border-blue-600 disabled:opacity-30 transition-all"
                     >
@@ -308,7 +255,7 @@ function BlogIndex() {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+                      onClick={() => setCurrentPage((prev: number) => Math.min(totalPages, prev + 1))}
                       disabled={currentPage === totalPages}
                       className="hover:bg-blue-50 dark:hover:bg-blue-950/30 hover:border-blue-400 dark:hover:border-blue-600 disabled:opacity-30 transition-all"
                     >

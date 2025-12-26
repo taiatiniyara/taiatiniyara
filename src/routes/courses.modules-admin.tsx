@@ -237,7 +237,7 @@ function ModulesAdmin() {
                   No courses available. Create a course first!
                 </p>
               ) : (
-                courses.map((course) => (
+                courses.map((course: any) => (
                   <div
                     key={course.id}
                     className="border border-slate-200 dark:border-slate-700 rounded-lg p-4 hover:border-purple-300 dark:hover:border-purple-700 transition-colors cursor-pointer"
@@ -467,8 +467,8 @@ function ModulesAdmin() {
                   </p>
                 ) : (
                   modules
-                    .sort((a, b) => a.order_index - b.order_index)
-                    .map((module, index) => (
+                    .sort((a: any, b: any) => a.order_index - b.order_index)
+                    .map((module: any, index: number) => (
                       <div
                         key={module.id}
                         className="border border-slate-200 dark:border-slate-700 rounded-lg p-4 hover:border-purple-300 dark:hover:border-purple-700 transition-colors"

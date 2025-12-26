@@ -1,8 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useProjectBySlug } from "@/hooks/useProjectQueries";
+import { getProjectBySlug } from "@/lib/project";
+import type { Project } from "@/types/project";
 import { ExternalLink, Github, ArrowLeft } from "lucide-react";
 import { SEO, StructuredData } from "@/components/SEO";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
@@ -14,13 +16,22 @@ export const Route = createFileRoute("/projects/$slug")({
 function ProjectDetail() {
   const { slug } = Route.useParams();
   const navigate = useNavigate();
-  const { data: project, isPending, isError } = useProjectBySlug(slug);
+  const [project, setProject] = useState<Project | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
-  if (isPending) {
+  useEffect(() => {
+    getProjectBySlug(slug)
+      .then(setProject)
+      .catch(setError)
+      .finally(() => setIsLoading(false));
+  }, [slug]);
+
+  if (isLoading) {
     return <LoadingSpinner />;
   }
 
-  if (isError || !project) {
+  if (error || !project) {
     return (
       <div className="container mx-auto px-4 py-16 max-w-4xl">
         <Card className="p-8 text-center">

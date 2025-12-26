@@ -310,7 +310,7 @@ function ProjectsAdmin() {
         {projects.length === 0 ? (
           <p className="text-gray-600">No projects yet. Create your first project!</p>
         ) : (
-          projects.map((project) => (
+          projects.map((project: any) => (
             <AdminListItem
               key={project.id}
               title={project.title}

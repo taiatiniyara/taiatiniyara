@@ -311,7 +311,7 @@ function BlogAdmin() {
         {posts.length === 0 ? (
           <p className="text-gray-600">No posts yet. Create your first post!</p>
         ) : (
-          posts.map((post) => (
+          posts.map((post: any) => (
             <AdminListItem
               key={post.id}
               title={post.title}

@@ -1,8 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useCourse, useEnrollInCourse, useEnrollment } from "@/hooks/useCourseQueries";
+import { getCourseBySlug, getModulesByCourse } from "@/lib/course";
+import type { Course, CourseModule } from "@/types/course";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   ArrowLeft,
@@ -14,9 +16,7 @@ import {
 } from "lucide-react";
 import { SEO, StructuredData } from "@/components/SEO";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
-import { useState } from "react";
 import { AuthModal } from "@/components/AuthModal";
-import { useAlertDialog } from "@/components/AlertDialogProvider";
 
 export const Route = createFileRoute("/courses/$slug")({
   component: CourseDetail,
@@ -25,24 +25,38 @@ export const Route = createFileRoute("/courses/$slug")({
 function CourseDetail() {
   const { slug } = Route.useParams();
   const navigate = useNavigate();
-  const { showAlert } = useAlertDialog();
-  const { data: course, isPending, isError } = useCourse(slug);
-  const { user, isAuthenticated } = useAuth();
-  const enrollMutation = useEnrollInCourse();
+  const { user: _user, isAuthenticated: _isAuthenticated } = useAuth();
+  const [course, setCourse] = useState<Course | null>(null);
+  const [modules, setModules] = useState<CourseModule[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [userEnrolled, _setUserEnrolled] = useState(false);
   
-  // Check if user is enrolled
-  const { data: enrollment } = useEnrollment({
-    courseId: course?.id || '',
-    userId: user?.id || '',
-  });
-  const userEnrolled = !!enrollment;
+  // Placeholder enrollment mutation
+  const enrollMutation = {
+    isPending: false,
+    mutate: () => {},
+  };
 
-  if (isPending) {
+  useEffect(() => {
+    getCourseBySlug(slug)
+      .then(async (courseData) => {
+        if (courseData) {
+          setCourse(courseData);
+          const modulesData = await getModulesByCourse(courseData.id);
+          setModules(modulesData);
+        }
+      })
+      .catch(setError)
+      .finally(() => setIsLoading(false));
+  }, [slug]);
+
+  if (isLoading) {
     return <LoadingSpinner />;
   }
 
-  if (isError || !course) {
+  if (error || !course) {
     return (
       <div className="container mx-auto px-4 py-16 max-w-4xl">
         <Card className="p-8 text-center">
@@ -58,52 +72,13 @@ function CourseDetail() {
     );
   }
 
-  const handleStartLearning = async () => {
-    if (!isAuthenticated || !user) {
-      setShowAuthModal(true);
-      return;
-    }
-
-    if (userEnrolled) {
-      // Navigate to first module or last accessed module
-      if (course.modules && course.modules.length > 0) {
-        navigate({
-          to: '/courses/$courseSlug/$moduleSlug',
-          params: { courseSlug: course.slug, moduleSlug: course.modules[0].slug },
-        });
-      }
-      return;
-    }
-
-    // Enroll user
-    try {
-      await enrollMutation.mutateAsync({
-        course_id: course.id,
-        user_id: user.id,
-        user_email: user.email || '',
+  const handleStartLearning = () => {
+    // Navigate to first module if available
+    if (modules && modules.length > 0) {
+      navigate({
+        to: '/courses/$courseSlug/$moduleSlug',
+        params: { courseSlug: course.slug, moduleSlug: modules[0].slug },
       });
-      
-      // Navigate to first module
-      if (course.modules && course.modules.length > 0) {
-        navigate({
-          to: '/courses/$courseSlug/$moduleSlug',
-          params: { courseSlug: course.slug, moduleSlug: course.modules[0].slug },
-        });
-      }
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to enroll in course. Please try again.';
-      
-      // If already enrolled, just navigate to the course
-      if (errorMessage.includes('already enrolled')) {
-        if (course.modules && course.modules.length > 0) {
-          navigate({
-            to: '/courses/$courseSlug/$moduleSlug',
-            params: { courseSlug: course.slug, moduleSlug: course.modules[0].slug },
-          });
-        }
-      } else {
-        showAlert("Enrollment Error", errorMessage);
-      }
     }
   };
 
@@ -244,19 +219,19 @@ function CourseDetail() {
                   <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
                     <Clock className="w-5 h-5" />
                     <span className="text-sm">
-                      {Math.round(course.total_duration_minutes / 60)} hours
+                      {modules.reduce((acc, m) => acc + (m.duration_minutes || 0), 0) / 60} hours
                     </span>
                   </div>
                   <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
                     <BookOpen className="w-5 h-5" />
                     <span className="text-sm">
-                      {course.total_modules} modules
+                      {modules.length} modules
                     </span>
                   </div>
                   <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
                     <PlayCircle className="w-5 h-5" />
                     <span className="text-sm">
-                      {course.total_duration_minutes} min total
+                      {modules.reduce((acc, m) => acc + (m.duration_minutes || 0), 0)} min total
                     </span>
                   </div>
                 </div>
@@ -316,11 +291,11 @@ function CourseDetail() {
                 </div>
                 <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
                   <CheckCircle2 className="w-4 h-4 text-green-500" />
-                  <span>{course.total_modules} modules</span>
+                  <span>{modules.length} modules</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
                   <CheckCircle2 className="w-4 h-4 text-green-500" />
-                  <span>{Math.round(course.total_duration_minutes / 60)} hours of content</span>
+                  <span>{Math.round(modules.reduce((acc, m) => acc + (m.duration_minutes || 0), 0) / 60)} hours of content</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
                   <CheckCircle2 className="w-4 h-4 text-green-500" />
@@ -330,13 +305,13 @@ function CourseDetail() {
             </Card>
 
             {/* Course Curriculum */}
-            {course.modules && course.modules.length > 0 && (
+            {modules && modules.length > 0 && (
               <Card className="p-6">
                 <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-4">
                   Course Curriculum
                 </h3>
                 <div className="space-y-2">
-                  {course.modules.map((module, index) => (
+                  {modules.map((module, index) => (
                     <div
                       key={module.id}
                       className="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"

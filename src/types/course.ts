@@ -12,6 +12,7 @@ export interface Course {
   published_at: string | null;
   created_at: string;
   updated_at: string;
+  modules?: CourseModule[];
 }
 
 export interface CourseModule {

@@ -1,7 +1,9 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
+import { useState, useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { usePostBySlug, usePublishedPosts } from '@/hooks/useBlogQueries';
+import { getPostBySlug, getPublishedPosts } from '@/lib/blog';
+import type { BlogPost } from '@/types/blog';
 import { SEO, StructuredData } from '@/components/SEO';
 import { Card } from '@/components/ui/card';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
@@ -14,18 +16,28 @@ function BlogPostPage() {
   const { slug } = Route.useParams();
   const navigate = useNavigate();
   
-  const { data: post, isPending: loading, error: queryError } = usePostBySlug(slug);
-  const { data: postsData } = usePublishedPosts(1, 10);
+  const [post, setPost] = useState<BlogPost | null>(null);
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Check if post is not found or not published
-  let error: string | null = null;
-  if (queryError) {
-    error = queryError instanceof Error ? queryError.message : 'Failed to load post';
-  } else if (!loading && !post) {
-    error = 'Blog post not found';
-  } else if (post && !post.published) {
-    error = 'This post is not yet published';
-  }
+  useEffect(() => {
+    Promise.all([
+      getPostBySlug(slug),
+      getPublishedPosts()
+    ])
+      .then(([postData, postsData]) => {
+        setPost(postData);
+        setPosts(postsData);
+        if (!postData) {
+          setError('Blog post not found');
+        } else if (!postData.published) {
+          setError('This post is not yet published');
+        }
+      })
+      .catch(err => setError(err.message))
+      .finally(() => setLoading(false));
+  }, [slug]);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -59,9 +71,9 @@ function BlogPostPage() {
   const excerpt = post.excerpt || post.content.substring(0, 160).replace(/<[^>]*>/g, '');
 
   // Get other blog posts (exclude current post and limit to 3)
-  const otherPosts = postsData?.posts
-    .filter(p => p.slug !== slug)
-    .slice(0, 3) || [];
+  const otherPosts = posts
+    .filter((p: BlogPost) => p.slug !== slug)
+    .slice(0, 3);
 
   return (
     <>
@@ -189,7 +201,7 @@ function BlogPostPage() {
               <div className="sticky top-8">
                 <h3 className="text-xl font-semibold mb-4">Other Blog Posts</h3>
                 <div className="space-y-4">
-                  {otherPosts.map((otherPost) => (
+                  {otherPosts.map((otherPost: BlogPost) => (
                     <Card key={otherPost.id} className="p-4 hover:shadow-lg transition-shadow">
                       <Link 
                         to="/blog/$slug" 

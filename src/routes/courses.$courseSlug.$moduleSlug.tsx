@@ -81,7 +81,7 @@ function ModuleLearning() {
     );
   }
 
-  const currentModule = course.modules?.find((m) => m.slug === moduleSlug);
+  const currentModule = course.modules?.find((m: any) => m.slug === moduleSlug);
 
   if (!currentModule) {
     return (
@@ -99,11 +99,11 @@ function ModuleLearning() {
     );
   }
 
-  const currentIndex = course.modules?.findIndex((m) => m.slug === moduleSlug);
+  const currentIndex = course.modules?.findIndex((m: any) => m.slug === moduleSlug) ?? -1;
   const previousModule =
-    currentIndex > 0 ? course.modules[currentIndex - 1] : null;
+    currentIndex > 0 && course.modules ? course.modules[currentIndex - 1] : null;
   const nextModule =
-    currentIndex < course.modules.length - 1
+    currentIndex >= 0 && course.modules && currentIndex < course.modules.length - 1
       ? course.modules[currentIndex + 1]
       : null;
 
@@ -123,12 +123,12 @@ function ModuleLearning() {
     localStorage.setItem(key, JSON.stringify([...newCompleted]));
 
     // Calculate and update progress
-    const progress = Math.round(
-      (newCompleted.size / course.modules.length) * 100
-    );
+    const progressValue = course.modules
+      ? Math.round((newCompleted.size / course.modules.length) * 100)
+      : 0;
     localStorage.setItem(
       `progress_${course.id}_${user.email}`,
-      progress.toString()
+      progressValue.toString()
     );
   };
 
@@ -184,7 +184,7 @@ function ModuleLearning() {
               Course Curriculum
             </h3>
             <div className="space-y-1">
-              {course.modules?.map((module, index) => {
+              {course.modules?.map((module: any, index: number) => {
                 const isCurrentModule = module.id === currentModule.id;
                 const isModuleCompleted = completedModules.has(module.id);
 

@@ -1,8 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { usePublishedCourses } from "@/hooks/useCourseQueries";
+import { getPublishedCourses } from "@/lib/course";
+import type { Course } from "@/types/course";
 import { GraduationCap, BookOpen, Award } from "lucide-react";
 import { SEO, StructuredData } from "@/components/SEO";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
@@ -12,21 +14,27 @@ export const Route = createFileRoute("/courses/")({
 });
 
 function CoursesIndex() {
-  const { data, isPending, isError, error } = usePublishedCourses(1, 100);
-  const courses = data?.courses || [];
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
-  if (isPending) {
+  useEffect(() => {
+    getPublishedCourses()
+      .then(setCourses)
+      .catch(setError)
+      .finally(() => setIsLoading(false));
+  }, []);
+
+  if (isLoading) {
     return <LoadingSpinner />;
   }
 
-  if (isError) {
+  if (error) {
     return (
       <div className="container mx-auto px-4 py-16">
         <Card className="p-8 text-center">
           <h1 className="text-2xl font-bold mb-4">Error Loading Courses</h1>
-          <p className="text-gray-600 mb-6">
-            {error instanceof Error ? error.message : 'Failed to load courses'}
-          </p>
+          <p className="text-gray-600 mb-6">{error.message}</p>
           <Button onClick={() => window.location.reload()}>Reload Page</Button>
         </Card>
       </div>
