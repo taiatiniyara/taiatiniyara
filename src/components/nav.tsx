@@ -46,7 +46,7 @@ export default function TopNavigation() {
 
       {user ? (
         <DropdownMenu>
-          <DropdownMenuTrigger>
+          <DropdownMenuTrigger asChild>
             <Button>
               <User2 />
               {user.user_metadata.fullName.split(" ")[0]}
