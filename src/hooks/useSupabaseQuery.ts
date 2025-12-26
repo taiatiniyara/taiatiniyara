@@ -17,7 +17,6 @@ interface SupabaseQueryOptions<T> {
 
 export function useSupabaseQuery<T>(options: SupabaseQueryOptions<T>) {
     // Implementation goes here
-    console.log("useSupabaseQuery called with options:", options);
     const { data, error, isLoading } = useQuery({
         queryKey: options.queryKey,
         queryFn: async () => {
