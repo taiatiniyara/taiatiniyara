@@ -35,28 +35,43 @@ function CourseDetail() {
   const [isEnrolling, setIsEnrolling] = useState(false);
 
   useEffect(() => {
+    let isMounted = true;
+
     const loadCourse = async () => {
       try {
         const courseData = await getCourseBySlug(slug);
+        if (!isMounted) return;
+        
         if (courseData) {
           setCourse(courseData);
           const modulesData = await getModulesByCourse(courseData.id);
+          if (!isMounted) return;
+          
           setModules(modulesData);
           
           // Check if user is already enrolled via Supabase
           if (isAuthenticated && user?.id) {
             const enrolled = await isUserEnrolled(courseData.id, user.id);
+            if (!isMounted) return;
+            
             setUserEnrolled(enrolled);
           }
         }
       } catch (err) {
+        if (!isMounted) return;
         setError(err as Error);
       } finally {
-        setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     };
     
     loadCourse();
+
+    return () => {
+      isMounted = false;
+    };
   }, [slug, isAuthenticated, user?.id]);
 
   if (isLoading) {

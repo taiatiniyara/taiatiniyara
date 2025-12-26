@@ -22,31 +22,45 @@ function ProjectsIndex() {
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
+    let retryTimeout: number | null = null;
+
     const fetchProjects = async (retries = 3) => {
       try {
         const data = await getPublishedProjects();
+        if (!isMounted) return;
+        
         setProjects(data);
         setError(null);
       } catch (err) {
+        if (!isMounted) return;
+        
         console.error('Error fetching projects:', err);
         
         // Retry logic for network errors
         if (retries > 0 && err instanceof Error && 
             (err.message.includes('fetch') || err.message.includes('network'))) {
           console.log(`Retrying projects... (${3 - retries + 1}/3)`);
-          setTimeout(() => fetchProjects(retries - 1), 1000 * (4 - retries));
+          retryTimeout = setTimeout(() => fetchProjects(retries - 1), 1000 * (4 - retries));
           return;
         }
         
         setError(err as Error);
       } finally {
-        if (retries === 0 || !error) {
+        if (isMounted) {
           setIsLoading(false);
         }
       }
     };
     
     fetchProjects();
+
+    return () => {
+      isMounted = false;
+      if (retryTimeout) {
+        clearTimeout(retryTimeout);
+      }
+    };
   }, []);
 
   if (isLoading) {

@@ -19,32 +19,46 @@ function CoursesIndex() {
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
+    let retryTimeout: number | null = null;
+
     const fetchCourses = async (retries = 3) => {
       try {
         console.log('Fetching published courses...');
         const data = await getPublishedCourses();
+        if (!isMounted) return;
+        
         console.log('Courses fetched:', data);
         setCourses(data);
       } catch (err) {
+        if (!isMounted) return;
+        
         console.error('Error fetching courses:', err);
         
         // Retry logic for network errors
         if (retries > 0 && err instanceof Error && 
             (err.message.includes('fetch') || err.message.includes('network'))) {
           console.log(`Retrying... (${3 - retries + 1}/3)`);
-          setTimeout(() => fetchCourses(retries - 1), 1000 * (4 - retries)); // Exponential backoff
+          retryTimeout = setTimeout(() => fetchCourses(retries - 1), 1000 * (4 - retries));
           return;
         }
         
         setError(err as Error);
       } finally {
-        if (retries === 0 || !error) {
+        if (isMounted) {
           setIsLoading(false);
         }
       }
     };
     
     fetchCourses();
+
+    return () => {
+      isMounted = false;
+      if (retryTimeout) {
+        clearTimeout(retryTimeout);
+      }
+    };
   }, []);
 
   if (isLoading) {

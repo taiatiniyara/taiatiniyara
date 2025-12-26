@@ -21,10 +21,26 @@ function ProjectDetail() {
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
+
     getProjectBySlug(slug)
-      .then(setProject)
-      .catch(setError)
-      .finally(() => setIsLoading(false));
+      .then(data => {
+        if (!isMounted) return;
+        setProject(data);
+      })
+      .catch(err => {
+        if (!isMounted) return;
+        setError(err);
+      })
+      .finally(() => {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
   }, [slug]);
 
   if (isLoading) {

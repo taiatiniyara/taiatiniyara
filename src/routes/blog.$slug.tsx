@@ -22,11 +22,15 @@ function BlogPostPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
+
     Promise.all([
       getPostBySlug(slug),
       getPublishedPosts()
     ])
       .then(([postData, postsData]) => {
+        if (!isMounted) return;
+        
         setPost(postData);
         setPosts(postsData);
         if (!postData) {
@@ -35,8 +39,19 @@ function BlogPostPage() {
           setError('This post is not yet published');
         }
       })
-      .catch(err => setError(err.message))
-      .finally(() => setLoading(false));
+      .catch(err => {
+        if (!isMounted) return;
+        setError(err.message);
+      })
+      .finally(() => {
+        if (isMounted) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
   }, [slug]);
 
   const formatDate = (dateString: string) => {

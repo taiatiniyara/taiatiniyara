@@ -27,31 +27,45 @@ function BlogIndex() {
   const totalPages = Math.ceil(posts.length / postsPerPage);
 
   useEffect(() => {
+    let isMounted = true;
+    let retryTimeout: number | null = null;
+
     const fetchPosts = async (retries = 3) => {
       try {
         const data = await getPublishedPosts();
+        if (!isMounted) return;
+        
         setPosts(data);
         setError(null);
       } catch (err) {
+        if (!isMounted) return;
+        
         console.error('Error fetching blog posts:', err);
         
         // Retry logic for network errors
         if (retries > 0 && err instanceof Error && 
             (err.message.includes('fetch') || err.message.includes('network'))) {
           console.log(`Retrying blog posts... (${3 - retries + 1}/3)`);
-          setTimeout(() => fetchPosts(retries - 1), 1000 * (4 - retries));
+          retryTimeout = setTimeout(() => fetchPosts(retries - 1), 1000 * (4 - retries));
           return;
         }
         
         setError(err instanceof Error ? err.message : 'Unknown error');
       } finally {
-        if (retries === 0 || !error) {
+        if (isMounted) {
           setIsLoading(false);
         }
       }
     };
     
     fetchPosts();
+
+    return () => {
+      isMounted = false;
+      if (retryTimeout) {
+        clearTimeout(retryTimeout);
+      }
+    };
   }, []);
 
   const loading = isLoading;
