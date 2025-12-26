@@ -37,6 +37,7 @@ const Navigation = () => {
   useAnalytics();
 
   const handleSignOut = async () => {
+    setMobileMenuOpen(false);
     await signOut();
   };
 

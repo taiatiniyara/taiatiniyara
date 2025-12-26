@@ -19,10 +19,21 @@ function CoursesIndex() {
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    getPublishedCourses()
-      .then(setCourses)
-      .catch(setError)
-      .finally(() => setIsLoading(false));
+    const fetchCourses = async () => {
+      try {
+        console.log('Fetching published courses...');
+        const data = await getPublishedCourses();
+        console.log('Courses fetched:', data);
+        setCourses(data);
+      } catch (err) {
+        console.error('Error fetching courses:', err);
+        setError(err as Error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchCourses();
   }, []);
 
   if (isLoading) {
@@ -34,8 +45,31 @@ function CoursesIndex() {
       <div className="container mx-auto px-4 py-16">
         <Card className="p-8 text-center">
           <h1 className="text-2xl font-bold mb-4">Error Loading Courses</h1>
-          <p className="text-gray-600 mb-6">{error.message}</p>
-          <Button onClick={() => window.location.reload()}>Reload Page</Button>
+          <p className="text-gray-600 mb-4">{error.message}</p>
+          <p className="text-sm text-gray-500 mb-6">
+            Please check your internet connection or try again later.
+          </p>
+          <div className="flex gap-2 justify-center">
+            <Button onClick={() => window.location.reload()}>Reload Page</Button>
+            <Button variant="outline" onClick={() => {
+              setIsLoading(true);
+              setError(null);
+              const fetchCourses = async () => {
+                try {
+                  console.log('Retrying course fetch...');
+                  const data = await getPublishedCourses();
+                  console.log('Courses fetched:', data);
+                  setCourses(data);
+                } catch (err) {
+                  console.error('Error fetching courses:', err);
+                  setError(err as Error);
+                } finally {
+                  setIsLoading(false);
+                }
+              };
+              fetchCourses();
+            }}>Try Again</Button>
+          </div>
         </Card>
       </div>
     );

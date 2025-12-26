@@ -111,7 +111,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    await supabase.auth.signOut({ scope: 'global' });
+    // Clear local state
+    setUser(null);
+    setSession(null);
+    setUserProfile(null);
+    // Navigate to home
+    window.location.href = '/';
   };
 
   const resetPassword = async (email: string) => {
