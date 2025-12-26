@@ -28,7 +28,7 @@ export default function TopNavigation() {
 
   const { user, signOut } = useAuth();
   return (
-    <div className="flex gap-4 p-4 mx-auto shadow-md items-center justify-between bg-white/20 backdrop-blur-xl sticky top-0 z-10">
+    <div className="flex gap-4 p-4 mx-auto container items-center justify-between bg-white/20 backdrop-blur-xl sticky top-0 z-10">
       <a href="/">
         <img src="/logo.svg" alt="Logo" width={40} />
       </a>

@@ -7,18 +7,7 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <div className="relative h-screen w-full overflow-hidden bg-background">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div
-          className="absolute -top-1/2 -left-1/2 w-full h-full bg-primary/10 rounded-full blur-3xl animate-pulse"
-          style={{ animationDuration: "4s" }}
-        />
-        <div
-          className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-chart-3/10 rounded-full blur-3xl animate-pulse"
-          style={{ animationDuration: "6s", animationDelay: "1s" }}
-        />
-      </div>
+    <div className="relative h-screen w-full overflow-hidden">
 
       {/* Main Content */}
       <div className="relative z-10 h-full flex flex-col items-center justify-center px-6 md:px-12">
