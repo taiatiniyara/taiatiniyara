@@ -3,6 +3,7 @@ import { boolean, integer, json, pgTable, timestamp, uuid, varchar } from "drizz
 export const blogPosts = pgTable("blog_posts", {
     id: uuid("id").primaryKey().defaultRandom(),
     title: varchar("title", { length: 255 }).notNull(),
+    slug: varchar("slug", { length: 255 }).notNull().unique(),
     excerpt: varchar("excerpt", { length: 1000 }).notNull(),
     content: varchar("content", { length: 5000 }).notNull(),
     tags: json("tags").notNull().$type<string[]>(),
@@ -28,6 +29,7 @@ export type NewCourseCategory = typeof course_categories.$inferInsert;
 export const courses = pgTable("courses", {
     id: uuid("id").primaryKey().defaultRandom(),
     category_id: uuid("category_uuid").notNull().references(() => course_categories.id),
+    slug: varchar("slug", { length: 255 }).notNull().unique(),
     title: varchar("title", { length: 255 }).notNull(),
     img_url: varchar("img_url", { length: 500 }),
     tags: json("tags").notNull().$type<string[]>(),
@@ -42,6 +44,7 @@ export type NewCourse = typeof courses.$inferInsert;
 export const lessons = pgTable("lessons", {
     id: uuid("id").primaryKey().defaultRandom(),
     course_id: uuid("course_id").notNull().references(() => courses.id),
+    slug: varchar("slug", { length: 255 }).notNull().unique(),
     title: varchar("title", { length: 255 }).notNull(),
     content: varchar("content", { length: 5000 }).notNull(),
     duration_minutes: integer("duration_minutes").notNull(),

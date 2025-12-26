@@ -71,7 +71,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       updated_at: new Date(),
     };
 
-    await supabase.from(tables.userProfiles).insert(newProfile);
+    await supabase.from(tables.user_profiles).insert(newProfile);
 
     return { error, data };
   };

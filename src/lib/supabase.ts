@@ -7,10 +7,10 @@ if (!supabaseUrl) {
     throw new Error('VITE_SUPABASE_URL is not defined in environment variables');
 }
 export const tables = {
-    blogPosts: 'blog_posts',
-    courseCategories: 'course_categories',
+    blog_posts: 'blog_posts',
+    course_categories: 'course_categories',
     courses: 'courses',
-    userProfiles: 'user_profiles',
+    user_profiles: 'user_profiles',
 }
 
 export const supabase = createClient(supabaseUrl, supabasePublishableKey!);
