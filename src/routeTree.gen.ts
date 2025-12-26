@@ -15,6 +15,12 @@ import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as StudentIndexRouteImport } from './routes/student/index'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminUsersIndexRouteImport } from './routes/admin/users/index'
+import { Route as AdminCoursesIndexRouteImport } from './routes/admin/courses/index'
+import { Route as AdminBlogsIndexRouteImport } from './routes/admin/blogs/index'
+import { Route as AdminCoursesCategoriesIndexRouteImport } from './routes/admin/courses/categories/index'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -46,6 +52,37 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StudentIndexRoute = StudentIndexRouteImport.update({
+  id: '/student/',
+  path: '/student/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminUsersIndexRoute = AdminUsersIndexRouteImport.update({
+  id: '/admin/users/',
+  path: '/admin/users/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminCoursesIndexRoute = AdminCoursesIndexRouteImport.update({
+  id: '/admin/courses/',
+  path: '/admin/courses/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminBlogsIndexRoute = AdminBlogsIndexRouteImport.update({
+  id: '/admin/blogs/',
+  path: '/admin/blogs/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminCoursesCategoriesIndexRoute =
+  AdminCoursesCategoriesIndexRouteImport.update({
+    id: '/admin/courses/categories/',
+    path: '/admin/courses/categories/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -54,6 +91,12 @@ export interface FileRoutesByFullPath {
   '/profile': typeof ProfileRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
+  '/admin': typeof AdminIndexRoute
+  '/student': typeof StudentIndexRoute
+  '/admin/blogs': typeof AdminBlogsIndexRoute
+  '/admin/courses': typeof AdminCoursesIndexRoute
+  '/admin/users': typeof AdminUsersIndexRoute
+  '/admin/courses/categories': typeof AdminCoursesCategoriesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,6 +105,12 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
+  '/admin': typeof AdminIndexRoute
+  '/student': typeof StudentIndexRoute
+  '/admin/blogs': typeof AdminBlogsIndexRoute
+  '/admin/courses': typeof AdminCoursesIndexRoute
+  '/admin/users': typeof AdminUsersIndexRoute
+  '/admin/courses/categories': typeof AdminCoursesCategoriesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,6 +120,12 @@ export interface FileRoutesById {
   '/profile': typeof ProfileRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
+  '/admin/': typeof AdminIndexRoute
+  '/student/': typeof StudentIndexRoute
+  '/admin/blogs/': typeof AdminBlogsIndexRoute
+  '/admin/courses/': typeof AdminCoursesIndexRoute
+  '/admin/users/': typeof AdminUsersIndexRoute
+  '/admin/courses/categories/': typeof AdminCoursesCategoriesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -81,6 +136,12 @@ export interface FileRouteTypes {
     | '/profile'
     | '/reset-password'
     | '/signup'
+    | '/admin'
+    | '/student'
+    | '/admin/blogs'
+    | '/admin/courses'
+    | '/admin/users'
+    | '/admin/courses/categories'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -89,6 +150,12 @@ export interface FileRouteTypes {
     | '/profile'
     | '/reset-password'
     | '/signup'
+    | '/admin'
+    | '/student'
+    | '/admin/blogs'
+    | '/admin/courses'
+    | '/admin/users'
+    | '/admin/courses/categories'
   id:
     | '__root__'
     | '/'
@@ -97,6 +164,12 @@ export interface FileRouteTypes {
     | '/profile'
     | '/reset-password'
     | '/signup'
+    | '/admin/'
+    | '/student/'
+    | '/admin/blogs/'
+    | '/admin/courses/'
+    | '/admin/users/'
+    | '/admin/courses/categories/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -106,6 +179,12 @@ export interface RootRouteChildren {
   ProfileRoute: typeof ProfileRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SignupRoute: typeof SignupRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+  StudentIndexRoute: typeof StudentIndexRoute
+  AdminBlogsIndexRoute: typeof AdminBlogsIndexRoute
+  AdminCoursesIndexRoute: typeof AdminCoursesIndexRoute
+  AdminUsersIndexRoute: typeof AdminUsersIndexRoute
+  AdminCoursesCategoriesIndexRoute: typeof AdminCoursesCategoriesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -152,6 +231,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/student/': {
+      id: '/student/'
+      path: '/student'
+      fullPath: '/student'
+      preLoaderRoute: typeof StudentIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/users/': {
+      id: '/admin/users/'
+      path: '/admin/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/courses/': {
+      id: '/admin/courses/'
+      path: '/admin/courses'
+      fullPath: '/admin/courses'
+      preLoaderRoute: typeof AdminCoursesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/blogs/': {
+      id: '/admin/blogs/'
+      path: '/admin/blogs'
+      fullPath: '/admin/blogs'
+      preLoaderRoute: typeof AdminBlogsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/courses/categories/': {
+      id: '/admin/courses/categories/'
+      path: '/admin/courses/categories'
+      fullPath: '/admin/courses/categories'
+      preLoaderRoute: typeof AdminCoursesCategoriesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -162,6 +283,12 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileRoute: ProfileRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SignupRoute: SignupRoute,
+  AdminIndexRoute: AdminIndexRoute,
+  StudentIndexRoute: StudentIndexRoute,
+  AdminBlogsIndexRoute: AdminBlogsIndexRoute,
+  AdminCoursesIndexRoute: AdminCoursesIndexRoute,
+  AdminUsersIndexRoute: AdminUsersIndexRoute,
+  AdminCoursesCategoriesIndexRoute: AdminCoursesCategoriesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
