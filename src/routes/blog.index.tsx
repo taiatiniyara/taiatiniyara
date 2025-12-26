@@ -27,10 +27,31 @@ function BlogIndex() {
   const totalPages = Math.ceil(posts.length / postsPerPage);
 
   useEffect(() => {
-    getPublishedPosts()
-      .then(setPosts)
-      .catch(err => setError(err.message))
-      .finally(() => setIsLoading(false));
+    const fetchPosts = async (retries = 3) => {
+      try {
+        const data = await getPublishedPosts();
+        setPosts(data);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching blog posts:', err);
+        
+        // Retry logic for network errors
+        if (retries > 0 && err instanceof Error && 
+            (err.message.includes('fetch') || err.message.includes('network'))) {
+          console.log(`Retrying blog posts... (${3 - retries + 1}/3)`);
+          setTimeout(() => fetchPosts(retries - 1), 1000 * (4 - retries));
+          return;
+        }
+        
+        setError(err instanceof Error ? err.message : 'Unknown error');
+      } finally {
+        if (retries === 0 || !error) {
+          setIsLoading(false);
+        }
+      }
+    };
+    
+    fetchPosts();
   }, []);
 
   const loading = isLoading;
@@ -50,9 +71,42 @@ function BlogIndex() {
   if (error) {
     return (
       <div className="container mx-auto px-4 py-16">
-        <div className="flex justify-center items-center min-h-100">
-          <div className="text-lg text-red-600">Error: {error}</div>
-        </div>
+        <Card className="p-8 text-center">
+          <h1 className="text-2xl font-bold mb-4">Error Loading Blog Posts</h1>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <p className="text-sm text-gray-500 mb-6">
+            Please check your internet connection or try again later.
+          </p>
+          <div className="flex gap-2 justify-center">
+            <Button onClick={() => window.location.reload()}>Reload Page</Button>
+            <Button variant="outline" onClick={() => {
+              setIsLoading(true);
+              setError(null);
+              const retryFetch = async (retries = 3) => {
+                try {
+                  const data = await getPublishedPosts();
+                  setPosts(data);
+                  setError(null);
+                } catch (err) {
+                  console.error('Error fetching blog posts:', err);
+                  
+                  if (retries > 0) {
+                    console.log(`Retrying... (${3 - retries + 1}/3)`);
+                    setTimeout(() => retryFetch(retries - 1), 1000 * (4 - retries));
+                    return;
+                  }
+                  
+                  setError(err instanceof Error ? err.message : 'Unknown error');
+                } finally {
+                  if (retries === 0) {
+                    setIsLoading(false);
+                  }
+                }
+              };
+              retryFetch();
+            }}>Try Again</Button>
+          </div>
+        </Card>
       </div>
     );
   }

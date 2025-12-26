@@ -12,31 +12,15 @@ import type {
 
 // GET all published courses
 export async function getPublishedCourses(): Promise<Course[]> {
-  console.log('Starting getPublishedCourses query...');
-  
-  // Add timeout to prevent infinite loading
-  const timeoutPromise = new Promise<never>((_, reject) => {
-    setTimeout(() => reject(new Error('Query timeout - request took too long')), 10000);
-  });
-  
-  const queryPromise = supabase
+  const { data, error } = await supabase
     .from('courses')
     .select('*')
     .eq('published', true)
-    .order('created_at', { ascending: false, nullsFirst: false });
-  
-  const { data, error } = await Promise.race([queryPromise, timeoutPromise]);
+    .order('created_at', { ascending: false });
 
-  console.log('Query result:', { data, error });
-  
   if (error) {
-    console.error('Error in getPublishedCourses:', error);
+    console.error('Error fetching published courses:', error);
     throw new Error(`Failed to fetch courses: ${error.message}`);
-  }
-  
-  if (!data) {
-    console.log('No courses found, returning empty array');
-    return [];
   }
   
   return data as Course[];

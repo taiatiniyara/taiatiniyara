@@ -9,7 +9,10 @@ export async function getPublishedProjects(): Promise<Project[]> {
     .eq('published', true)
     .order('published_at', { ascending: false });
 
-  if (error) throw new Error(error.message);
+  if (error) {
+    console.error('Error fetching published projects:', error);
+    throw new Error(`Failed to fetch projects: ${error.message}`);
+  }
   return data as Project[];
 }
 

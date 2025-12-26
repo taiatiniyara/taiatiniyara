@@ -11,7 +11,7 @@ if (!url || !publishableKey) {
   throw new Error("Missing Supabase environment variables");
 }
 
-// Supabase client with extended timeout for large operations
+// Supabase client with optimized configuration
 export const supabase = createClient(url, publishableKey, {
   db: {
     schema: 'public',
@@ -21,8 +21,13 @@ export const supabase = createClient(url, publishableKey, {
       'x-client-info': 'taiatiniyara-web',
     },
   },
-  // Increase timeout for large content operations
   auth: {
     persistSession: true,
+    autoRefreshToken: true,
+  },
+  realtime: {
+    params: {
+      eventsPerSecond: 10,
+    },
   },
 });

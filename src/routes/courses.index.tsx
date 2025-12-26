@@ -19,7 +19,7 @@ function CoursesIndex() {
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    const fetchCourses = async () => {
+    const fetchCourses = async (retries = 3) => {
       try {
         console.log('Fetching published courses...');
         const data = await getPublishedCourses();
@@ -27,9 +27,20 @@ function CoursesIndex() {
         setCourses(data);
       } catch (err) {
         console.error('Error fetching courses:', err);
+        
+        // Retry logic for network errors
+        if (retries > 0 && err instanceof Error && 
+            (err.message.includes('fetch') || err.message.includes('network'))) {
+          console.log(`Retrying... (${3 - retries + 1}/3)`);
+          setTimeout(() => fetchCourses(retries - 1), 1000 * (4 - retries)); // Exponential backoff
+          return;
+        }
+        
         setError(err as Error);
       } finally {
-        setIsLoading(false);
+        if (retries === 0 || !error) {
+          setIsLoading(false);
+        }
       }
     };
     
@@ -54,20 +65,31 @@ function CoursesIndex() {
             <Button variant="outline" onClick={() => {
               setIsLoading(true);
               setError(null);
-              const fetchCourses = async () => {
+              const retryFetch = async (retries = 3) => {
                 try {
                   console.log('Retrying course fetch...');
                   const data = await getPublishedCourses();
                   console.log('Courses fetched:', data);
                   setCourses(data);
+                  setError(null);
                 } catch (err) {
                   console.error('Error fetching courses:', err);
+                  
+                  // Retry with exponential backoff
+                  if (retries > 0) {
+                    console.log(`Retrying... (${3 - retries + 1}/3)`);
+                    setTimeout(() => retryFetch(retries - 1), 1000 * (4 - retries));
+                    return;
+                  }
+                  
                   setError(err as Error);
                 } finally {
-                  setIsLoading(false);
+                  if (retries === 0) {
+                    setIsLoading(false);
+                  }
                 }
               };
-              fetchCourses();
+              retryFetch();
             }}>Try Again</Button>
           </div>
         </Card>

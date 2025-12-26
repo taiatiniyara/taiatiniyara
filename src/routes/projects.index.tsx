@@ -22,10 +22,31 @@ function ProjectsIndex() {
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    getPublishedProjects()
-      .then(setProjects)
-      .catch(setError)
-      .finally(() => setIsLoading(false));
+    const fetchProjects = async (retries = 3) => {
+      try {
+        const data = await getPublishedProjects();
+        setProjects(data);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching projects:', err);
+        
+        // Retry logic for network errors
+        if (retries > 0 && err instanceof Error && 
+            (err.message.includes('fetch') || err.message.includes('network'))) {
+          console.log(`Retrying projects... (${3 - retries + 1}/3)`);
+          setTimeout(() => fetchProjects(retries - 1), 1000 * (4 - retries));
+          return;
+        }
+        
+        setError(err as Error);
+      } finally {
+        if (retries === 0 || !error) {
+          setIsLoading(false);
+        }
+      }
+    };
+    
+    fetchProjects();
   }, []);
 
   if (isLoading) {
@@ -37,8 +58,39 @@ function ProjectsIndex() {
       <div className="container mx-auto px-4 py-16">
         <Card className="p-8 text-center">
           <h1 className="text-2xl font-bold mb-4">Error Loading Projects</h1>
-          <p className="text-gray-600 mb-6">{error.message}</p>
-          <Button onClick={() => window.location.reload()}>Reload Page</Button>
+          <p className="text-gray-600 mb-4">{error.message}</p>
+          <p className="text-sm text-gray-500 mb-6">
+            Please check your internet connection or try again later.
+          </p>
+          <div className="flex gap-2 justify-center">
+            <Button onClick={() => window.location.reload()}>Reload Page</Button>
+            <Button variant="outline" onClick={() => {
+              setIsLoading(true);
+              setError(null);
+              const retryFetch = async (retries = 3) => {
+                try {
+                  const data = await getPublishedProjects();
+                  setProjects(data);
+                  setError(null);
+                } catch (err) {
+                  console.error('Error fetching projects:', err);
+                  
+                  if (retries > 0) {
+                    console.log(`Retrying... (${3 - retries + 1}/3)`);
+                    setTimeout(() => retryFetch(retries - 1), 1000 * (4 - retries));
+                    return;
+                  }
+                  
+                  setError(err as Error);
+                } finally {
+                  if (retries === 0) {
+                    setIsLoading(false);
+                  }
+                }
+              };
+              retryFetch();
+            }}>Try Again</Button>
+          </div>
         </Card>
       </div>
     );

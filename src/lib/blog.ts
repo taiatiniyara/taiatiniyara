@@ -9,7 +9,10 @@ export async function getPublishedPosts(): Promise<BlogPost[]> {
     .eq('published', true)
     .order('published_at', { ascending: false });
 
-  if (error) throw new Error(error.message);
+  if (error) {
+    console.error('Error fetching published posts:', error);
+    throw new Error(`Failed to fetch blog posts: ${error.message}`);
+  }
   return data as BlogPost[];
 }
 
