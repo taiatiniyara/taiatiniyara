@@ -99,10 +99,7 @@ function ModulesAdmin() {
       "Are you sure you want to delete this module? This action cannot be undone.",
       async () => {
         try {
-          await deleteModuleMutation.mutateAsync({
-            id,
-            courseId: selectedCourse!.id,
-          });
+          await deleteModuleMutation.mutateAsync(id);
           showAlert("Success", "Module deleted successfully!");
         } catch (error) {
           showAlert("Error", "Failed to delete module.");

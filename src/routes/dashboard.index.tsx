@@ -5,6 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import { useUser } from "@/hooks/useUser";
 import { SEO } from "@/components/SEO";
 import { BookOpen, Award, LogOut, TrendingUp } from "lucide-react";
+import { useState, useEffect } from "react";
+import { getUserEnrollments, getCompletedModules } from "@/lib/course";
+import type { Course } from "@/types/course";
 
 export const Route = createFileRoute("/dashboard/")({
   component: Dashboard,
@@ -12,6 +15,28 @@ export const Route = createFileRoute("/dashboard/")({
 
 function Dashboard() {
   const { user, isAuthenticated, logout } = useUser();
+  const [enrollments, setEnrollments] = useState<any[]>([]);
+  const [isLoadingEnrollments, setIsLoadingEnrollments] = useState(true);
+
+  // Load enrollments from Supabase
+  useEffect(() => {
+    const loadEnrollments = async () => {
+      if (user?.id) {
+        try {
+          const data = await getUserEnrollments(user.id);
+          setEnrollments(data);
+        } catch (err) {
+          console.error('Error loading enrollments:', err);
+        } finally {
+          setIsLoadingEnrollments(false);
+        }
+      } else {
+        setIsLoadingEnrollments(false);
+      }
+    };
+    
+    loadEnrollments();
+  }, [user?.id]);
 
   if (!isAuthenticated) {
     return (
@@ -29,10 +54,8 @@ function Dashboard() {
     );
   }
 
-  // Get enrolled courses from localStorage
-  const enrolledCourseIds = JSON.parse(
-    localStorage.getItem("enrolled_courses") || "[]"
-  );
+  const completedCount = enrollments.filter(e => e.progress === 100).length;
+  const inProgressCount = enrollments.filter(e => e.progress > 0 && e.progress < 100).length;
 
   return (
     <>
@@ -67,7 +90,7 @@ function Dashboard() {
                     Enrolled Courses
                   </p>
                   <p className="text-3xl font-bold text-slate-800 dark:text-slate-100">
-                    {enrolledCourseIds.length}
+                    {enrollments.length}
                   </p>
                 </div>
                 <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center">
@@ -83,14 +106,7 @@ function Dashboard() {
                     Completed
                   </p>
                   <p className="text-3xl font-bold text-slate-800 dark:text-slate-100">
-                    {
-                      enrolledCourseIds.filter((id: string) => {
-                        const progress = localStorage.getItem(
-                          `progress_${id}_${user?.email}`
-                        );
-                        return progress === "100";
-                      }).length
-                    }
+                    {completedCount}
                   </p>
                 </div>
                 <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
@@ -106,14 +122,7 @@ function Dashboard() {
                     In Progress
                   </p>
                   <p className="text-3xl font-bold text-slate-800 dark:text-slate-100">
-                    {
-                      enrolledCourseIds.filter((id: string) => {
-                        const progress = localStorage.getItem(
-                          `progress_${id}_${user?.email}`
-                        );
-                        return progress !== "100" && progress !== "0";
-                      }).length
-                    }
+                    {inProgressCount}
                   </p>
                 </div>
                 <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
@@ -129,7 +138,11 @@ function Dashboard() {
               My Courses
             </h2>
 
-            {enrolledCourseIds.length === 0 ? (
+            {isLoadingEnrollments ? (
+              <div className="text-center py-12">
+                <p className="text-slate-600 dark:text-slate-400">Loading your courses...</p>
+              </div>
+            ) : enrollments.length === 0 ? (
               <Card className="p-12 text-center">
                 <BookOpen className="w-16 h-16 text-slate-300 dark:text-slate-600 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mb-2">
@@ -144,11 +157,10 @@ function Dashboard() {
               </Card>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {enrolledCourseIds.map((courseId: string) => (
+                {enrollments.map((enrollment) => (
                   <EnrolledCourseCard
-                    key={courseId}
-                    courseId={courseId}
-                    userEmail={user?.email || ""}
+                    key={enrollment.id}
+                    enrollment={enrollment}
                   />
                 ))}
               </div>
@@ -161,35 +173,60 @@ function Dashboard() {
 }
 
 function EnrolledCourseCard({
-  courseId,
-  userEmail,
+  enrollment,
 }: {
-  courseId: string;
-  userEmail: string;
+  enrollment: any;
 }) {
+  const { user } = useUser();
   // Fetch course details
-  const { data: courses } = { data: [] as any[] }; // Placeholder - implement proper data fetching
-  
-  // This should be replaced with proper data fetching
-  // const { data: courses } = useQuery({
-  //   queryKey: ["allCourses"],
-  //   queryFn: async () => {
-  //     const { getAllCourses } = await import("@/lib/course");
-  //     const response = await getAllCourses();
-  //     return response;
-  //   },
-  // });
+  const [course, setCourse] = useState<Course | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [completedModulesCount, setCompletedModulesCount] = useState(0);
 
-  const course = courses?.find((c: any) => c.id === courseId);
-  const progress = parseInt(
-    localStorage.getItem(`progress_${courseId}_${userEmail}`) || "0"
-  );
-  const completedModulesData = localStorage.getItem(
-    `completed_modules_${courseId}_${userEmail}`
-  );
-  const completedModules = completedModulesData
-    ? JSON.parse(completedModulesData).length
-    : 0;
+  useEffect(() => {
+    const loadCourseData = async () => {
+      try {
+        // Get course by ID - we need to fetch all courses and find by ID
+        // or better, update getCourseBySlug to also support ID lookup
+        const { supabase } = await import('@/lib/supabase');
+        const { data: courseData } = await supabase
+          .from('courses')
+          .select('*')
+          .eq('id', enrollment.course_id)
+          .single();
+        
+        if (courseData) {
+          setCourse(courseData as Course);
+          
+          // Get completed modules count
+          if (user?.id) {
+            const completedIds = await getCompletedModules(enrollment.course_id, user.id);
+            setCompletedModulesCount(completedIds.length);
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching course:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadCourseData();
+  }, [enrollment.course_id, user?.id]);
+
+  const progress = enrollment.progress || 0;
+
+  if (isLoading) {
+    return (
+      <Card className="overflow-hidden">
+        <div className="h-40 bg-slate-200 dark:bg-slate-700 animate-pulse" />
+        <div className="p-6">
+          <div className="h-6 bg-slate-200 dark:bg-slate-700 rounded mb-2 animate-pulse" />
+          <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded animate-pulse" />
+        </div>
+      </Card>
+    );
+  }
 
   if (!course) {
     return null;
@@ -243,7 +280,7 @@ function EnrolledCourseCard({
             />
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
-            {completedModules} modules completed
+            {completedModulesCount} modules completed
           </p>
         </div>
 

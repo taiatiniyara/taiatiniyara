@@ -193,3 +193,123 @@ export function generateSlug(title: string): string {
   const randomString = Math.random().toString(36).substring(2, 8);
   return `${baseSlug}-${randomString}`;
 }
+
+// ===== ENROLLMENTS =====
+
+// ENROLL user in a course
+export async function enrollInCourse(courseId: string, userId: string, userEmail: string): Promise<void> {
+  const { error } = await supabase
+    .from('course_enrollments')
+    .upsert({
+      course_id: courseId,
+      user_id: userId,
+      user_email: userEmail,
+      enrolled_at: new Date().toISOString(),
+      progress: 0,
+    }, {
+      onConflict: 'course_id,user_id'
+    });
+
+  if (error) throw new Error(error.message);
+}
+
+// CHECK if user is enrolled in a course
+export async function isUserEnrolled(courseId: string, userId: string): Promise<boolean> {
+  const { data, error } = await supabase
+    .from('course_enrollments')
+    .select('id')
+    .eq('course_id', courseId)
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  if (error) throw new Error(error.message);
+  return !!data;
+}
+
+// GET user enrollments
+export async function getUserEnrollments(userId: string): Promise<any[]> {
+  const { data, error } = await supabase
+    .from('course_enrollments')
+    .select('*')
+    .eq('user_id', userId)
+    .order('enrolled_at', { ascending: false });
+
+  if (error) throw new Error(error.message);
+  return data || [];
+}
+
+// UPDATE course progress
+export async function updateCourseProgress(
+  courseId: string,
+  userId: string,
+  progress: number
+): Promise<void> {
+  const { error } = await supabase
+    .from('course_enrollments')
+    .update({ 
+      progress,
+      completed_at: progress === 100 ? new Date().toISOString() : null
+    })
+    .eq('course_id', courseId)
+    .eq('user_id', userId);
+
+  if (error) throw new Error(error.message);
+}
+
+// MARK module as complete
+export async function markModuleComplete(
+  moduleId: string,
+  courseId: string,
+  userId: string,
+  userEmail: string
+): Promise<void> {
+  const { error } = await supabase
+    .from('module_completions')
+    .upsert({
+      user_id: userId,
+      user_email: userEmail,
+      course_id: courseId,
+      module_id: moduleId,
+      completed_at: new Date().toISOString(),
+    }, {
+      onConflict: 'user_id,module_id'
+    });
+
+  if (error) throw new Error(error.message);
+}
+
+// UNMARK module as complete
+export async function unmarkModuleComplete(moduleId: string, userId: string): Promise<void> {
+  const { error } = await supabase
+    .from('module_completions')
+    .delete()
+    .eq('module_id', moduleId)
+    .eq('user_id', userId);
+
+  if (error) throw new Error(error.message);
+}
+
+// GET completed modules for a course
+export async function getCompletedModules(courseId: string, userId: string): Promise<string[]> {
+  const { data, error } = await supabase
+    .from('module_completions')
+    .select('module_id')
+    .eq('course_id', courseId)
+    .eq('user_id', userId);
+
+  if (error) throw new Error(error.message);
+  return data ? data.map(item => item.module_id) : [];
+}
+
+// GET enrollment with progress
+export async function getEnrollmentProgress(courseId: string, userId: string): Promise<any> {
+  const { data, error } = await supabase
+    .from('course_enrollments')
+    .select('*')
+    .eq('course_id', courseId)
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  if (error) throw new Error(error.message);
+  return data;
+}

@@ -4,6 +4,13 @@ import { Button } from "@/components/ui/button";
 import { useCourse } from "@/hooks/useCourseQueries";
 import { useUser } from "@/hooks/useUser";
 import {
+  getCompletedModules,
+  markModuleComplete,
+  unmarkModuleComplete,
+  updateCourseProgress,
+  isUserEnrolled,
+} from "@/lib/course";
+import {
   ArrowLeft,
   ChevronLeft,
   ChevronRight,
@@ -16,7 +23,7 @@ import {
 } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export const Route = createFileRoute("/courses/$courseSlug/$moduleSlug")({
   component: ModuleLearning,
@@ -31,35 +38,57 @@ function ModuleLearning() {
   const [completedModules, setCompletedModules] = useState<Set<string>>(
     new Set()
   );
+  const contentAreaRef = useRef<HTMLDivElement>(null);
 
-  // Load completed modules from localStorage
+  // Load completed modules from Supabase
   useEffect(() => {
-    if (course && user) {
-      const key = `completed_modules_${course.id}_${user.email}`;
-      const stored = localStorage.getItem(key);
-      if (stored) {
-        setCompletedModules(new Set(JSON.parse(stored)));
+    const loadCompletedModules = async () => {
+      if (course && user?.id) {
+        try {
+          const completedIds = await getCompletedModules(course.id, user.id);
+          setCompletedModules(new Set(completedIds));
+        } catch (err) {
+          console.error('Error loading completed modules:', err);
+        }
       }
-    }
-  }, [course, user]);
+    };
+    
+    loadCompletedModules();
+  }, [course, user?.id]);
 
-  // Check if user is enrolled
+  // Scroll to top when module changes
   useEffect(() => {
-    if (!isAuthenticated || !course) {
-      return;
+    // Scroll the window to the very top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Also scroll the content area
+    if (contentAreaRef.current) {
+      contentAreaRef.current.scrollTo({ top: 0, behavior: 'smooth' });
     }
+  }, [moduleSlug]);
 
-    const enrolledCourses = JSON.parse(
-      localStorage.getItem("enrolled_courses") || "[]"
-    );
-    if (!enrolledCourses.includes(course.id)) {
-      // Not enrolled, redirect to course page
-      navigate({
-        to: "/courses/$slug",
-        params: { slug: courseSlug },
-      });
-    }
-  }, [isAuthenticated, course, courseSlug, navigate]);
+  // Check if user is enrolled via Supabase
+  useEffect(() => {
+    const checkEnrollment = async () => {
+      if (!isAuthenticated || !course || !user?.id) {
+        return;
+      }
+
+      try {
+        const enrolled = await isUserEnrolled(course.id, user.id);
+        if (!enrolled) {
+          // Not enrolled, redirect to course page
+          navigate({
+            to: "/courses/$slug",
+            params: { slug: courseSlug },
+          });
+        }
+      } catch (err) {
+        console.error('Error checking enrollment:', err);
+      }
+    };
+    
+    checkEnrollment();
+  }, [isAuthenticated, course, courseSlug, navigate, user?.id]);
 
   if (isPending) {
     return <LoadingSpinner />;
@@ -107,29 +136,61 @@ function ModuleLearning() {
       ? course.modules[currentIndex + 1]
       : null;
 
-  const handleMarkComplete = () => {
-    if (!user || !course) return;
+  const handleMarkComplete = async (toggle: boolean = true) => {
+    if (!user?.id || !course) return;
 
     const newCompleted = new Set(completedModules);
-    if (completedModules.has(currentModule.id)) {
-      newCompleted.delete(currentModule.id);
-    } else {
-      newCompleted.add(currentModule.id);
+    const isCurrentlyCompleted = completedModules.has(currentModule.id);
+    
+    try {
+      if (toggle && isCurrentlyCompleted) {
+        // Unmark as complete (only if toggle is true)
+        await unmarkModuleComplete(currentModule.id, user.id);
+        newCompleted.delete(currentModule.id);
+      } else if (!isCurrentlyCompleted) {
+        // Mark as complete
+        await markModuleComplete(
+          currentModule.id,
+          course.id,
+          user.id,
+          user.email || ''
+        );
+        newCompleted.add(currentModule.id);
+      }
+      
+      setCompletedModules(newCompleted);
+
+      // Calculate and update progress
+      const progressValue = course.modules
+        ? Math.round((newCompleted.size / course.modules.length) * 100)
+        : 0;
+      
+      await updateCourseProgress(course.id, user.id, progressValue);
+    } catch (err) {
+      console.error('Error updating module completion:', err);
+      alert('Failed to update progress. Please try again.');
     }
-    setCompletedModules(newCompleted);
+  };
 
-    // Save to localStorage
-    const key = `completed_modules_${course.id}_${user.email}`;
-    localStorage.setItem(key, JSON.stringify([...newCompleted]));
+  const handleNextModule = async () => {
+    // Mark current module as complete before navigating
+    if (!completedModules.has(currentModule.id)) {
+      await handleMarkComplete(false);
+    }
+  };
 
-    // Calculate and update progress
-    const progressValue = course.modules
-      ? Math.round((newCompleted.size / course.modules.length) * 100)
-      : 0;
-    localStorage.setItem(
-      `progress_${course.id}_${user.email}`,
-      progressValue.toString()
-    );
+  const handlePreviousModule = async () => {
+    // Mark current module as complete before navigating
+    if (!completedModules.has(currentModule.id)) {
+      await handleMarkComplete(false);
+    }
+  };
+
+  const handleCourseComplete = async () => {
+    // Mark current (last) module as complete before navigating
+    if (!completedModules.has(currentModule.id)) {
+      await handleMarkComplete(false);
+    }
   };
 
   const isCompleted = completedModules.has(currentModule.id);
@@ -261,7 +322,7 @@ function ModuleLearning() {
               </div>
               <Button
                 variant={isCompleted ? "outline" : "default"}
-                onClick={handleMarkComplete}
+                onClick={() => handleMarkComplete(true)}
               >
                 {isCompleted ? (
                   <>
@@ -279,11 +340,11 @@ function ModuleLearning() {
           </div>
 
           {/* Content Area */}
-          <div className="flex-1 overflow-y-auto">
-            <div className="max-w-4xl mx-auto p-8">
+          <div ref={contentAreaRef} className="flex-1 overflow-y-auto">
+            <div className="max-w-5xl mx-auto p-4 md:p-6">
               {/* Video Player */}
               {currentModule.video_url && (
-                <Card className="mb-8 overflow-hidden">
+                <Card className="mb-4 overflow-hidden">
                   <div className="aspect-video bg-slate-900">
                     {currentModule.video_url.includes("youtube.com") ||
                     currentModule.video_url.includes("youtu.be") ? (
@@ -311,16 +372,16 @@ function ModuleLearning() {
 
               {/* Module Description */}
               {currentModule.description && (
-                <Card className="p-6 bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 mb-8">
+                <Card className="p-4 bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 mb-4">
                   <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/40 rounded-lg flex items-center justify-center shrink-0">
-                      <BookOpen className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                    <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/40 rounded-lg flex items-center justify-center shrink-0">
+                      <BookOpen className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                     </div>
                     <div>
-                      <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-2">
+                      <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 mb-1">
                         Module Overview
                       </h2>
-                      <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
+                      <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
                         {currentModule.description}
                       </p>
                     </div>
@@ -329,32 +390,32 @@ function ModuleLearning() {
               )}
 
               {/* Module Content */}
-              <Card className="p-8 md:p-12 bg-white dark:bg-slate-800">
+              <Card className="p-6 md:p-8 bg-white dark:bg-slate-800">
                 <style>{`
                   .module-content {
-                    font-size: 17px;
-                    line-height: 1.75;
+                    font-size: 16px;
+                    line-height: 1.65;
                     color: #334155;
                   }
                   .dark .module-content {
                     color: #cbd5e1;
                   }
                   .module-content h1 {
-                    font-size: 2.5rem;
+                    font-size: 2rem;
                     font-weight: 700;
-                    margin-top: 2rem;
-                    margin-bottom: 1.5rem;
+                    margin-top: 1.5rem;
+                    margin-bottom: 1rem;
                     color: #0f172a;
                   }
                   .dark .module-content h1 {
                     color: #f1f5f9;
                   }
                   .module-content h2 {
-                    font-size: 2rem;
+                    font-size: 1.5rem;
                     font-weight: 700;
-                    margin-top: 2rem;
-                    margin-bottom: 1rem;
-                    padding-bottom: 0.5rem;
+                    margin-top: 1.5rem;
+                    margin-bottom: 0.75rem;
+                    padding-bottom: 0.4rem;
                     border-bottom: 2px solid #e2e8f0;
                     color: #1e293b;
                   }
@@ -363,18 +424,18 @@ function ModuleLearning() {
                     border-bottom-color: #475569;
                   }
                   .module-content h3 {
-                    font-size: 1.5rem;
+                    font-size: 1.25rem;
                     font-weight: 600;
-                    margin-top: 1.5rem;
-                    margin-bottom: 0.75rem;
+                    margin-top: 1.25rem;
+                    margin-bottom: 0.5rem;
                     color: #1e293b;
                   }
                   .dark .module-content h3 {
                     color: #e2e8f0;
                   }
                   .module-content p {
-                    margin-bottom: 1.25rem;
-                    line-height: 1.8;
+                    margin-bottom: 1rem;
+                    line-height: 1.7;
                   }
                   .module-content strong {
                     font-weight: 700;
@@ -415,11 +476,11 @@ function ModuleLearning() {
                   .module-content pre {
                     background: #1e293b;
                     color: #e2e8f0;
-                    padding: 1.5rem;
-                    border-radius: 0.75rem;
+                    padding: 1rem;
+                    border-radius: 0.5rem;
                     overflow-x: auto;
-                    margin: 1.5rem 0;
-                    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+                    margin: 1rem 0;
+                    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
                     border: 1px solid #334155;
                   }
                   .dark .module-content pre {
@@ -434,8 +495,8 @@ function ModuleLearning() {
                     font-weight: 400;
                   }
                   .module-content ul, .module-content ol {
-                    margin: 1.25rem 0;
-                    padding-left: 1.75rem;
+                    margin: 1rem 0;
+                    padding-left: 1.5rem;
                   }
                   .module-content ul {
                     list-style-type: disc;
@@ -444,8 +505,8 @@ function ModuleLearning() {
                     list-style-type: decimal;
                   }
                   .module-content li {
-                    margin-bottom: 0.75rem;
-                    line-height: 1.75;
+                    margin-bottom: 0.5rem;
+                    line-height: 1.65;
                   }
                   .module-content li::marker {
                     color: #9333ea;
@@ -457,9 +518,9 @@ function ModuleLearning() {
                   .module-content blockquote {
                     border-left: 4px solid #9333ea;
                     background: #faf5ff;
-                    padding: 1rem 1.5rem;
-                    margin: 1.5rem 0;
-                    border-radius: 0 0.5rem 0.5rem 0;
+                    padding: 0.75rem 1rem;
+                    margin: 1rem 0;
+                    border-radius: 0 0.375rem 0.375rem 0;
                     font-style: italic;
                   }
                   .dark .module-content blockquote {
@@ -467,16 +528,16 @@ function ModuleLearning() {
                     border-left-color: #c084fc;
                   }
                   .module-content img {
-                    border-radius: 0.75rem;
-                    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-                    margin: 2rem 0;
+                    border-radius: 0.5rem;
+                    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+                    margin: 1.5rem 0;
                     max-width: 100%;
                     height: auto;
                   }
                   .module-content hr {
                     border: none;
                     border-top: 2px solid #e2e8f0;
-                    margin: 2rem 0;
+                    margin: 1.5rem 0;
                   }
                   .dark .module-content hr {
                     border-top-color: #475569;
@@ -484,11 +545,11 @@ function ModuleLearning() {
                   .module-content table {
                     width: 100%;
                     border-collapse: collapse;
-                    margin: 1.5rem 0;
+                    margin: 1rem 0;
                   }
                   .module-content th {
                     background: #f8fafc;
-                    padding: 0.75rem 1rem;
+                    padding: 0.625rem 0.875rem;
                     text-align: left;
                     font-weight: 600;
                     border: 1px solid #e2e8f0;
@@ -498,7 +559,7 @@ function ModuleLearning() {
                     border-color: #475569;
                   }
                   .module-content td {
-                    padding: 0.75rem 1rem;
+                    padding: 0.625rem 0.875rem;
                     border: 1px solid #e2e8f0;
                   }
                   .dark .module-content td {
@@ -512,15 +573,16 @@ function ModuleLearning() {
               </Card>
 
               {/* Navigation */}
-              <div className="flex items-center justify-between mt-8 gap-4">
+              <div className="flex items-center justify-between mt-4 gap-4">
                 {previousModule ? (
                   <Link
                     to="/courses/$courseSlug/$moduleSlug"
                     params={{ courseSlug, moduleSlug: previousModule.slug }}
+                    onClick={handlePreviousModule}
                   >
-                    <Button variant="outline">
-                      <ChevronLeft className="w-4 h-4 mr-2" />
-                      Previous: {previousModule.title}
+                    <Button variant="outline" size="sm">
+                      <ChevronLeft className="w-4 h-4 mr-1" />
+                      Previous
                     </Button>
                   </Link>
                 ) : (
@@ -531,16 +593,17 @@ function ModuleLearning() {
                   <Link
                     to="/courses/$courseSlug/$moduleSlug"
                     params={{ courseSlug, moduleSlug: nextModule.slug }}
+                    onClick={handleNextModule}
                   >
-                    <Button>
+                    <Button size="sm">
                       Next: {nextModule.title}
-                      <ChevronRight className="w-4 h-4 ml-2" />
+                      <ChevronRight className="w-4 h-4 ml-1" />
                     </Button>
                   </Link>
                 ) : (
-                  <Link to="/courses/$slug" params={{ slug: courseSlug }}>
-                    <Button>
-                      <CheckCircle2 className="w-4 h-4 mr-2" />
+                  <Link to="/courses/$slug" params={{ slug: courseSlug }} onClick={handleCourseComplete}>
+                    <Button size="sm">
+                      <CheckCircle2 className="w-4 h-4 mr-1" />
                       Course Complete
                     </Button>
                   </Link>

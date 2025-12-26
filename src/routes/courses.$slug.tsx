@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { getCourseBySlug, getModulesByCourse } from "@/lib/course";
+import { getCourseBySlug, getModulesByCourse, isUserEnrolled, enrollInCourse } from "@/lib/course";
 import type { Course, CourseModule } from "@/types/course";
 import { useAuth } from "@/contexts/AuthContext";
 import {
@@ -25,32 +25,39 @@ export const Route = createFileRoute("/courses/$slug")({
 function CourseDetail() {
   const { slug } = Route.useParams();
   const navigate = useNavigate();
-  const { user: _user, isAuthenticated: _isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const [course, setCourse] = useState<Course | null>(null);
   const [modules, setModules] = useState<CourseModule[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [userEnrolled, _setUserEnrolled] = useState(false);
-  
-  // Placeholder enrollment mutation
-  const enrollMutation = {
-    isPending: false,
-    mutate: () => {},
-  };
+  const [userEnrolled, setUserEnrolled] = useState(false);
+  const [isEnrolling, setIsEnrolling] = useState(false);
 
   useEffect(() => {
-    getCourseBySlug(slug)
-      .then(async (courseData) => {
+    const loadCourse = async () => {
+      try {
+        const courseData = await getCourseBySlug(slug);
         if (courseData) {
           setCourse(courseData);
           const modulesData = await getModulesByCourse(courseData.id);
           setModules(modulesData);
+          
+          // Check if user is already enrolled via Supabase
+          if (isAuthenticated && user?.id) {
+            const enrolled = await isUserEnrolled(courseData.id, user.id);
+            setUserEnrolled(enrolled);
+          }
         }
-      })
-      .catch(setError)
-      .finally(() => setIsLoading(false));
-  }, [slug]);
+      } catch (err) {
+        setError(err as Error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadCourse();
+  }, [slug, isAuthenticated, user?.id]);
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -72,7 +79,29 @@ function CourseDetail() {
     );
   }
 
-  const handleStartLearning = () => {
+  const handleStartLearning = async () => {
+    // Check if user is authenticated
+    if (!isAuthenticated || !user) {
+      setShowAuthModal(true);
+      return;
+    }
+
+    // Enroll the user in the course via Supabase
+    if (course && !userEnrolled) {
+      setIsEnrolling(true);
+      try {
+        await enrollInCourse(course.id, user.id, user.email || '');
+        setUserEnrolled(true);
+      } catch (err) {
+        console.error('Error enrolling in course:', err);
+        alert('Failed to enroll in course. Please try again.');
+        setIsEnrolling(false);
+        return;
+      } finally {
+        setIsEnrolling(false);
+      }
+    }
+    
     // Navigate to first module if available
     if (modules && modules.length > 0) {
       navigate({
@@ -273,9 +302,9 @@ function CourseDetail() {
                 className="w-full mb-4" 
                 size="lg"
                 onClick={handleStartLearning}
-                disabled={enrollMutation.isPending}
+                disabled={isEnrolling}
               >
-                {enrollMutation.isPending ? (
+                {isEnrolling ? (
                   "Enrolling..."
                 ) : userEnrolled ? (
                   "Continue Learning"
