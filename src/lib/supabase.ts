@@ -11,6 +11,10 @@ export const tables = {
     course_categories: 'course_categories',
     courses: 'courses',
     user_profiles: 'user_profiles',
+    projects: "projects",
+    lessons: "lessons",
+    enrollments: "enrollments",
+    progress_tracking: "progress_tracking"
 }
 
 export const supabase = createClient(supabaseUrl, supabasePublishableKey!);

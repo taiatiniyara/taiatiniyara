@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronsDown, User2 } from "lucide-react";
+import { ChevronsDown, LogIn, User2 } from "lucide-react";
 
 interface NavList {
   name: string;
@@ -27,12 +27,8 @@ export default function TopNavigation() {
   const path = typeof window !== "undefined" ? window.location.pathname : "";
 
   const { user, signOut } = useAuth();
-  if (!user) {
-    console.log("No user logged in");
-    return null;
-  }
   return (
-    <div className="flex gap-4 p-4 container mx-auto items-center justify-between">
+    <div className="flex gap-4 p-4 mx-auto shadow-md items-center justify-between bg-white/20 backdrop-blur-xl sticky top-0 z-10">
       <a href="/">
         <img src="/logo.svg" alt="Logo" width={40} />
       </a>
@@ -64,21 +60,34 @@ export default function TopNavigation() {
               <a href="/profile">Profile</a>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <a href={
-                user.user_metadata.role === "admin" ? "/admin" : "/student"
-              }>Dashboard</a>
+              <a
+                href={
+                  user.user_metadata.role === "admin" ? "/admin" : "/student"
+                }
+              >
+                Dashboard
+              </a>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-pink-600 font-medium" onClick={async () => {
-              await signOut();
-              window.location.href = "/";
-            }}>
+            <DropdownMenuItem
+              className="text-pink-600 font-medium"
+              onClick={async () => {
+                await signOut();
+                window.location.href = "/";
+              }}
+            >
               Sign Out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       ) : (
-        <Button>Login</Button>
+        <Button
+          onClick={() => {
+            window.location.href = "/login";
+          }}
+        >
+          <LogIn /> Sign In
+        </Button>
       )}
     </div>
   );
