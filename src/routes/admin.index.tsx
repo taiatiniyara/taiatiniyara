@@ -10,15 +10,15 @@ function RouteComponent() {
   const { user } = useAuth();
   
   return (
-    <div className="space-y-8 w-full">
+    <div className="space-y-6 sm:space-y-8 w-full">
       <div>
-        <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold mb-2">Admin Dashboard</h1>
         <p className="text-muted-foreground">
           Welcome back, {user?.user_metadata?.fullName || 'Admin'}!
         </p>
       </div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         <Card className="p-6 hover:shadow-lg transition-shadow">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
@@ -64,7 +64,7 @@ function RouteComponent() {
 
       <Card className="p-6">
         <h2 className="text-xl font-bold mb-4">Quick Actions</h2>
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <a href="/admin/blog" className="p-4 border rounded-lg hover:bg-muted/50 transition-colors">
             <h3 className="font-semibold mb-1">Create New Blog Post</h3>
             <p className="text-sm text-muted-foreground">Write and publish a new article</p>

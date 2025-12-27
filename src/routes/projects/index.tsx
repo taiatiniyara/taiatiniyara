@@ -32,12 +32,12 @@ function RouteComponent() {
     <div className="min-h-screen bg-linear-to-b from-background via-background to-muted/20">
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-linear-to-br from-primary/10 via-background to-chart-3/10 border-b">
-        <div className="container mx-auto px-6 py-16 md:py-24">
-          <div className="max-w-4xl mx-auto text-center space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
+        <div className="container mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-24">
+          <div className="max-w-4xl mx-auto text-center space-y-4 sm:space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+            <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight">
               My <span className="text-primary">Projects</span>
             </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
               A showcase of software solutions and creative work
             </p>
           </div>
@@ -45,8 +45,8 @@ function RouteComponent() {
       </div>
 
       {/* Projects Grid */}
-      <div className="container mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
           {data?.map((project) => (
             <a
               key={project.slug}
@@ -64,8 +64,8 @@ function RouteComponent() {
                     <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent" />
                   </div>
                 )}
-                <div className="p-6 flex-1 flex flex-col">
-                  <h2 className="text-2xl font-bold mb-4 group-hover:text-primary transition-colors">
+                <div className="p-4 sm:p-6 flex-1 flex flex-col">
+                  <h2 className="text-xl sm:text-2xl font-bold mb-4 group-hover:text-primary transition-colors">
                     {project.title}
                   </h2>
                   <div className="flex flex-wrap gap-2 mt-auto">

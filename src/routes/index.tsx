@@ -10,7 +10,7 @@ function Index() {
     <div className="relative h-screen w-full overflow-hidden">
 
       {/* Main Content */}
-      <div className="relative z-10 h-full flex flex-col items-center justify-center px-6 md:px-12">
+      <div className="relative z-0 h-full flex flex-col items-center justify-center px-6 md:px-12">
         <div className="max-w-5xl mx-auto text-center space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
           {/* Badge */}
           <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm">
@@ -22,10 +22,10 @@ function Index() {
 
           {/* Main Heading */}
           <div className="space-y-4">
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight">
               <span className="text-primary">Turn Your Vision</span>
             </h1>
-            <h2 className="text-2xl md:text-4xl lg:text-5xl font-semibold text-muted-foreground">
+            <h2 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-semibold text-muted-foreground">
               Into Powerful Software
             </h2>
           </div>

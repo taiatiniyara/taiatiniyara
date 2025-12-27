@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { Book, LayoutDashboard, Stamp, Users } from "lucide-react";
-import React from "react";
+import { Book, LayoutDashboard, Stamp, Users, Menu, X } from "lucide-react";
+import React, { useState } from "react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin")({
@@ -31,6 +31,7 @@ if (!ADMIN_ACCESS_KEY || !ADMIN_KEY) {
 
 function RouteComponent() {
   const path = window.location.pathname;
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const adminKey =
     typeof window !== "undefined" ? sessionStorage.getItem(ADMIN_KEY) : null;
@@ -63,8 +64,25 @@ function RouteComponent() {
   }
 
   return (
-    <div className="flex items-start">
-      <div className="w-fit min-h-screen flex flex-col border-r border-gray-300 gap-2 py-4">
+    <div className="flex flex-col lg:flex-row items-start">
+      {/* Mobile Menu Toggle */}
+      <button
+        className="lg:hidden fixed bottom-4 right-4 z-50 p-3 bg-primary text-white rounded-full shadow-lg"
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        aria-label="Toggle menu"
+      >
+        {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
+
+      {/* Sidebar */}
+      <div
+        className={`
+          fixed lg:static inset-y-0 left-0 z-40 w-64 lg:w-fit min-h-screen
+          flex flex-col border-r border-gray-300 gap-2 py-4 bg-background
+          transition-transform duration-300 ease-in-out
+          ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        `}
+      >
         {sidebarListItems.map((item) => (
           <a
             className={`flex items-center gap-3 py-2 px-4 ${
@@ -74,13 +92,23 @@ function RouteComponent() {
             }`}
             href={item.href}
             key={item.href}
+            onClick={() => setIsMobileMenuOpen(false)}
           >
             {item.icon}
-            {item.text}
+            <span className="whitespace-nowrap">{item.text}</span>
           </a>
         ))}
       </div>
-      <div className="p-4"><Outlet /></div>
+
+      {/* Overlay for mobile */}
+      {isMobileMenuOpen && (
+        <div
+          className="lg:hidden fixed inset-0 bg-black/50 z-30"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
+      <div className="p-4 sm:p-6 w-full overflow-x-hidden"><Outlet /></div>
       
     </div>
   );

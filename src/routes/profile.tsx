@@ -32,33 +32,33 @@ function ProfileContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4">
+    <div className="min-h-screen bg-gray-50 py-8 sm:py-12 px-4">
       <div className="mx-auto max-w-3xl">
-        <Card className="p-8">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">Profile</h1>
-            <p className="mt-2 text-gray-600">
+        <Card className="p-4 sm:p-6 md:p-8">
+          <div className="mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Profile</h1>
+            <p className="mt-2 text-sm sm:text-base text-gray-600">
               Manage your account information
             </p>
           </div>
 
-          <div className="space-y-6">
-            <div className="border-b border-gray-200 pb-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+          <div className="space-y-4 sm:space-y-6">
+            <div className="border-b border-gray-200 pb-4 sm:pb-6">
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">
                 Account Information
               </h2>
               <div className="space-y-4">
                 <div>
-                  <Label>Email</Label>
-                  <p>{user?.email}</p>
+                  <Label className="text-sm">Email</Label>
+                  <p className="text-sm sm:text-base">{user?.email}</p>
                 </div>
                 <div>
-                  <Label>User ID</Label>
-                  <p>{user?.id}</p>
+                  <Label className="text-sm">User ID</Label>
+                  <p className="text-xs sm:text-sm break-all">{user?.id}</p>
                 </div>
                 <div>
-                  <Label>Full Name</Label>
-                  <p>{user?.user_metadata?.fullName || "Not provided"}</p>
+                  <Label className="text-sm">Full Name</Label>
+                  <p className="text-sm sm:text-base">{user?.user_metadata?.fullName || "Not provided"}</p>
                 </div>
                 <div>
                   <Label>Role</Label>
@@ -83,11 +83,11 @@ function ProfileContent() {
               </div>
             </div>
 
-            <div className="flex gap-4">
-              <Button variant="outline" onClick={() => navigate({ to: "/" })}>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+              <Button variant="outline" onClick={() => navigate({ to: "/" })} className="w-full sm:w-auto">
                 Go to Home
               </Button>
-              <Button variant="destructive" onClick={handleSignOut}>
+              <Button variant="destructive" onClick={handleSignOut} className="w-full sm:w-auto">
                 Sign Out
               </Button>
             </div>

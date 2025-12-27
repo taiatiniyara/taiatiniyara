@@ -42,17 +42,18 @@ function RouteComponent() {
 
   return (
     <div className="min-h-screen bg-linear-to-b from-background via-background to-muted/20">
-      <div className="container mx-auto px-6 py-12">
-        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
-          <article className="flex-1 bg-card border rounded-lg p-8 shadow-md">
+      <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-6 lg:gap-8">
+          <article className="flex-1 bg-card border rounded-lg overflow-hidden shadow-md">
             <img
               src={blogPost.img_url || "/default-image.jpg"}
               alt={blogPost.title}
-              className="mb-8 rounded-lg w-full h-96 object-cover shadow-lg"
+              className="w-full h-48 sm:h-64 md:h-96 object-cover"
             />
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">{blogPost.title}</h1>
-            <div className="flex items-center gap-2 text-muted-foreground text-sm mb-6 pb-6 border-b">
-              <Calendar size={18} />
+            <div className="p-4 sm:p-6 md:p-8">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 leading-tight">{blogPost.title}</h1>
+              <div className="flex items-center gap-2 text-muted-foreground text-xs sm:text-sm mb-4 sm:mb-6 pb-4 sm:pb-6 border-b">
+              <Calendar size={16} className="sm:w-4.5 sm:h-4.5" />
               <time dateTime={new Date(blogPost.created_at).toISOString()}>
                 {new Date(blogPost.created_at).toLocaleDateString('en-US', {
                   year: 'numeric',
@@ -61,7 +62,7 @@ function RouteComponent() {
                 })}
               </time>
             </div>
-            <p className="text-lg text-muted-foreground italic mb-8 pb-8 border-b">
+            <p className="text-base sm:text-lg text-muted-foreground italic mb-6 sm:mb-8 pb-6 sm:pb-8 border-b">
               {blogPost.excerpt}
             </p>
             <div 
@@ -69,6 +70,7 @@ function RouteComponent() {
               className="prose prose-lg max-w-none"
               dangerouslySetInnerHTML={{ __html: blogPost.content }}
             />
+            </div>
           </article>
           <aside className="lg:w-80">
             <OtherBlogs slug={slug} />

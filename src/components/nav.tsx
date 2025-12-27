@@ -31,88 +31,92 @@ export default function TopNavigation() {
   const { user, signOut } = useAuth();
   return (
     <>
-      <div className="flex gap-4 p-4 items-center justify-between bg-white/20 backdrop-blur-xl sticky top-0 z-10">
-        <a href="/">
-          <img src="/logo.svg" alt="Logo" width={40} />
-        </a>
-        
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex">
-          {navList.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className={`px-2 mx-2 ${path.split("/")[1] === item.href.slice(1) ? "text-pink-600 font-semibold" : "hover:text-gray-400 transition-colors"}`}
-            >
-              {item.name}
+      <div className="bg-white/50 backdrop-blur-lg sticky top-0 z-50">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="flex gap-4 py-4 items-center justify-between">
+            <a href="/">
+              <img src="/logo.svg" alt="Logo" width={40} />
             </a>
-          ))}
-        </nav>
+            
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex gap-6">
+              {navList.map((item) => (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  className={`${path.split("/")[1] === item.href.slice(1) ? "text-pink-600 font-semibold" : "hover:text-gray-400 transition-colors"}`}
+                >
+                  {item.name}
+                </a>
+              ))}
+            </nav>
 
-        <div className="flex items-center gap-2">
-          {/* Desktop Auth Button */}
-          <div className="hidden md:block">
-            {user ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button>
-                    <User2 />
-                    {user.user_metadata.fullName.split(" ")[0]}
-                    <ChevronsDown />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>Account</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <a href="/profile">Profile</a>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <a
-                      href={
-                        user.user_metadata.role === "admin" ? "/admin" : "/student"
-                      }
-                    >
-                      Dashboard
-                    </a>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    className="text-pink-600 font-medium"
-                    onClick={async () => {
-                      await signOut();
-                      window.location.href = "/";
+            <div className="flex items-center gap-2">
+              {/* Desktop Auth Button */}
+              <div className="hidden md:block">
+                {user ? (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button>
+                        <User2 />
+                        {user.user_metadata.fullName.split(" ")[0]}
+                        <ChevronsDown />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuLabel>Account</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem>
+                        <a href="/profile">Profile</a>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <a
+                          href={
+                            user.user_metadata.role === "admin" ? "/admin" : "/student"
+                          }
+                        >
+                          Dashboard
+                        </a>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        className="text-pink-600 font-medium"
+                        onClick={async () => {
+                          await signOut();
+                          window.location.href = "/";
+                        }}
+                      >
+                        Sign Out
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : (
+                  <Button
+                    onClick={() => {
+                      window.location.href = "/login";
                     }}
                   >
-                    Sign Out
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <Button
-                onClick={() => {
-                  window.location.href = "/login";
-                }}
-              >
-                <LogIn /> Sign In
-              </Button>
-            )}
-          </div>
+                    <LogIn /> Sign In
+                  </Button>
+                )}
+              </div>
 
-          {/* Mobile Menu Toggle */}
-          <button
-            className="md:hidden p-2 hover:bg-white/10 rounded-md transition-colors"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+              {/* Mobile Menu Toggle */}
+              <button
+                className="md:hidden p-2 hover:bg-white/10 rounded-md transition-colors"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label="Toggle menu"
+              >
+                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 top-18 z-50 bg-white/95 backdrop-blur-xl">
+        <div className="md:hidden fixed inset-0 top-18 z-50 bg-white/95 backdrop-blur-lg">
           <nav className="flex flex-col p-4 space-y-2">
             {navList.map((item) => (
               <a

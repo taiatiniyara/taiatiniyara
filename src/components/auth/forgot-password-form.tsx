@@ -31,8 +31,8 @@ export function ForgotPasswordForm() {
 
   if (success) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-        <Card className="w-full max-w-md p-8">
+      <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-8">
+        <Card className="w-full max-w-md p-6 sm:p-8">
           <div className="text-center">
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-pink-100">
               <svg
@@ -49,8 +49,8 @@ export function ForgotPasswordForm() {
                 />
               </svg>
             </div>
-            <h3 className="mt-4 text-lg font-medium text-gray-900">Check Your Email</h3>
-            <p className="mt-2 text-sm text-gray-600">
+            <h3 className="mt-4 text-base sm:text-lg font-medium text-gray-900">Check Your Email</h3>
+            <p className="mt-2 text-xs sm:text-sm text-gray-600">
               We've sent a password reset link to {email}
             </p>
             <div className="mt-6">
@@ -67,16 +67,16 @@ export function ForgotPasswordForm() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-      <Card className="w-full max-w-md p-8">
-        <div className="mb-8 text-center">
-          <h1 className="text-2xl font-bold text-gray-900">Reset Password</h1>
-          <p className="mt-2 text-sm text-gray-600">
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-8">
+      <Card className="w-full max-w-md p-6 sm:p-8">
+        <div className="mb-6 sm:mb-8 text-center">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Reset Password</h1>
+          <p className="mt-2 text-xs sm:text-sm text-gray-600">
             Enter your email to receive a password reset link
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
           {error && (
             <div className="rounded-md bg-red-50 p-4">
               <p className="text-sm text-red-800">{error}</p>

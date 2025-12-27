@@ -27,13 +27,13 @@ export default function OtherBlogs({ slug }: { slug?: string }) {
 
   if (!data || data.filter((post) => post.slug !== slug).length === 0)
     return (
-      <div className="lg:w-[25%]">
+      <div className="w-full">
         <EmptyListPlaceholder text="No other blog posts available." />
       </div>
     );
 
   return (
-    <div className="lg:w-[25%] flex flex-col gap-4">
+    <div className="w-full flex flex-col gap-4">
       {data
         .filter((post) => post.slug !== slug)
         .slice(0, 3)

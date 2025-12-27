@@ -36,11 +36,11 @@ function RouteComponent() {
 
   return (
     <div className="min-h-screen bg-linear-to-b from-background via-background to-muted/20">
-      <div className="container mx-auto px-6 py-12">
-        <div className="max-w-5xl mx-auto space-y-8">
+      <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <div className="max-w-5xl mx-auto space-y-6 sm:space-y-8">
           <Card className="overflow-hidden shadow-xl">
             {project.img_url && (
-              <div className="relative h-96 overflow-hidden">
+              <div className="relative h-48 sm:h-64 md:h-96 overflow-hidden">
                 <img
                   src={project.img_url}
                   alt={project.title}
@@ -49,9 +49,9 @@ function RouteComponent() {
                 <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
               </div>
             )}
-            <div className="p-8">
-              <h1 className="text-4xl md:text-5xl font-bold mb-6">{project.title}</h1>
-              <div className="flex flex-wrap gap-2 mb-8">
+            <div className="p-4 sm:p-6 md:p-8">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">{project.title}</h1>
+              <div className="flex flex-wrap gap-2 mb-6 sm:mb-8">
                 {project.tags?.map((tag) => (
                   <span
                     key={tag}
@@ -61,8 +61,8 @@ function RouteComponent() {
                   </span>
                 ))}
               </div>
-              <div className="prose prose-lg max-w-none">
-                <p className="text-lg text-muted-foreground leading-relaxed">
+              <div className="prose prose-sm sm:prose-base lg:prose-lg max-w-none">
+                <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
                   {project.description || 'Project details coming soon.'}
                 </p>
               </div>
