@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { Book, LayoutDashboard, Stamp, Users, Menu, X } from "lucide-react";
+import { Book, LayoutDashboard, Stamp, Users, Menu, X, Pencil } from "lucide-react";
 import React, { useState } from "react";
 import { toast } from "sonner";
 
@@ -18,6 +18,7 @@ interface SidebarListItem {
 const sidebarListItems: SidebarListItem[] = [
   { text: "Dashboard", href: "/admin", icon: <LayoutDashboard /> },
   { text: "Blog", href: "/admin/blog", icon: <Book /> },
+  { text: "Projects", href: "/admin/projects", icon: <Pencil /> },
   { text: "Courses", href: "/admin/courses", icon: <Stamp /> },
   { text: "Users", href: "/admin/users", icon: <Users /> },
 ];
@@ -77,7 +78,7 @@ function RouteComponent() {
       {/* Sidebar */}
       <div
         className={`
-          fixed lg:static inset-y-0 left-0 z-40 w-64 lg:w-fit min-h-screen
+          fixed lg:sticky top-0 lg:top-18.25 inset-y-0 left-0 z-40 w-64 lg:w-fit min-h-screen lg:h-[calc(100vh-73px)]
           flex flex-col border-r border-gray-300 gap-2 py-4 bg-background
           transition-transform duration-300 ease-in-out
           ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
