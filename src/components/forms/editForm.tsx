@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select";
 import { useState, useEffect } from "react";
 import { Button } from "../ui/button";
-import Tiptap from "../tiptap";
+import Tiptap from "../tiptap-lazy";
 import { toast } from "sonner";
 import { TagsInput } from "../ui/tags-input";
 import LoadingSpinner from "../ui/loading-spinner";

@@ -19,4 +19,18 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Split vendor dependencies into separate chunks
+          'react-vendor': ['react', 'react-dom'],
+          'tanstack-vendor': ['@tanstack/react-router', '@tanstack/react-query'],
+          'tiptap-vendor': ['@tiptap/react', '@tiptap/starter-kit', '@tiptap/extension-image'],
+          'ui-vendor': ['lucide-react', 'sonner'],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 600, // Slightly increase the warning threshold
+  },
 })

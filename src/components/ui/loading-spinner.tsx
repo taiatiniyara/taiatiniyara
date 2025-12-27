@@ -7,7 +7,7 @@ interface LoadingSpinnerProps {
 
 export default function LoadingSpinner({ size, text }: LoadingSpinnerProps) {
   return (
-    <div className="flex min-h-[400px] w-full flex-col gap-6 items-center justify-center p-8">
+    <div className="flex min-h-100 w-full flex-col gap-6 items-center justify-center p-8">
       <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center animate-pulse">
         <svg className="w-8 h-8 text-primary animate-spin" fill="none" viewBox="0 0 24 24">
           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
