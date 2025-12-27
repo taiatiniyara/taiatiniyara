@@ -1,15 +1,21 @@
 import type { BlogPost } from "@/lib/drizzle/schema";
-import CreateForm from "../forms/createForm";
-import { slugGenerate } from "@/lib/utils";
+import EditForm from "../forms/editForm";
 
-export default function CreateBlogForm() {
+interface EditBlogFormProps {
+  blogId: string; // or slug
+  useSlug?: boolean; // if true, will match by slug instead of id
+}
+
+export default function EditBlogForm({ blogId, useSlug = false }: EditBlogFormProps) {
   return (
-    <CreateForm<BlogPost>
+    <EditForm<BlogPost>
       tableName="blog_posts"
+      recordId={blogId}
+      matchColumn={useSlug ? "slug" : "id"}
       fields={[
         {
           name: "title",
-          type: "text",
+          type: "textarea",
         },
         {
           name: "excerpt",
@@ -28,13 +34,6 @@ export default function CreateBlogForm() {
           type: "text",
         },
       ]}
-      defaultValues={{
-        created_at: new Date(),
-        updated_at: new Date(),
-        slug: slugGenerate(),
-        is_published: true,
-        tags: [],
-      }}
     />
   );
 }

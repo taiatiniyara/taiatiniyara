@@ -13,6 +13,8 @@ import {
 import { useState } from "react";
 import { Button } from "../ui/button";
 import Tiptap from "../tiptap";
+import { toast } from "sonner";
+import { TagsInput } from "../ui/tags-input";
 
 interface CreateFormProps<T> {
   fields: {
@@ -24,7 +26,8 @@ interface CreateFormProps<T> {
       | "password"
       | "textarea"
       | "select"
-      | "richtext";
+      | "richtext"
+      | "tags";
     options?: string[]; // for select type
   }[];
   tableName: keyof typeof tables;
@@ -37,6 +40,20 @@ export default function CreateForm<T>(props: CreateFormProps<T>) {
   const [selectValues, setSelectValues] = useState<Record<string, string>>({});
   const [richtextValues, setRichtextValues] = useState<Record<string, string>>(
     {}
+  );
+  const [tagsValues, setTagsValues] = useState<Record<string, string[]>>(
+    () => {
+      const initialTags: Record<string, string[]> = {};
+      props.fields.forEach((field) => {
+        if (field.type === "tags" && props.defaultValues) {
+          const defaultValue = (props.defaultValues as any)[field.name];
+          if (Array.isArray(defaultValue)) {
+            initialTags[String(field.name)] = defaultValue;
+          }
+        }
+      });
+      return initialTags;
+    }
   );
 
   return (
@@ -57,6 +74,12 @@ export default function CreateForm<T>(props: CreateFormProps<T>) {
             value = richtextValues[String(field.name)] || "";
           }
 
+          // For tags fields, use the stored array value
+          if (field.type === "tags") {
+            (data as any)[field.name] = tagsValues[String(field.name)] || [];
+            return;
+          }
+
           if (value !== null && value !== undefined) {
             if (field.type === "number") {
               (data as any)[field.name] = Number(value);
@@ -70,15 +93,21 @@ export default function CreateForm<T>(props: CreateFormProps<T>) {
           Object.assign(data, props.defaultValues);
         }
 
+        console.log("Data to be inserted:", data);
+
         const c = await supabase.from(props.tableName).insert(data);
+        console.log("Supabase response:", c);
         if (c.error) {
           setError(c.error.message);
+          toast.error("Error submitting form: " + c.error.message);
         } else {
           setError(null);
-          e.currentTarget.reset();
+          toast.success("Form submitted successfully!");
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
         }
         setSubmitting(false);
-        window.location.reload();
       }}
     >
       {props.fields.map((field) => (
@@ -111,6 +140,17 @@ export default function CreateForm<T>(props: CreateFormProps<T>) {
                 value={richtextValues[String(field.name)] || ""}
               />
             </>
+          ) : field.type === "tags" ? (
+            <TagsInput
+              value={tagsValues[String(field.name)] || []}
+              onChange={(tags) => {
+                setTagsValues((prev) => ({
+                  ...prev,
+                  [String(field.name)]: tags,
+                }));
+              }}
+              placeholder={`Add ${String(field.name).toLowerCase()}...`}
+            />
           ) : field.type === "textarea" ? (
             <Textarea
               name={String(field.name)}

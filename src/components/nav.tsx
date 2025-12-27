@@ -8,7 +8,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronsDown, LogIn, User2 } from "lucide-react";
+import { ChevronsDown, LogIn, User2, Menu, X } from "lucide-react";
+import { useState } from "react";
 
 interface NavList {
   name: string;
@@ -25,70 +26,155 @@ const navList: NavList[] = [
 
 export default function TopNavigation() {
   const path = typeof window !== "undefined" ? window.location.pathname : "";
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const { user, signOut } = useAuth();
   return (
-    <div className="flex gap-4 p-4 items-center justify-between bg-white/20 backdrop-blur-xl sticky top-0 z-10">
-      <a href="/">
-        <img src="/logo.svg" alt="Logo" width={40} />
-      </a>
-      <nav>
-        {navList.map((item) => (
-          <a
-            key={item.href}
-            href={item.href}
-            className={`px-2 mx-2 ${path.split("/")[1] === item.href.slice(1) ? "text-pink-600 font-semibold" : "hover:text-gray-400 transition-colors"}`}
-          >
-            {item.name}
-          </a>
-        ))}
-      </nav>
-
-      {user ? (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button>
-              <User2 />
-              {user.user_metadata.fullName.split(" ")[0]}
-              <ChevronsDown />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <a href="/profile">Profile</a>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <a
-                href={
-                  user.user_metadata.role === "admin" ? "/admin" : "/student"
-                }
-              >
-                Dashboard
-              </a>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="text-pink-600 font-medium"
-              onClick={async () => {
-                await signOut();
-                window.location.href = "/";
-              }}
+    <>
+      <div className="flex gap-4 p-4 items-center justify-between bg-white/20 backdrop-blur-xl sticky top-0 z-10">
+        <a href="/">
+          <img src="/logo.svg" alt="Logo" width={40} />
+        </a>
+        
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex">
+          {navList.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              className={`px-2 mx-2 ${path.split("/")[1] === item.href.slice(1) ? "text-pink-600 font-semibold" : "hover:text-gray-400 transition-colors"}`}
             >
-              Sign Out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      ) : (
-        <Button
-          onClick={() => {
-            window.location.href = "/login";
-          }}
-        >
-          <LogIn /> Sign In
-        </Button>
+              {item.name}
+            </a>
+          ))}
+        </nav>
+
+        <div className="flex items-center gap-2">
+          {/* Desktop Auth Button */}
+          <div className="hidden md:block">
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button>
+                    <User2 />
+                    {user.user_metadata.fullName.split(" ")[0]}
+                    <ChevronsDown />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <a href="/profile">Profile</a>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <a
+                      href={
+                        user.user_metadata.role === "admin" ? "/admin" : "/student"
+                      }
+                    >
+                      Dashboard
+                    </a>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    className="text-pink-600 font-medium"
+                    onClick={async () => {
+                      await signOut();
+                      window.location.href = "/";
+                    }}
+                  >
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button
+                onClick={() => {
+                  window.location.href = "/login";
+                }}
+              >
+                <LogIn /> Sign In
+              </Button>
+            )}
+          </div>
+
+          {/* Mobile Menu Toggle */}
+          <button
+            className="md:hidden p-2 hover:bg-white/10 rounded-md transition-colors"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden fixed inset-0 top-18 z-50 bg-white/95 backdrop-blur-xl">
+          <nav className="flex flex-col p-4 space-y-2">
+            {navList.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                className={`px-4 py-3 rounded-md text-lg ${
+                  path.split("/")[1] === item.href.slice(1)
+                    ? "text-pink-600 font-semibold bg-pink-50"
+                    : "hover:bg-gray-100 transition-colors"
+                }`}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {item.name}
+              </a>
+            ))}
+            
+            <div className="pt-4 mt-4 border-t">
+              {user ? (
+                <>
+                  <div className="px-4 py-2 text-sm text-gray-600">
+                    Signed in as <span className="font-semibold">{user.user_metadata.fullName}</span>
+                  </div>
+                  <a
+                    href="/profile"
+                    className="block px-4 py-3 rounded-md text-lg hover:bg-gray-100 transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Profile
+                  </a>
+                  <a
+                    href={user.user_metadata.role === "admin" ? "/admin" : "/student"}
+                    className="block px-4 py-3 rounded-md text-lg hover:bg-gray-100 transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Dashboard
+                  </a>
+                  <button
+                    className="w-full text-left px-4 py-3 rounded-md text-lg text-pink-600 font-medium hover:bg-pink-50 transition-colors"
+                    onClick={async () => {
+                      await signOut();
+                      setMobileMenuOpen(false);
+                      window.location.href = "/";
+                    }}
+                  >
+                    Sign Out
+                  </button>
+                </>
+              ) : (
+                <Button
+                  className="w-full"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    window.location.href = "/login";
+                  }}
+                >
+                  <LogIn /> Sign In
+                </Button>
+              )}
+            </div>
+          </nav>
+        </div>
       )}
-    </div>
+    </>
   );
 }

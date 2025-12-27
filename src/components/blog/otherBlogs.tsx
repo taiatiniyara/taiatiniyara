@@ -10,6 +10,10 @@ export default function OtherBlogs({ slug }: { slug?: string }) {
     tableName: "blog_posts",
     fields: ["slug", "excerpt", "title", "img_url", "created_at"],
     numberOfItems: 3,
+    orderBy: {
+      column: "created_at",
+      ascending: false,
+    }
   });
   if (isLoading) return <LoadingSpinner text="Loading Other Blogs..." />;
   if (error)
@@ -34,25 +38,25 @@ export default function OtherBlogs({ slug }: { slug?: string }) {
         .filter((post) => post.slug !== slug)
         .slice(0, 3)
         .map((post) => (
-          <div key={post.slug} className="mb-4 p-4 border-b">
+          <div key={post.slug} className="mb-4 border shadow-md bg-white">
             {post.img_url && (
               <img
                 src={post.img_url}
                 alt={post.title}
-                className="max-w-full h-auto mb-2"
+                className="w-full h-40 object-cover"
               />
             )}
+
+            <div className="p-4">
             <h3 className="text-lg font-bold">{post.title}</h3>
-            <p className="text-gray-600 text-sm">
-              {new Date(post.created_at).toDateString()}
-            </p>
-            <p className="mt-2">{post.excerpt}</p>
+            <p className="text-sm line-clamp-3 my-2">{post.excerpt}</p>
             <a
               href={`/blog/${post.slug}`}
-              className="text-pink-500 hover:underline mt-2 inline-block"
+              className="text-pink-500 font-medium underline inline-block"
             >
               Read more
             </a>
+            </div>
           </div>
         ))}
     </div>

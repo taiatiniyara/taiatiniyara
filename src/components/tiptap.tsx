@@ -78,6 +78,7 @@ const Tiptap = ({ content = "<p>Start writing your content here...</p>", onChang
       <div className="bg-card border-border ring-foreground/10 sticky top-0 z-10 flex flex-wrap items-center gap-1 rounded-t-2xl border-b p-2 ring-1">
         <div className="flex items-center gap-1 border-r border-border pr-2">
           <Button
+            type="button"
             variant="ghost"
             size="icon-sm"
             onClick={() => editor.chain().focus().toggleBold().run()}
@@ -90,6 +91,7 @@ const Tiptap = ({ content = "<p>Start writing your content here...</p>", onChang
             <Bold className="size-4" />
           </Button>
           <Button
+            type="button"
             variant="ghost"
             size="icon-sm"
             onClick={() => editor.chain().focus().toggleItalic().run()}
@@ -102,6 +104,7 @@ const Tiptap = ({ content = "<p>Start writing your content here...</p>", onChang
             <Italic className="size-4" />
           </Button>
           <Button
+            type="button"
             variant="ghost"
             size="icon-sm"
             onClick={() => editor.chain().focus().toggleStrike().run()}
@@ -114,6 +117,7 @@ const Tiptap = ({ content = "<p>Start writing your content here...</p>", onChang
             <Strikethrough className="size-4" />
           </Button>
           <Button
+            type="button"
             variant="ghost"
             size="icon-sm"
             onClick={() => editor.chain().focus().toggleCode().run()}
@@ -129,6 +133,7 @@ const Tiptap = ({ content = "<p>Start writing your content here...</p>", onChang
 
         <div className="flex items-center gap-1 border-r border-border pr-2">
           <Button
+            type="button"
             variant="ghost"
             size="icon-sm"
             onClick={() =>
@@ -143,6 +148,7 @@ const Tiptap = ({ content = "<p>Start writing your content here...</p>", onChang
             <Heading1 className="size-4" />
           </Button>
           <Button
+            type="button"
             variant="ghost"
             size="icon-sm"
             onClick={() =>
@@ -157,6 +163,7 @@ const Tiptap = ({ content = "<p>Start writing your content here...</p>", onChang
             <Heading2 className="size-4" />
           </Button>
           <Button
+            type="button"
             variant="ghost"
             size="icon-sm"
             onClick={() =>
@@ -174,6 +181,7 @@ const Tiptap = ({ content = "<p>Start writing your content here...</p>", onChang
 
         <div className="flex items-center gap-1 border-r border-border pr-2">
           <Button
+            type="button"
             variant="ghost"
             size="icon-sm"
             onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -185,6 +193,7 @@ const Tiptap = ({ content = "<p>Start writing your content here...</p>", onChang
             <List className="size-4" />
           </Button>
           <Button
+            type="button"
             variant="ghost"
             size="icon-sm"
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
@@ -196,6 +205,7 @@ const Tiptap = ({ content = "<p>Start writing your content here...</p>", onChang
             <ListOrdered className="size-4" />
           </Button>
           <Button
+            type="button"
             variant="ghost"
             size="icon-sm"
             onClick={() => editor.chain().focus().toggleBlockquote().run()}
@@ -210,6 +220,7 @@ const Tiptap = ({ content = "<p>Start writing your content here...</p>", onChang
 
         <div className="flex items-center gap-1 border-r border-border pr-2">
           <Button
+            type="button"
             variant="ghost"
             size="icon-sm"
             onClick={addImage}
@@ -221,6 +232,7 @@ const Tiptap = ({ content = "<p>Start writing your content here...</p>", onChang
 
         <div className="flex items-center gap-1">
           <Button
+            type="button"
             variant="ghost"
             size="icon-sm"
             onClick={() => editor.chain().focus().undo().run()}
@@ -230,6 +242,7 @@ const Tiptap = ({ content = "<p>Start writing your content here...</p>", onChang
             <Undo className="size-4" />
           </Button>
           <Button
+            type="button"
             variant="ghost"
             size="icon-sm"
             onClick={() => editor.chain().focus().redo().run()}
@@ -242,7 +255,7 @@ const Tiptap = ({ content = "<p>Start writing your content here...</p>", onChang
       </div>
 
       {/* Editor Content */}
-      <div className="bg-card text-card-foreground ring-foreground/10 rounded-b-2xl ring-1">
+      <div className="bg-card text-card-foreground ring-foreground/10 rounded-b-2xl ring-1 max-h-125 overflow-y-auto">
         <EditorContent editor={editor} className="tiptap-editor" />
       </div>
 
@@ -253,6 +266,7 @@ const Tiptap = ({ content = "<p>Start writing your content here...</p>", onChang
           className="bg-popover text-popover-foreground ring-foreground/10 flex items-center gap-1 rounded-2xl p-1 shadow-lg ring-1"
         >
           <Button
+            type="button"
             variant="ghost"
             size="icon-xs"
             onClick={() => editor.chain().focus().toggleBold().run()}
@@ -264,6 +278,7 @@ const Tiptap = ({ content = "<p>Start writing your content here...</p>", onChang
             <Bold className="size-3" />
           </Button>
           <Button
+            type="button"
             variant="ghost"
             size="icon-xs"
             onClick={() => editor.chain().focus().toggleItalic().run()}
@@ -275,6 +290,7 @@ const Tiptap = ({ content = "<p>Start writing your content here...</p>", onChang
             <Italic className="size-3" />
           </Button>
           <Button
+            type="button"
             variant="ghost"
             size="icon-xs"
             onClick={() => editor.chain().focus().toggleStrike().run()}
@@ -295,6 +311,7 @@ const Tiptap = ({ content = "<p>Start writing your content here...</p>", onChang
           className="bg-popover text-popover-foreground ring-foreground/10 flex items-center gap-1 rounded-2xl p-1 shadow-lg ring-1"
         >
           <Button
+            type="button"
             variant="ghost"
             size="xs"
             onClick={() =>
@@ -307,6 +324,7 @@ const Tiptap = ({ content = "<p>Start writing your content here...</p>", onChang
             H1
           </Button>
           <Button
+            type="button"
             variant="ghost"
             size="xs"
             onClick={() =>
@@ -319,6 +337,7 @@ const Tiptap = ({ content = "<p>Start writing your content here...</p>", onChang
             H2
           </Button>
           <Button
+            type="button"
             variant="ghost"
             size="xs"
             onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -333,7 +352,6 @@ const Tiptap = ({ content = "<p>Start writing your content here...</p>", onChang
       <style>{`
         .tiptap-editor .tiptap {
           padding: 1.5rem;
-          min-height: 200px;
         }
 
         .tiptap-editor .tiptap:focus {

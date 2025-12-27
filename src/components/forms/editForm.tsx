@@ -1,0 +1,276 @@
+import { supabase, type tables } from "@/lib/supabase";
+import { Label } from "../ui/label";
+import { Textarea } from "../ui/textarea";
+import { Input } from "../ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useState, useEffect } from "react";
+import { Button } from "../ui/button";
+import Tiptap from "../tiptap";
+import { toast } from "sonner";
+import { TagsInput } from "../ui/tags-input";
+import LoadingSpinner from "../ui/loading-spinner";
+
+interface EditFormProps<T> {
+  fields: {
+    name: keyof T;
+    type:
+      | "text"
+      | "number"
+      | "email"
+      | "password"
+      | "textarea"
+      | "select"
+      | "richtext"
+      | "tags";
+    options?: string[]; // for select type
+    editable?: boolean; // if false, field will be readonly
+  }[];
+  tableName: keyof typeof tables;
+  recordId: string; // ID of the record to edit
+  matchColumn?: string; // Column to match for fetching (default: 'id')
+  onSuccess?: () => void; // Callback after successful update
+}
+
+export default function EditForm<T>(props: EditFormProps<T>) {
+  const [submitting, setSubmitting] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [formData, setFormData] = useState<Partial<T>>({});
+  const [selectValues, setSelectValues] = useState<Record<string, string>>({});
+  const [richtextValues, setRichtextValues] = useState<Record<string, string>>(
+    {}
+  );
+  const [tagsValues, setTagsValues] = useState<Record<string, string[]>>({});
+
+  // Fetch existing data
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const matchColumn = props.matchColumn || "id";
+
+      const { data, error } = await supabase
+        .from(props.tableName)
+        .select("*")
+        .eq(matchColumn, props.recordId)
+        .single();
+
+      if (error) {
+        setError(`Failed to load data: ${error.message}`);
+        toast.error(`Failed to load data: ${error.message}`);
+      } else if (data) {
+        setFormData(data as Partial<T>);
+
+        // Initialize state for special field types
+        const initialSelect: Record<string, string> = {};
+        const initialRichtext: Record<string, string> = {};
+        const initialTags: Record<string, string[]> = {};
+
+        props.fields.forEach((field) => {
+          const value = (data as any)[field.name];
+
+          if (field.type === "select" && value) {
+            initialSelect[String(field.name)] = value;
+          } else if (field.type === "richtext" && value) {
+            initialRichtext[String(field.name)] = value;
+          } else if (field.type === "tags" && Array.isArray(value)) {
+            initialTags[String(field.name)] = value;
+          }
+        });
+
+        setSelectValues(initialSelect);
+        setRichtextValues(initialRichtext);
+        setTagsValues(initialTags);
+      }
+
+      setLoading(false);
+    };
+
+    fetchData();
+  }, [props.recordId, props.tableName, props.matchColumn]);
+
+  if (loading) {
+    return (
+      <div className="min-w-100 border bg-white shadow-lg p-8 my-4 flex items-center justify-center min-h-75">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  return (
+    <form
+      className="min-w-100 border bg-white shadow-lg p-8 my-4"
+      onSubmit={async (e) => {
+        e.preventDefault();
+        setSubmitting(true);
+        const formDataObj = new FormData(e.currentTarget);
+
+        const data: Partial<T> = {};
+        props.fields.forEach((field) => {
+          let value = formDataObj.get(String(field.name));
+
+          // For richtext fields, use the stored HTML value
+          if (field.type === "richtext") {
+            value = richtextValues[String(field.name)] || "";
+          }
+
+          // For tags fields, use the stored array value
+          if (field.type === "tags") {
+            (data as any)[field.name] = tagsValues[String(field.name)] || [];
+            return;
+          }
+
+          if (value !== null && value !== undefined) {
+            if (field.type === "number") {
+              (data as any)[field.name] = Number(value);
+            } else {
+              (data as any)[field.name] = value;
+            }
+          }
+        });
+
+        // Add updated_at timestamp
+        (data as any).updated_at = new Date();
+
+        console.log("Data to be updated:", data);
+
+        const matchColumn = props.matchColumn || "id";
+        const c = await supabase
+          .from(props.tableName)
+          .update(data)
+          .eq(matchColumn, props.recordId);
+
+        console.log("Supabase response:", c);
+        if (c.error) {
+          setError(c.error.message);
+          toast.error("Error updating: " + c.error.message);
+        } else {
+          setError(null);
+          toast.success("Updated successfully!");
+          if (props.onSuccess) {
+            props.onSuccess();
+          } else {
+            setTimeout(() => {
+              window.location.reload();
+            }, 2000);
+          }
+        }
+        setSubmitting(false);
+      }}
+    >
+      {props.fields.map((field) => {
+        const fieldValue = (formData as any)[field.name];
+        const isEditable = field.editable !== false;
+
+        return (
+          <div key={String(field.name)} className="mb-4">
+            <Label className="mb-2">
+              {(
+                String(field.name).at(0)!.toUpperCase() +
+                String(field.name).slice(1)
+              )
+                .split("_")
+                .join(" ")}
+            </Label>
+            {field.type === "richtext" ? (
+              <>
+                <Tiptap
+                  content={richtextValues[String(field.name)] || "<p></p>"}
+                  onChange={(html) => {
+                    setRichtextValues((prev) => ({
+                      ...prev,
+                      [String(field.name)]: html,
+                    }));
+                  }}
+                />
+                <input
+                  type="hidden"
+                  name={String(field.name)}
+                  value={richtextValues[String(field.name)] || ""}
+                />
+              </>
+            ) : field.type === "tags" ? (
+              <TagsInput
+                value={tagsValues[String(field.name)] || []}
+                onChange={(tags) => {
+                  setTagsValues((prev) => ({
+                    ...prev,
+                    [String(field.name)]: tags,
+                  }));
+                }}
+                placeholder={`Add ${String(field.name).toLowerCase()}...`}
+              />
+            ) : field.type === "textarea" ? (
+              <Textarea
+                name={String(field.name)}
+                placeholder={`Enter ${String(field.name).toLowerCase()} here...`}
+                defaultValue={fieldValue || ""}
+                readOnly={!isEditable}
+                required
+              />
+            ) : field.type === "select" ? (
+              <>
+                <Select
+                  name={String(field.name)}
+                  required
+                  disabled={!isEditable}
+                  value={selectValues[String(field.name)] || ""}
+                  onValueChange={(value) => {
+                    setSelectValues((prev) => ({
+                      ...prev,
+                      [String(field.name)]: value,
+                    }));
+                  }}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue
+                      placeholder={`Select a ${String(field.name).toLowerCase()}`}
+                    />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectLabel>{String(field.name)}</SelectLabel>
+                    {field.options?.map((option) => (
+                      <SelectItem key={option} value={option}>
+                        {option}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <input
+                  type="hidden"
+                  name={String(field.name)}
+                  value={selectValues[String(field.name)] || ""}
+                />
+              </>
+            ) : (
+              <Input
+                name={String(field.name)}
+                placeholder={`Enter ${String(field.name).toLowerCase()} here...`}
+                type={field.type}
+                defaultValue={fieldValue || ""}
+                readOnly={!isEditable}
+                required
+              />
+            )}
+          </div>
+        );
+      })}
+
+      {error && (
+        <p className="text-red-500 font-medium text-sm my-2 bg-red-100 p-4">
+          {error}
+        </p>
+      )}
+
+      <Button type="submit" disabled={submitting} className="w-full">
+        {submitting ? "Updating..." : "Update"}
+      </Button>
+    </form>
+  );
+}

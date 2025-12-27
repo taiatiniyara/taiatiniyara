@@ -14,6 +14,10 @@ interface SupabaseQueryOptions<T> {
     fields?: (keyof T)[];
     params?: Param<T>;
     numberOfItems?: number;
+    orderBy?: {
+        column: keyof T;
+        ascending: boolean;
+    };
 }
 
 export function useSupabaseQuery<T>(options: SupabaseQueryOptions<T>) {
@@ -29,6 +33,13 @@ export function useSupabaseQuery<T>(options: SupabaseQueryOptions<T>) {
             // Only apply the .eq() filter if params are provided
             if (options.params) {
                 query = query.eq(options.params.name as string, options.params.value);
+            }
+
+            if (options.orderBy) {
+                query = query.order(
+                    options.orderBy.column as string,
+                    { ascending: options.orderBy.ascending }
+                );
             }
             
             const { data, error } = await query;

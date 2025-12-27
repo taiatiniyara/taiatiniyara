@@ -14,6 +14,10 @@ function RouteComponent() {
     queryKey: ["blog_posts"],
     tableName: "blog_posts",
     fields: ["id", "title", "img_url", "excerpt", "created_at", "slug"],
+    orderBy: {
+      column: "created_at",
+      ascending: false,
+    },
   });
 
   if (isLoading) {
@@ -33,9 +37,9 @@ function RouteComponent() {
   }
 
   return (
-    <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 container mx-auto p-4">
+    <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 md:gap-6 sm:gap-4 lg:gap-8 container mx-auto py-8">
       {data.map((post) => (
-        <div key={post.id} className="mb-4 bg-white shadow-md border">
+        <div key={post.id} className="bg-white shadow-md border">
           {post.img_url && (
             <img
               src={post.img_url}
@@ -48,11 +52,11 @@ function RouteComponent() {
             <p className="text-gray-500 text-sm">
               {new Date(post.created_at).toDateString()}
             </p>
-            <p className="my-2">{post.excerpt}</p>
+            <p className="my-2 line-clamp-3">{post.excerpt}</p>
 
             <a
               href={`/blog/${post.slug}`}
-              className="text-pink-500 text-sm font-medium text-right hover:underline w-full inline-block"
+              className="text-pink-500 font-medium underline w-full inline-block"
             >
               Read more
             </a>

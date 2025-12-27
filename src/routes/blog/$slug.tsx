@@ -41,22 +41,33 @@ function RouteComponent() {
   const blogPost = data[0];
 
   return (
-    <div className="lg:mx-[15%] md:mx-[10%] sm:mx-4 lg:flex-row flex flex-col gap-4 my-8">
-      <div className="lg:w-[75%]">
+    <div className="lg:mx-[15%] md:mx-[10%] sm:px-4 lg:flex-row flex flex-col gap-8 py-8">
+      <article className="lg:w-[75%] flex flex-col">
         <img
           src={blogPost.img_url || "/default-image.jpg"}
           alt={blogPost.title}
-          className="mb-4 h-75 w-full object-cover"
+          className="mb-6 rounded-lg h-96 w-full object-cover shadow-lg"
         />
-        <h1 className="text-2xl font-bold">{blogPost.title}</h1>
-        <span className="text-gray-500 text-sm flex items-center gap-1 mt-2">
-          <Calendar size={18} />{new Date(blogPost.created_at).toDateString()}
-        </span>
-        <p className=" text-gray-500 italic py-2 border-b">{blogPost.excerpt}</p>
-        <div className="py-4"
+        <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">{blogPost.title}</h1>
+        <div className="flex items-center gap-2 text-muted-foreground text-sm mb-4">
+          <Calendar size={18} />
+          <time dateTime={new Date(blogPost.created_at).toISOString()}>
+            {new Date(blogPost.created_at).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            })}
+          </time>
+        </div>
+        <p className="text-lg text-muted-foreground italic py-4 mb-6 border-b border-border">
+          {blogPost.excerpt}
+        </p>
+        <div 
+          id="blog-content" 
+          className="prose prose-lg max-w-none"
           dangerouslySetInnerHTML={{ __html: blogPost.content }}
         />
-      </div>
+      </article>
       <OtherBlogs slug={slug} />
     </div>
   );
