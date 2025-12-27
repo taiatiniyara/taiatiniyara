@@ -66,6 +66,13 @@ export default function CreateForm<T>(props: CreateFormProps<T>) {
 
         console.log("Form Data Submitted:", formData.entries());
         const data: Partial<T> = {};
+        
+        // Apply default values first
+        if (props.defaultValues) {
+          Object.assign(data, props.defaultValues);
+        }
+        
+        // Then override with form values
         props.fields.forEach((field) => {
           let value = formData.get(String(field.name));
 
@@ -88,10 +95,6 @@ export default function CreateForm<T>(props: CreateFormProps<T>) {
             }
           }
         });
-
-        if (props.defaultValues) {
-          Object.assign(data, props.defaultValues);
-        }
 
         console.log("Data to be inserted:", data);
 

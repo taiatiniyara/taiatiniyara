@@ -12,7 +12,7 @@ export const Route = createFileRoute("/projects/")({
 function RouteComponent() {
   const { error, data, isLoading } = useSupabaseQuery<Project>({
     tableName: "projects",
-    fields: ["slug", "title", "tags", "img_url"],
+    fields: ["slug", "title", "img_url"],
     queryKey: ["all-projects"],
   });
 
@@ -68,16 +68,6 @@ function RouteComponent() {
                   <h2 className="text-xl sm:text-2xl font-bold mb-4 group-hover:text-primary transition-colors">
                     {project.title}
                   </h2>
-                  <div className="flex flex-wrap gap-2 mt-auto">
-                    {project.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
                 </div>
               </div>
             </a>
