@@ -69,6 +69,9 @@ export function useSEO({
     updateMetaTag('meta[property="og:title"]', finalOgTitle);
     updateMetaTag('meta[property="og:description"]', finalOgDescription);
     updateMetaTag('meta[property="og:image"]', ogImage);
+    updateMetaTag('meta[property="og:image:width"]', '1200');
+    updateMetaTag('meta[property="og:image:height"]', '630');
+    updateMetaTag('meta[property="og:image:alt"]', finalOgTitle);
     updateMetaTag('meta[property="og:type"]', ogType);
     
     if (canonicalUrl) {
@@ -76,9 +79,11 @@ export function useSEO({
     }
 
     // Update Twitter Card tags
+    updateMetaTag('meta[property="twitter:card"]', 'summary_large_image');
     updateMetaTag('meta[property="twitter:title"]', finalOgTitle);
     updateMetaTag('meta[property="twitter:description"]', finalOgDescription);
     updateMetaTag('meta[property="twitter:image"]', ogImage);
+    updateMetaTag('meta[property="twitter:image:alt"]', finalOgTitle);
 
     // Article-specific meta tags
     if (ogType === 'article') {
