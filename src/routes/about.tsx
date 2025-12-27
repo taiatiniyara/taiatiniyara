@@ -212,7 +212,7 @@ function RouteComponent() {
             </p>
             <div className="flex justify-center">
               <Button asChild size="lg">
-                <a href="/CV.pdf" download className="flex items-center gap-2">
+                <a href="/CV-Taia-Tiniyara.pdf" download className="flex items-center gap-2">
                   <Download size={20} />
                   Download Full CV
                 </a>
