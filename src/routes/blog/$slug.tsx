@@ -41,34 +41,40 @@ function RouteComponent() {
   const blogPost = data[0];
 
   return (
-    <div className="lg:mx-[15%] md:mx-[10%] sm:px-4 lg:flex-row flex flex-col gap-8 py-8">
-      <article className="lg:w-[75%] flex flex-col">
-        <img
-          src={blogPost.img_url || "/default-image.jpg"}
-          alt={blogPost.title}
-          className="mb-6 rounded-lg h-96 w-full object-cover shadow-lg"
-        />
-        <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">{blogPost.title}</h1>
-        <div className="flex items-center gap-2 text-muted-foreground text-sm mb-4">
-          <Calendar size={18} />
-          <time dateTime={new Date(blogPost.created_at).toISOString()}>
-            {new Date(blogPost.created_at).toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric'
-            })}
-          </time>
+    <div className="min-h-screen bg-linear-to-b from-background via-background to-muted/20">
+      <div className="container mx-auto px-6 py-12">
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
+          <article className="flex-1 bg-card border rounded-lg p-8 shadow-md">
+            <img
+              src={blogPost.img_url || "/default-image.jpg"}
+              alt={blogPost.title}
+              className="mb-8 rounded-lg w-full h-96 object-cover shadow-lg"
+            />
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">{blogPost.title}</h1>
+            <div className="flex items-center gap-2 text-muted-foreground text-sm mb-6 pb-6 border-b">
+              <Calendar size={18} />
+              <time dateTime={new Date(blogPost.created_at).toISOString()}>
+                {new Date(blogPost.created_at).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })}
+              </time>
+            </div>
+            <p className="text-lg text-muted-foreground italic mb-8 pb-8 border-b">
+              {blogPost.excerpt}
+            </p>
+            <div 
+              id="blog-content" 
+              className="prose prose-lg max-w-none"
+              dangerouslySetInnerHTML={{ __html: blogPost.content }}
+            />
+          </article>
+          <aside className="lg:w-80">
+            <OtherBlogs slug={slug} />
+          </aside>
         </div>
-        <p className="text-lg text-muted-foreground italic py-4 mb-6 border-b border-border">
-          {blogPost.excerpt}
-        </p>
-        <div 
-          id="blog-content" 
-          className="prose prose-lg max-w-none"
-          dangerouslySetInnerHTML={{ __html: blogPost.content }}
-        />
-      </article>
-      <OtherBlogs slug={slug} />
+      </div>
     </div>
   );
 }

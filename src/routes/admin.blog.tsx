@@ -35,21 +35,31 @@ function RouteComponent() {
   }
 
   return (
-    <div>
-      <div className="flex justify-between gap-12 w-full mb-4">
-        <h2 className="text-2xl font-bold">Blog Posts</h2>
+    <div className="w-full space-y-6">
+      <div className="flex justify-between items-center gap-4">
+        <div>
+          <h2 className="text-3xl font-bold mb-1">Blog Posts</h2>
+          <p className="text-muted-foreground">Manage your blog content</p>
+        </div>
         <Button 
           onClick={() => {
             setShowCreateForm(!showCreateForm);
             setEditingPostId(null);
           }}
+          size="lg"
         >
           {showCreateForm ? "Cancel" : "Create New Post"}
         </Button>
       </div>
-      {showCreateForm ? <CreateBlogForm /> : null}
+      
+      {showCreateForm ? (
+        <div className="bg-card border rounded-lg p-6 shadow-md">
+          <CreateBlogForm />
+        </div>
+      ) : null}
+      
       {editingPostId ? (
-        <div className="mb-8">
+        <div className="bg-card border rounded-lg p-6 shadow-md">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-xl font-semibold">Edit Post</h3>
             <Button 
@@ -62,28 +72,36 @@ function RouteComponent() {
           <EditBlogForm blogId={editingPostId} />
         </div>
       ) : null}
-      {data?.map((post) => (
-        <div key={post.id} className="mb-4 p-4 border rounded flex justify-between items-center">
-          <div>
-            <h2 className="text-xl font-bold">{post.title}</h2>
-            <p className="text-sm text-gray-500">
-              Created at: {new Date(post.created_at).toLocaleDateString()}
-            </p>
+      
+      <div className="space-y-4">
+        {data?.map((post) => (
+          <div key={post.id} className="bg-card border rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex justify-between items-start gap-4">
+              <div className="flex-1">
+                <h2 className="text-xl font-bold mb-2">{post.title}</h2>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  Created: {new Date(post.created_at).toLocaleDateString()}
+                </div>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setEditingPostId(post.id);
+                  setShowCreateForm(false);
+                }}
+                className="flex items-center gap-2"
+              >
+                <Pencil className="h-4 w-4" />
+                Edit
+              </Button>
+            </div>
           </div>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                setEditingPostId(post.id);
-                setShowCreateForm(false);
-              }}
-            >
-              <Pencil className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }
