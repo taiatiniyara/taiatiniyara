@@ -18,7 +18,7 @@ function RouteComponent() {
             <div className="flex justify-center mb-6">
               <div className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-full overflow-hidden border-4 border-primary/20 shadow-xl">
                 <img 
-                  src="/taia.png" 
+                  src="/taia.jpg" 
                   alt="Taia Tiniyara" 
                   className="w-full h-full object-cover"
                 />
@@ -208,18 +208,13 @@ function RouteComponent() {
           <Card className="p-8 sm:p-12 shadow-xl bg-linear-to-br from-primary/5 to-chart-3/5">
             <h2 className="text-2xl sm:text-3xl font-bold mb-4">Let's Work Together</h2>
             <p className="text-muted-foreground mb-6 sm:mb-8 max-w-2xl mx-auto">
-              Interested in collaborating or learning more about my work? Download my full CV or get in touch.
+              Interested in collaborating or learning more about my work? Download my full CV.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button asChild size="lg" className="w-full sm:w-auto">
+            <div className="flex justify-center">
+              <Button asChild size="lg">
                 <a href="/CV.pdf" download className="flex items-center gap-2">
                   <Download size={20} />
                   Download Full CV
-                </a>
-              </Button>
-              <Button asChild size="lg" variant="outline" className="w-full sm:w-auto">
-                <a href="mailto:mail@taiatiniyara.com">
-                  Get In Touch
                 </a>
               </Button>
             </div>
