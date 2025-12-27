@@ -2,12 +2,20 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar, Mail, MapPin, Phone, Download, Code, Palette, Server, Smartphone, Cloud } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 
 export const Route = createFileRoute("/about")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  useSEO({
+    title: "About Taia Tiniyara - Software Engineer in Fiji",
+    description: "Meet Taia Tiniyara, a professional software engineer based in Lami, Fiji. Specializing in full-stack development, web applications, and software engineering training for Pacific Island professionals.",
+    keywords: "Taia Tiniyara, software engineer Fiji, programmer Lami, developer Pacific Islands, Fiji software development",
+    canonicalUrl: "/about",
+    ogType: "profile",
+  });
   return (
     <div className="min-h-screen bg-linear-to-b from-background via-background to-muted/20">
       {/* Hero Section */}

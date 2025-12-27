@@ -1,0 +1,20 @@
+# robots.txt for taiatiniyara.com
+
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /student
+Disallow: /student/*
+Disallow: /login
+Disallow: /signup
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /profile
+Disallow: /unauthorized
+
+# Sitemap location
+Sitemap: https://taiatiniyara.com/sitemap.xml
+
+# Crawl delay (optional - remove if not needed)
+Crawl-delay: 1

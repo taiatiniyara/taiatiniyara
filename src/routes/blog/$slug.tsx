@@ -6,6 +6,8 @@ import { useSupabaseQuery } from "@/hooks/useSupabaseQuery";
 import type { BlogPost } from "@/lib/drizzle/schema";
 import { createFileRoute, useParams } from "@tanstack/react-router";
 import { Calendar } from "lucide-react";
+import { useSEO, createStructuredData } from "@/hooks/useSEO";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/blog/$slug")({
   component: RouteComponent,
@@ -39,6 +41,60 @@ function RouteComponent() {
   }
 
   const blogPost = data[0];
+
+  // SEO optimization
+  useSEO({
+    title: blogPost.title,
+    description: blogPost.excerpt || blogPost.title,
+    keywords: `blog, ${blogPost.title}, software development, programming`,
+    canonicalUrl: `/blog/${slug}`,
+    ogType: "article",
+    ogImage: blogPost.img_url || undefined,
+    publishedTime: new Date(blogPost.created_at).toISOString(),
+    modifiedTime: blogPost.updated_at ? new Date(blogPost.updated_at).toISOString() : undefined,
+  });
+
+  // Add structured data for Article
+  useEffect(() => {
+    const structuredData = createStructuredData({
+      '@type': 'BlogPosting',
+      headline: blogPost.title,
+      description: blogPost.excerpt || blogPost.title,
+      image: blogPost.img_url || 'https://taiatiniyara.com/og-image.jpg',
+      datePublished: new Date(blogPost.created_at).toISOString(),
+      dateModified: blogPost.updated_at ? new Date(blogPost.updated_at).toISOString() : new Date(blogPost.created_at).toISOString(),
+      author: {
+        '@type': 'Person',
+        name: 'Taia Tiniyara',
+        url: 'https://taiatiniyara.com/about'
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: 'Taia Tiniyara',
+        logo: {
+          '@type': 'ImageObject',
+          url: 'https://taiatiniyara.com/logo.svg'
+        }
+      },
+      mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': `https://taiatiniyara.com/blog/${slug}`
+      }
+    });
+
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = structuredData;
+    script.id = 'blog-structured-data';
+    document.head.appendChild(script);
+
+    return () => {
+      const existingScript = document.getElementById('blog-structured-data');
+      if (existingScript) {
+        existingScript.remove();
+      }
+    };
+  }, [blogPost, slug]);
 
   return (
     <div className="min-h-screen bg-linear-to-b from-background via-background to-muted/20">

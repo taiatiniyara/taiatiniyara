@@ -4,12 +4,20 @@ import LoadingSpinner from "@/components/ui/loading-spinner";
 import { useSupabaseQuery } from "@/hooks/useSupabaseQuery";
 import type { BlogPost } from "@/lib/drizzle/schema";
 import { createFileRoute } from "@tanstack/react-router";
+import { useSEO } from "@/hooks/useSEO";
 
 export const Route = createFileRoute("/blog/")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  useSEO({
+    title: "Blog - Software Development Insights & Tutorials",
+    description: "Read the latest articles, tutorials, and insights on software development, web programming, and technology from Taia Tiniyara. Learn about modern development practices and technologies.",
+    keywords: "software development blog, programming tutorials, web development articles, coding blog Fiji, tech insights Pacific",
+    canonicalUrl: "/blog",
+    ogType: "website",
+  });
   const { error, data, isLoading } = useSupabaseQuery<BlogPost>({
     queryKey: ["blog_posts"],
     tableName: "blog_posts",

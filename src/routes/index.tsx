@@ -1,11 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
+import { useSEO } from "@/hooks/useSEO";
 
 export const Route = createFileRoute("/")({
   component: Index,
 });
 
 function Index() {
+  useSEO({
+    title: "Software Engineering & Development in Fiji & the Pacific",
+    description: "Leading software engineering and development training in Fiji and the Pacific Islands. Expert software engineers, programmers, and developers offering comprehensive courses for Pacific professionals.",
+    keywords: "software engineer Fiji, programmer Fiji, software developer Fiji, web development Fiji, coding courses Fiji, developer training Pacific",
+    canonicalUrl: "/",
+    ogType: "website",
+  });
   return (
     <div className="relative h-screen w-full overflow-hidden">
 

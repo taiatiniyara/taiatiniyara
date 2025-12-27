@@ -4,12 +4,20 @@ import LoadingSpinner from "@/components/ui/loading-spinner";
 import { useSupabaseQuery } from "@/hooks/useSupabaseQuery";
 import type { Project } from "@/lib/drizzle/schema";
 import { createFileRoute } from "@tanstack/react-router";
+import { useSEO } from "@/hooks/useSEO";
 
 export const Route = createFileRoute("/projects/")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  useSEO({
+    title: "Projects - Portfolio of Software Development Work",
+    description: "Explore my portfolio of software development projects including web applications, mobile apps, and custom solutions. See examples of quality software engineering work from Fiji and the Pacific.",
+    keywords: "software projects Fiji, web development portfolio, developer portfolio Pacific, programming projects, software engineering examples",
+    canonicalUrl: "/projects",
+    ogType: "website",
+  });
   const { error, data, isLoading } = useSupabaseQuery<Project>({
     tableName: "projects",
     fields: ["slug", "title", "img_url"],

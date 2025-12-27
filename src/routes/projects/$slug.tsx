@@ -8,6 +8,8 @@ import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
+import { useSEO, createStructuredData } from '@/hooks/useSEO'
+import { useEffect } from 'react'
 
 export const Route = createFileRoute('/projects/$slug')({
   component: RouteComponent,
@@ -35,6 +37,46 @@ function RouteComponent() {
   }
 
   const project = data[0];
+
+  // SEO optimization
+  useSEO({
+    title: project.title,
+    description: project.description || `${project.title} - A software project by Taia Tiniyara`,
+    keywords: `project, ${project.title}, ${project.technologies?.join(', ') || ''}, software development`,
+    canonicalUrl: `/projects/${slug}`,
+    ogType: 'article',
+    ogImage: project.img_url || undefined,
+  });
+
+  // Add structured data for CreativeWork
+  useEffect(() => {
+    const structuredData = createStructuredData({
+      '@type': 'CreativeWork',
+      name: project.title,
+      description: project.description || project.title,
+      image: project.img_url || 'https://taiatiniyara.com/og-image.jpg',
+      author: {
+        '@type': 'Person',
+        name: 'Taia Tiniyara',
+        url: 'https://taiatiniyara.com/about'
+      },
+      url: `https://taiatiniyara.com/projects/${slug}`,
+      keywords: project.tags?.join(', ') || project.technologies?.join(', ') || '',
+    });
+
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = structuredData;
+    script.id = 'project-structured-data';
+    document.head.appendChild(script);
+
+    return () => {
+      const existingScript = document.getElementById('project-structured-data');
+      if (existingScript) {
+        existingScript.remove();
+      }
+    };
+  }, [project, slug]);
 
   return (
     <div className="min-h-screen bg-linear-to-b from-background via-background to-muted/20">
