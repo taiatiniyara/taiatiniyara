@@ -1,10 +1,8 @@
-import EmptyListPlaceholder from "@/components/ui/empty-list-placeholder";
-import ErrorBox from "@/components/ui/error";
-import LoadingSpinner from "@/components/ui/loading-spinner";
 import { useSupabaseQuery } from "@/hooks/useSupabaseQuery";
 import type { Course } from "@/lib/drizzle/schema";
 import { createFileRoute, useParams } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
+import { DetailPageLayout } from "@/components/ui/detail-page-layout";
 
 export const Route = createFileRoute("/courses/$slug")({
   component: RouteComponent,
@@ -18,24 +16,18 @@ function RouteComponent() {
     tableName: "courses",
     params: { name: "slug", value: slug },
   });
-  if (isLoading) {
-    return <LoadingSpinner text={`Loading course...`} />;
-  }
-
-  if (error) {
-    return (
-      <ErrorBox message="Failed to load course. Please try again later." />
-    );
-  }
-
-  if (!data || data.length === 0) {
-    return <EmptyListPlaceholder text="Course not found." />;
-  }
-
-  const course = data[0];
+  const course = data?.[0];
+  
   return (
-    <div className="min-h-screen bg-linear-to-b from-background via-background to-muted/20">
-      <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
+    <DetailPageLayout
+      isLoading={isLoading}
+      error={error}
+      data={data}
+      loadingText="Loading course..."
+      errorMessage="Failed to load course. Please try again later."
+      emptyMessage="Course not found."
+    >
+      {course && (
         <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8">
           <div className="bg-card border rounded-lg p-4 sm:p-6 md:p-8 shadow-md">
             <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-6">
@@ -52,7 +44,7 @@ function RouteComponent() {
             </Button>
           </div>
         </div>
-      </div>
-    </div>
+      )}
+    </DetailPageLayout>
   );
 }

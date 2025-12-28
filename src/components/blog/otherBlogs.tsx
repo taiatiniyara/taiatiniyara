@@ -38,7 +38,7 @@ export default function OtherBlogs({ slug }: { slug?: string }) {
         .filter((post) => post.slug !== slug)
         .slice(0, 3)
         .map((post) => (
-          <div key={post.slug} className="mb-4 border shadow-md bg-white">
+          <div key={post.slug} className="mb-4 border shadow-md bg-card rounded-lg overflow-hidden">
             {post.img_url && (
               <img
                 src={post.img_url}
@@ -48,11 +48,11 @@ export default function OtherBlogs({ slug }: { slug?: string }) {
             )}
 
             <div className="p-4">
-            <h3 className="text-lg font-bold">{post.title}</h3>
-            <p className="text-sm line-clamp-3 my-2">{post.excerpt}</p>
+            <h3 className="text-lg font-bold text-foreground">{post.title}</h3>
+            <p className="text-sm line-clamp-3 my-2 text-muted-foreground">{post.excerpt}</p>
             <a
               href={`/blog/${post.slug}`}
-              className="text-pink-500 font-medium underline inline-block"
+              className="text-primary font-medium underline inline-block hover:text-primary/80 transition-colors"
             >
               Read more
             </a>

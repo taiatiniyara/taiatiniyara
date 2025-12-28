@@ -1,20 +1,8 @@
 import { supabase, type tables } from "@/lib/supabase";
-import { Label } from "../ui/label";
-import { Textarea } from "../ui/textarea";
-import { Input } from "../ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useState } from "react";
 import { Button } from "../ui/button";
-import Tiptap from "../tiptap-lazy";
 import { toast } from "sonner";
-import { TagsInput } from "../ui/tags-input";
+import { FormField } from "../ui/form-field";
 
 interface CreateFormProps<T> {
   fields: {
@@ -114,93 +102,31 @@ export default function CreateForm<T>(props: CreateFormProps<T>) {
       }}
     >
       {props.fields.map((field) => (
-        <div key={String(field.name)} className="mb-4">
-          <Label className="mb-2">
-            {(
-              String(field.name).at(0)!.toUpperCase() +
-              String(field.name).slice(1)
-            )
-              .split("_")
-              .join(" ")}
-          </Label>
-          {field.type === "richtext" ? (
-            <>
-              <Tiptap
-                content={
-                  richtextValues[String(field.name)] ||
-                  "<p>Start writing...</p>"
-                }
-                onChange={(html) => {
-                  setRichtextValues((prev) => ({
-                    ...prev,
-                    [String(field.name)]: html,
-                  }));
-                }}
-              />
-              <input
-                type="hidden"
-                name={String(field.name)}
-                value={richtextValues[String(field.name)] || ""}
-              />
-            </>
-          ) : field.type === "tags" ? (
-            <TagsInput
-              value={tagsValues[String(field.name)] || []}
-              onChange={(tags) => {
-                setTagsValues((prev) => ({
-                  ...prev,
-                  [String(field.name)]: tags,
-                }));
-              }}
-              placeholder={`Add ${String(field.name).toLowerCase()}...`}
-            />
-          ) : field.type === "textarea" ? (
-            <Textarea
-              name={String(field.name)}
-              placeholder={`Enter ${String(field.name).toLowerCase()} here...`}
-              required
-            />
-          ) : field.type === "select" ? (
-            <>
-              <Select
-                name={String(field.name)}
-                required
-                onValueChange={(value) => {
-                  setSelectValues((prev) => ({
-                    ...prev,
-                    [String(field.name)]: value,
-                  }));
-                }}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue
-                    placeholder={`Select a ${String(field.name).toLowerCase()}`}
-                  />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectLabel>{String(field.name)}</SelectLabel>
-                  {field.options?.map((option) => (
-                    <SelectItem key={option} value={option}>
-                      {option}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <input
-                type="hidden"
-                name={String(field.name)}
-                value={selectValues[String(field.name)] || ""}
-              />
-            </>
-          ) : (
-            <Input
-              name={String(field.name)}
-              placeholder={`Enter ${String(field.name).toLowerCase()} here...`}
-              type={field.type}
-              required
-            />
-          )}
-        </div>
+        <FormField<T>
+          key={String(field.name)}
+          field={field}
+          selectValue={selectValues[String(field.name)]}
+          richtextValue={richtextValues[String(field.name)]}
+          tagsValue={tagsValues[String(field.name)]}
+          onSelectChange={(value) => {
+            setSelectValues((prev) => ({
+              ...prev,
+              [String(field.name)]: value,
+            }));
+          }}
+          onRichtextChange={(html) => {
+            setRichtextValues((prev) => ({
+              ...prev,
+              [String(field.name)]: html,
+            }));
+          }}
+          onTagsChange={(tags) => {
+            setTagsValues((prev) => ({
+              ...prev,
+              [String(field.name)]: tags,
+            }));
+          }}
+        />
       ))}
 
       {error && (

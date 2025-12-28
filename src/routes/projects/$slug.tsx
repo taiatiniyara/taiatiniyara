@@ -1,15 +1,13 @@
 import { createFileRoute, useParams } from '@tanstack/react-router'
 import { useSupabaseQuery } from '@/hooks/useSupabaseQuery'
 import type { Project } from '@/lib/drizzle/schema'
-import LoadingSpinner from '@/components/ui/loading-spinner'
-import ErrorBox from '@/components/ui/error'
-import EmptyListPlaceholder from '@/components/ui/empty-list-placeholder'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
-import { useSEO, createStructuredData } from '@/hooks/useSEO'
-import { useEffect } from 'react'
+import { useSEO } from '@/hooks/useSEO'
+import { useStructuredData } from '@/hooks/useStructuredData'
+import { DetailPageLayout } from '@/components/ui/detail-page-layout'
 
 export const Route = createFileRoute('/projects/$slug')({
   component: RouteComponent,
@@ -36,11 +34,9 @@ function RouteComponent() {
     ogImage: project?.img_url || undefined,
   });
 
-  // Add structured data for CreativeWork - must be at top level
-  useEffect(() => {
-    if (!project) return;
-
-    const structuredData = createStructuredData({
+  // Add structured data for CreativeWork
+  useStructuredData(
+    project ? {
       '@type': 'CreativeWork',
       name: project.title,
       description: project.description || project.title,
@@ -52,38 +48,21 @@ function RouteComponent() {
       },
       url: `https://taiatiniyara.com/projects/${slug}`,
       keywords: project.tags?.join(', ') || project.technologies?.join(', ') || '',
-    });
-
-    const script = document.createElement('script');
-    script.type = 'application/ld+json';
-    script.text = structuredData;
-    script.id = 'project-structured-data';
-    document.head.appendChild(script);
-
-    return () => {
-      const existingScript = document.getElementById('project-structured-data');
-      if (existingScript) {
-        existingScript.remove();
-      }
-    };
-  }, [project, slug]);
-
-  if (isLoading) {
-    return <LoadingSpinner text="Loading project..." />;
-  }
-
-  if (error) {
-    return <ErrorBox message="Failed to load project. Please try again later." />;
-  }
-
-  if (!data || data.length === 0 || !project) {
-    return <EmptyListPlaceholder text="Project not found." />;
-  }
+    } : null,
+    'project-structured-data'
+  );
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-background via-background to-muted/20">
-      <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
-        <div className="max-w-5xl mx-auto space-y-6 sm:space-y-8">
+    <DetailPageLayout
+      isLoading={isLoading}
+      error={error}
+      data={data}
+      loadingText="Loading project..."
+      errorMessage="Failed to load project. Please try again later."
+      emptyMessage="Project not found."
+    >
+      {project && (
+        <>
           <Card className="overflow-hidden shadow-xl">
             {project.img_url && (
               <div className="relative h-48 sm:h-64 md:h-96 overflow-hidden">
@@ -179,8 +158,8 @@ function RouteComponent() {
               <a href="/projects">← Back to Projects</a>
             </Button>
           </div>
-        </div>
-      </div>
-    </div>
+        </>
+      )}
+    </DetailPageLayout>
   );
 }

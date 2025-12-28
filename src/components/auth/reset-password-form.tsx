@@ -4,7 +4,8 @@ import { useAuth } from '@/context/auth-context';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card } from '@/components/ui/card';
+import { AuthFormWrapper } from '@/components/ui/auth-form-wrapper';
+import { ErrorMessage } from '@/components/ui/error-message';
 
 export function ResetPasswordForm() {
   const [password, setPassword] = useState('');
@@ -41,21 +42,12 @@ export function ResetPasswordForm() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-      <Card className="w-full max-w-md p-8">
-        <div className="mb-8 text-center">
-          <h1 className="text-2xl font-bold text-gray-900">Set New Password</h1>
-          <p className="mt-2 text-sm text-gray-600">
-            Enter your new password below
-          </p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {error && (
-            <div className="rounded-md bg-red-50 p-4">
-              <p className="text-sm text-red-800">{error}</p>
-            </div>
-          )}
+    <AuthFormWrapper
+      title="Set New Password"
+      description="Enter your new password below"
+    >
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {error && <ErrorMessage message={error} />}
 
           <div className="space-y-2">
             <Label htmlFor="password">New Password</Label>
@@ -87,7 +79,6 @@ export function ResetPasswordForm() {
             {loading ? 'Updating...' : 'Update Password'}
           </Button>
         </form>
-      </Card>
-    </div>
+    </AuthFormWrapper>
   );
 }

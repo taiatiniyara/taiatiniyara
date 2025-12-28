@@ -1,13 +1,11 @@
 import OtherBlogs from "@/components/blog/otherBlogs";
-import EmptyListPlaceholder from "@/components/ui/empty-list-placeholder";
-import ErrorBox from "@/components/ui/error";
-import LoadingSpinner from "@/components/ui/loading-spinner";
 import { useSupabaseQuery } from "@/hooks/useSupabaseQuery";
 import type { BlogPost } from "@/lib/drizzle/schema";
 import { createFileRoute, useParams } from "@tanstack/react-router";
 import { Calendar } from "lucide-react";
-import { useSEO, createStructuredData } from "@/hooks/useSEO";
-import { useEffect } from "react";
+import { useSEO } from "@/hooks/useSEO";
+import { useStructuredData } from "@/hooks/useStructuredData";
+import { DetailPageLayout } from "@/components/ui/detail-page-layout";
 
 export const Route = createFileRoute("/blog/$slug")({
   component: RouteComponent,
@@ -36,11 +34,9 @@ function RouteComponent() {
     modifiedTime: blogPost?.updated_at ? new Date(blogPost.updated_at).toISOString() : undefined,
   });
 
-  // Add structured data for Article - must be at top level
-  useEffect(() => {
-    if (!blogPost) return;
-
-    const structuredData = createStructuredData({
+  // Add structured data for Article
+  useStructuredData(
+    blogPost ? {
       '@type': 'BlogPosting',
       headline: blogPost.title,
       description: blogPost.excerpt || blogPost.title,
@@ -64,43 +60,20 @@ function RouteComponent() {
         '@type': 'WebPage',
         '@id': `https://taiatiniyara.com/blog/${slug}`
       }
-    });
-
-    const script = document.createElement('script');
-    script.type = 'application/ld+json';
-    script.text = structuredData;
-    script.id = 'blog-structured-data';
-    document.head.appendChild(script);
-
-    return () => {
-      const existingScript = document.getElementById('blog-structured-data');
-      if (existingScript) {
-        existingScript.remove();
-      }
-    };
-  }, [blogPost, slug]);
-
-  if (isLoading) {
-    return <LoadingSpinner text="Loading Blog Post..." />;
-  }
-
-  if (error) {
-    return (
-      <ErrorBox
-        message={
-          error.message || "An error occurred while fetching the blog post."
-        }
-      />
-    );
-  }
-
-  if (!data || data.length === 0 || !blogPost) {
-    return <EmptyListPlaceholder text="Blog post not found." />;
-  }
+    } : null,
+    'blog-structured-data'
+  );
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-background via-background to-muted/20">
-      <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
+    <DetailPageLayout
+      isLoading={isLoading}
+      error={error}
+      data={data}
+      loadingText="Loading Blog Post..."
+      errorMessage="An error occurred while fetching the blog post."
+      emptyMessage="Blog post not found."
+    >
+      {blogPost && (
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-6 lg:gap-8">
           <article className="flex-1 bg-card border rounded-lg overflow-hidden shadow-md">
             <img
@@ -134,7 +107,7 @@ function RouteComponent() {
             <OtherBlogs slug={slug} />
           </aside>
         </div>
-      </div>
-    </div>
+      )}
+    </DetailPageLayout>
   );
 }
