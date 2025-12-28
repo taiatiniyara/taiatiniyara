@@ -22,40 +22,24 @@ function RouteComponent() {
     params: { name: "slug", value: slug },
   });
 
-  if (isLoading) {
-    return <LoadingSpinner text="Loading Blog Post..." />;
-  }
+  const blogPost = data?.[0];
 
-  if (error) {
-    return (
-      <ErrorBox
-        message={
-          error.message || "An error occurred while fetching the blog post."
-        }
-      />
-    );
-  }
-
-  if (!data || data.length === 0) {
-    return <EmptyListPlaceholder text="Blog post not found." />;
-  }
-
-  const blogPost = data[0];
-
-  // SEO optimization
+  // SEO optimization - must be called at top level before conditional returns
   useSEO({
-    title: blogPost.title,
-    description: blogPost.excerpt || blogPost.title,
-    keywords: `blog, ${blogPost.title}, software development, programming`,
+    title: blogPost?.title,
+    description: blogPost?.excerpt || blogPost?.title,
+    keywords: blogPost ? `blog, ${blogPost.title}, software development, programming` : undefined,
     canonicalUrl: `/blog/${slug}`,
     ogType: "article",
-    ogImage: blogPost.img_url || undefined,
-    publishedTime: new Date(blogPost.created_at).toISOString(),
-    modifiedTime: blogPost.updated_at ? new Date(blogPost.updated_at).toISOString() : undefined,
+    ogImage: blogPost?.img_url || undefined,
+    publishedTime: blogPost ? new Date(blogPost.created_at).toISOString() : undefined,
+    modifiedTime: blogPost?.updated_at ? new Date(blogPost.updated_at).toISOString() : undefined,
   });
 
-  // Add structured data for Article
+  // Add structured data for Article - must be at top level
   useEffect(() => {
+    if (!blogPost) return;
+
     const structuredData = createStructuredData({
       '@type': 'BlogPosting',
       headline: blogPost.title,
@@ -95,6 +79,24 @@ function RouteComponent() {
       }
     };
   }, [blogPost, slug]);
+
+  if (isLoading) {
+    return <LoadingSpinner text="Loading Blog Post..." />;
+  }
+
+  if (error) {
+    return (
+      <ErrorBox
+        message={
+          error.message || "An error occurred while fetching the blog post."
+        }
+      />
+    );
+  }
+
+  if (!data || data.length === 0 || !blogPost) {
+    return <EmptyListPlaceholder text="Blog post not found." />;
+  }
 
   return (
     <div className="min-h-screen bg-linear-to-b from-background via-background to-muted/20">

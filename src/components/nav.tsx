@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronsDown, LogIn, User2, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 interface NavList {
   name: string;
@@ -31,7 +32,7 @@ export default function TopNavigation() {
   const { user, signOut } = useAuth();
   return (
     <>
-      <div className="bg-white/50 backdrop-blur-lg sticky top-0 z-50">
+      <div className="bg-background/80 backdrop-blur-lg sticky top-0 z-50 border-b border-border">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="flex gap-4 py-4 items-center justify-between">
             <a href="/">
@@ -52,6 +53,9 @@ export default function TopNavigation() {
             </nav>
 
             <div className="flex items-center gap-2">
+              {/* Theme Toggle */}
+              <ThemeToggle />
+              
               {/* Desktop Auth Button */}
               <div className="hidden md:block">
                 {user ? (
@@ -103,7 +107,7 @@ export default function TopNavigation() {
 
               {/* Mobile Menu Toggle */}
               <button
-                className="md:hidden p-2 hover:bg-white/10 rounded-md transition-colors"
+                className="md:hidden p-2 hover:bg-accent rounded-md transition-colors"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 aria-label="Toggle menu"
               >
@@ -116,7 +120,7 @@ export default function TopNavigation() {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 top-18 z-50 bg-white/95 backdrop-blur-lg">
+        <div className="md:hidden fixed inset-0 top-18 z-50 bg-background/95 backdrop-blur-lg">
           <nav className="flex flex-col p-4 space-y-2">
             {navList.map((item) => (
               <a
@@ -124,8 +128,8 @@ export default function TopNavigation() {
                 href={item.href}
                 className={`px-4 py-3 rounded-md text-lg ${
                   path.split("/")[1] === item.href.slice(1)
-                    ? "text-pink-600 font-semibold bg-pink-50"
-                    : "hover:bg-gray-100 transition-colors"
+                    ? "text-pink-600 font-semibold bg-pink-50 dark:bg-pink-950/30"
+                    : "hover:bg-accent transition-colors"
                 }`}
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -133,28 +137,28 @@ export default function TopNavigation() {
               </a>
             ))}
             
-            <div className="pt-4 mt-4 border-t">
+            <div className="pt-4 mt-4 border-t border-border">
               {user ? (
                 <>
-                  <div className="px-4 py-2 text-sm text-gray-600">
+                  <div className="px-4 py-2 text-sm text-muted-foreground">
                     Signed in as <span className="font-semibold">{user.user_metadata.fullName}</span>
                   </div>
                   <a
                     href="/profile"
-                    className="block px-4 py-3 rounded-md text-lg hover:bg-gray-100 transition-colors"
+                    className="block px-4 py-3 rounded-md text-lg hover:bg-accent transition-colors"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Profile
                   </a>
                   <a
                     href={user.user_metadata.role === "admin" ? "/admin" : "/student"}
-                    className="block px-4 py-3 rounded-md text-lg hover:bg-gray-100 transition-colors"
+                    className="block px-4 py-3 rounded-md text-lg hover:bg-accent transition-colors"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Dashboard
                   </a>
                   <button
-                    className="w-full text-left px-4 py-3 rounded-md text-lg text-pink-600 font-medium hover:bg-pink-50 transition-colors"
+                    className="w-full text-left px-4 py-3 rounded-md text-lg text-pink-600 font-medium hover:bg-pink-50 dark:hover:bg-pink-950/30 transition-colors"
                     onClick={async () => {
                       await signOut();
                       setMobileMenuOpen(false);

@@ -24,32 +24,22 @@ function RouteComponent() {
     params: { name: 'slug', value: slug },
   });
 
-  if (isLoading) {
-    return <LoadingSpinner text="Loading project..." />;
-  }
+  const project = data?.[0];
 
-  if (error) {
-    return <ErrorBox message="Failed to load project. Please try again later." />;
-  }
-
-  if (!data || data.length === 0) {
-    return <EmptyListPlaceholder text="Project not found." />;
-  }
-
-  const project = data[0];
-
-  // SEO optimization
+  // SEO optimization - must be called at top level before conditional returns
   useSEO({
-    title: project.title,
-    description: project.description || `${project.title} - A software project by Taia Tiniyara`,
-    keywords: `project, ${project.title}, ${project.technologies?.join(', ') || ''}, software development`,
+    title: project?.title,
+    description: project?.description || (project ? `${project.title} - A software project by Taia Tiniyara` : undefined),
+    keywords: project ? `project, ${project.title}, ${project.technologies?.join(', ') || ''}, software development` : undefined,
     canonicalUrl: `/projects/${slug}`,
     ogType: 'article',
-    ogImage: project.img_url || undefined,
+    ogImage: project?.img_url || undefined,
   });
 
-  // Add structured data for CreativeWork
+  // Add structured data for CreativeWork - must be at top level
   useEffect(() => {
+    if (!project) return;
+
     const structuredData = createStructuredData({
       '@type': 'CreativeWork',
       name: project.title,
@@ -77,6 +67,18 @@ function RouteComponent() {
       }
     };
   }, [project, slug]);
+
+  if (isLoading) {
+    return <LoadingSpinner text="Loading project..." />;
+  }
+
+  if (error) {
+    return <ErrorBox message="Failed to load project. Please try again later." />;
+  }
+
+  if (!data || data.length === 0 || !project) {
+    return <EmptyListPlaceholder text="Project not found." />;
+  }
 
   return (
     <div className="min-h-screen bg-linear-to-b from-background via-background to-muted/20">
