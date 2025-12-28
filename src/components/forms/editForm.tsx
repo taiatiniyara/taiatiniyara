@@ -85,7 +85,7 @@ export default function EditForm<T>(props: EditFormProps<T>) {
 
   if (loading) {
     return (
-      <div className="min-w-100 border bg-white shadow-lg p-8 my-4 flex items-center justify-center min-h-75">
+      <div className="min-w-100 border bg-card shadow-lg p-8 my-4 flex items-center justify-center min-h-75 rounded-lg">
         <LoadingSpinner />
       </div>
     );
@@ -93,7 +93,7 @@ export default function EditForm<T>(props: EditFormProps<T>) {
 
   return (
     <form
-      className="min-w-100 border bg-white shadow-lg p-8 my-4"
+      className="min-w-100 border bg-card shadow-lg p-8 my-4 rounded-lg"
       onSubmit={async (e) => {
         e.preventDefault();
         setSubmitting(true);
@@ -188,7 +188,7 @@ export default function EditForm<T>(props: EditFormProps<T>) {
       })}
 
       {error && (
-        <p className="text-red-500 font-medium text-sm my-2 bg-red-100 p-4">
+        <p className="text-red-500 dark:text-red-400 font-medium text-sm my-2 bg-red-100 dark:bg-red-900/20 p-4 rounded-md border border-red-200 dark:border-red-800">
           {error}
         </p>
       )}

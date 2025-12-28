@@ -75,7 +75,7 @@ export function ForgotPasswordForm() {
           <div className="text-center text-sm">
             <Link
               to="/login"
-              className="font-medium text-pink-600 hover:text-pink-500"
+              className="font-medium text-primary hover:text-primary/80 transition-colors"
             >
               Back to Login
             </Link>

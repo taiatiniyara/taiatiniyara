@@ -67,7 +67,7 @@ export function LoginForm() {
           <div className="flex items-center justify-between">
             <Link
               to="/forgot-password"
-              className="text-sm font-medium text-pink-600 hover:text-pink-500"
+              className="text-sm font-medium text-primary hover:text-primary/80 transition-colors"
             >
               Forgot password?
             </Link>
@@ -78,10 +78,10 @@ export function LoginForm() {
           </Button>
 
           <div className="text-center text-sm">
-            <span className="text-gray-600">Don't have an account? </span>
+            <span className="text-muted-foreground">Don't have an account? </span>
             <Link
               to="/signup"
-              className="font-medium text-pink-600 hover:text-pink-500"
+              className="font-medium text-primary hover:text-primary/80 transition-colors"
             >
               Sign up
             </Link>
