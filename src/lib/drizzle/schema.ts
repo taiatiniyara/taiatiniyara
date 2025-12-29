@@ -45,7 +45,7 @@ export type NewCourseCategory = typeof course_categories.$inferInsert;
 
 export const courses = pgTable("courses", {
     id: uuid("id").primaryKey().defaultRandom(),
-    category_id: uuid("category_uuid").notNull().references(() => course_categories.id),
+    category_id: uuid("category_id").notNull().references(() => course_categories.id),
     slug: varchar("slug", { length: 255 }).notNull().unique(),
     title: varchar("title", { length: 255 }).notNull(),
     img_url: varchar("img_url", { length: 500 }),

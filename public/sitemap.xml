@@ -1,5 +1,5 @@
-[dotenv@17.2.3] injecting env (4) from .env.local -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
-[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+[dotenv@17.2.3] injecting env (4) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
@@ -53,19 +53,25 @@
   </url>
   <url>
     <loc>https://taiatiniyara.com/projects/dcS3P3arGwA2F3eV</loc>
-    <lastmod>2025-12-27T11:23:13.098Z</lastmod>
+    <lastmod>2025-12-27T18:45:06.425Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://taiatiniyara.com/projects/WMVMPNsspivnURQa</loc>
-    <lastmod>2025-12-27T11:25:16.337Z</lastmod>
+    <lastmod>2025-12-27T18:43:22.156Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://taiatiniyara.com/projects/0twX1IxZXF7jHZwm</loc>
-    <lastmod>2025-12-27T11:26:09.241Z</lastmod>
+    <lastmod>2025-12-27T12:49:38.244Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/courses/Nz7EozWcZtldxHKL</loc>
+    <lastmod>2025-12-29T06:22:20.383Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

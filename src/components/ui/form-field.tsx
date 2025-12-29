@@ -5,7 +5,6 @@ import {
   Select,
   SelectContent,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -95,7 +94,6 @@ export function FormField<T>({
               <SelectValue placeholder={`Select a ${fieldName.toLowerCase()}`} />
             </SelectTrigger>
             <SelectContent>
-              <SelectLabel>{fieldLabel}</SelectLabel>
               {field.options?.map((option) => (
                 <SelectItem key={option} value={option}>
                   {option}

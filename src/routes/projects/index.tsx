@@ -13,8 +13,10 @@ export const Route = createFileRoute("/projects/")({
 function RouteComponent() {
   useSEO({
     title: "Projects - Portfolio of Software Development Work",
-    description: "Explore my portfolio of software development projects including web applications, mobile apps, and custom solutions. See examples of quality software engineering work from Fiji and the Pacific.",
-    keywords: "software projects Fiji, web development portfolio, developer portfolio Pacific, programming projects, software engineering examples",
+    description:
+      "Explore my portfolio of software development projects including web applications, mobile apps, and custom solutions. See examples of quality software engineering work from Fiji and the Pacific.",
+    keywords:
+      "software projects Fiji, web development portfolio, developer portfolio Pacific, programming projects, software engineering examples",
     canonicalUrl: "/projects",
     ogType: "website",
   });
@@ -25,7 +27,7 @@ function RouteComponent() {
   });
 
   if (isLoading) {
-    return <LoadingSpinner text="Loading projects..." />
+    return <LoadingSpinner text="Loading projects..." />;
   }
 
   if (error) {
@@ -76,6 +78,12 @@ function RouteComponent() {
                   <h2 className="text-xl sm:text-2xl font-bold mb-4 group-hover:text-primary transition-colors">
                     {project.title}
                   </h2>
+
+                  <div className="flex flex-wrap gap-2">
+                    {project.technologies.map((tech) => (
+                      <span className="border px-1">{tech}</span>
+                    ))}
+                  </div>
                 </div>
               </div>
             </a>

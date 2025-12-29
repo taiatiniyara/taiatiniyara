@@ -4,17 +4,29 @@ import LoadingSpinner from "@/components/ui/loading-spinner";
 import { useSupabaseQuery } from "@/hooks/useSupabaseQuery";
 import { createFileRoute } from "@tanstack/react-router";
 import { Card } from "@/components/ui/card";
+import CreateCourseForm from "@/components/courses/createCouse";
+import CreateCourseCategoryForm from "@/components/courses/createCourseCategory";
+import { type Course } from "@/lib/drizzle/schema";
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import EditCourseForm from "@/components/courses/editCourse";
 
 export const Route = createFileRoute("/admin/courses")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { data, error, isLoading } = useSupabaseQuery({
+  const { data, error, isLoading } = useSupabaseQuery<Course>({
     queryKey: ["admin-courses"],
     tableName: "courses",
     fields: ["id", "title", "created_at"],
   });
+
+  const [showCreateForm, setShowCreateForm] = React.useState<boolean>(false);
+  const [editingCourseId, setEditingCourseId] = React.useState<string | null>(
+    null
+  );
 
   if (isLoading) return <LoadingSpinner text="Loading courses..." />;
 
@@ -24,6 +36,10 @@ function RouteComponent() {
     return (
       <div className="w-full">
         <EmptyListPlaceholder text="No courses found." />
+        <div className="flex gap-4">
+          <CreateCourseForm />
+          <CreateCourseCategoryForm />
+        </div>
       </div>
     );
 
@@ -34,22 +50,49 @@ function RouteComponent() {
           <h2 className="text-3xl font-bold mb-1">Courses</h2>
           <p className="text-muted-foreground">Manage your courses</p>
         </div>
+
+        <Button
+          onClick={() => {
+            setShowCreateForm(!showCreateForm);
+            setEditingCourseId(null);
+          }}
+        >
+          {showCreateForm ? (
+            "Cancel"
+          ) : (
+            <>
+              <Plus /> Create Course
+            </>
+          )}
+        </Button>
       </div>
-      
-      <div className="space-y-4">
+
+      {showCreateForm ?? <CreateCourseForm />}
+      {editingCourseId === null ? null : (
+        <EditCourseForm courseId={editingCourseId} />
+      )}
+
+      <div className="grid grid-cols-2 gap-4 max-h-100 my-4">
         {data?.map((course) => (
-          <Card key={course.id} className="p-6 hover:shadow-md transition-shadow">
-            <div className="flex justify-between items-start gap-4">
-              <div className="flex-1">
-                <h3 className="text-xl font-bold mb-2">{course.title}</h3>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  Created: {new Date(course.created_at).toLocaleDateString()}
-                </div>
-              </div>
+          <Card
+            key={course.id}
+            className="p-6 hover:shadow-md transition-shadow"
+          >
+            <img src={course.img_url || ""} alt="course-thumbnail" />
+
+            <div>
+              <h3>{course.title}</h3>
+              <p className="p-3 line-clamp-3">{course.description}</p>
             </div>
+
+            <Button
+              variant="outline"
+              onClick={() => {
+                setEditingCourseId(course.id);
+              }}
+            >
+              Edit
+            </Button>
           </Card>
         ))}
       </div>

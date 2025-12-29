@@ -45,7 +45,7 @@ export default function TopNavigation() {
                 <a
                   key={item.href}
                   href={item.href}
-                  className={`${path.split("/")[1] === item.href.slice(1) ? "text-pink-600 font-semibold" : "hover:text-gray-400 transition-colors"}`}
+                  className={`${path.split("/")[1] === item.href.slice(1) ? "text-pink-500 font-bold" : "hover:text-gray-400 transition-colors"}`}
                 >
                   {item.name}
                 </a>
