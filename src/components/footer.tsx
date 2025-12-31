@@ -91,7 +91,7 @@ export default function Footer() {
             <h4 className="text-lg font-semibold text-white">Contact</h4>
             <ul className="space-y-2 text-sm text-slate-400">
               <li>Email: info@taiatiniyara.com</li>
-              <li>Phone: +1 (555) 123-4567</li>
+              <li>Phone: +679 9860831</li>
               <li className="pt-4">
                 <div className="flex gap-4">
                   <a
