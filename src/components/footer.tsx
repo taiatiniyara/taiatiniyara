@@ -6,8 +6,7 @@ export default function Footer() {
           <div className="space-y-4">
             <h3 className="text-xl font-bold text-white">Taia Tiniyara</h3>
             <p className="text-sm text-slate-400">
-              Empowering learners through quality education and innovative
-              courses.
+              Assisting the Pacific through innovative systems design and problem-solving software.
             </p>
           </div>
 
