@@ -4,14 +4,14 @@ import { slugGenerate } from "@/lib/utils";
 import { useSupabaseQuery } from "@/hooks/useSupabaseQuery";
 
 export default function CreateCourseForm() {
-  const {data, error, isLoading} = useSupabaseQuery<CourseCategory>({
+  const { data, error, isLoading } = useSupabaseQuery<CourseCategory>({
     tableName: "course_categories",
     queryKey: ["courseCat"],
-    fields: ["id", "name"]
+    fields: ["id", "name"],
   });
 
-  if (isLoading) return <div>Loading...</div>
-  if (error) return <div>Error</div>
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error</div>;
 
   return (
     <CreateForm<Course>
@@ -20,7 +20,9 @@ export default function CreateCourseForm() {
         {
           name: "category_id",
           type: "select",
-          options: data ? data.map(cat => cat.id) : []
+          options: data
+            ? data.map((cat) => ({ label: cat.name, value: cat.id }))
+            : [],
         },
         {
           name: "title",
@@ -41,7 +43,7 @@ export default function CreateCourseForm() {
         {
           name: "img_url",
           type: "text",
-        }
+        },
       ]}
       defaultValues={{
         slug: slugGenerate(),

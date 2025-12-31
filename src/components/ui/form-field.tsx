@@ -23,7 +23,7 @@ interface FormFieldProps<T> {
       | "select"
       | "richtext"
       | "tags";
-    options?: string[];
+    options?: { label?: string; value: string }[];
     editable?: boolean;
   };
   value?: any;
@@ -61,11 +61,7 @@ export function FormField<T>({
             content={richtextValue || "<p>Start writing...</p>"}
             onChange={(html) => onRichtextChange?.(html)}
           />
-          <input
-            type="hidden"
-            name={fieldName}
-            value={richtextValue || ""}
-          />
+          <input type="hidden" name={fieldName} value={richtextValue || ""} />
         </>
       ) : field.type === "tags" ? (
         <TagsInput
@@ -91,21 +87,19 @@ export function FormField<T>({
             onValueChange={onSelectChange}
           >
             <SelectTrigger className="w-full">
-              <SelectValue placeholder={`Select a ${fieldName.toLowerCase()}`} />
+              <SelectValue
+                placeholder={`Select a ${fieldName.toLowerCase()}`}
+              />
             </SelectTrigger>
             <SelectContent>
               {field.options?.map((option) => (
-                <SelectItem key={option} value={option}>
-                  {option}
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label || option.value}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
-          <input
-            type="hidden"
-            name={fieldName}
-            value={selectValue || ""}
-          />
+          <input type="hidden" name={fieldName} value={selectValue || ""} />
         </>
       ) : (
         <Input

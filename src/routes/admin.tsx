@@ -53,10 +53,10 @@ function RouteComponent() {
             toast.error("Invalid access key. Please try again.");
           }
         }}
-        className="p-8 space-y-4 border shadow bg-white m-4"
+        className="p-8 space-y-4 border shadow m-4"
       >
         <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
-        <p className="text-gray-700">Enter Access Key to continue:</p>
+        <p>Enter Access Key to continue:</p>
         <Input name={ADMIN_KEY} placeholder="Enter access key here..." />
 
         <Button type="submit">Check</Button>
@@ -88,8 +88,8 @@ function RouteComponent() {
           <a
             className={`flex items-center gap-3 py-2 px-4 ${
               path === item.href
-                ? "bg-pink-200 text-pink-600 font-semibold"
-                : "hover:text-pink-600 transition-colors"
+                ? "bg-pink-200 text-pink-500 font-semibold"
+                : "hover:text-pink-500 transition-colors"
             }`}
             href={item.href}
             key={item.href}

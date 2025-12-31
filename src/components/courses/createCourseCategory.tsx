@@ -17,7 +17,20 @@ export default function CreateCourseCategoryForm() {
         {
           name: "level",
           type: "select",
-          options: ["Beginner", "Intermediate", "Advanced"],
+          options: [
+            {
+              label: "Beginner",
+              value: "Beginner",
+            },
+            {
+              label: "Intermediate",
+              value: "Intermediate"
+            },
+            {
+              label: "Advanced",
+              value: "Advanced"
+            }
+          ],
         },
       ]}
       defaultValues={{

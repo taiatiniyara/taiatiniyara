@@ -17,7 +17,10 @@ interface EditFormProps<T> {
       | "select"
       | "richtext"
       | "tags";
-    options?: string[]; // for select type
+    options?: {
+      label?: string;
+      value: string;
+    }[]; // for select type
     editable?: boolean; // if false, field will be readonly
   }[];
   tableName: keyof typeof tables;

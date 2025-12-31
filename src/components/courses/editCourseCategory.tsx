@@ -26,7 +26,20 @@ export default function EditCourseCategoryForm({
         {
           name: "level",
           type: "select",
-          options: ["Beginner", "Intermediate", "Advanced"],
+          options: [
+            {
+              label: "Beginner",
+              value: "Beginner",
+            },
+            {
+              label: "Intermediate",
+              value: "Intermediate",
+            },
+            {
+              label: "Advanced",
+              value: "Advanced",
+            },
+          ],
         },
       ]}
       tableName="course_categories"

@@ -16,7 +16,10 @@ interface CreateFormProps<T> {
       | "select"
       | "richtext"
       | "tags";
-    options?: string[]; // for select type
+    options?: {
+      label?: string;
+      value: string;
+    }[]; // for select type
   }[];
   tableName: keyof typeof tables;
   defaultValues?: Partial<T>;

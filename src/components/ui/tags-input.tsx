@@ -2,6 +2,7 @@ import { useState, type KeyboardEvent } from "react";
 import { Badge } from "./badge";
 import { Input } from "./input";
 import { X } from "lucide-react";
+import { Button } from "./button";
 
 interface TagsInputProps {
   value: string[];
@@ -10,10 +11,7 @@ interface TagsInputProps {
   className?: string;
 }
 
-export function TagsInput({
-  value,
-  onChange,
-}: TagsInputProps) {
+export function TagsInput({ value, onChange }: TagsInputProps) {
   const [inputValue, setInputValue] = useState("");
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -39,7 +37,7 @@ export function TagsInput({
   };
 
   return (
-    <div className="gap-2 rounded-md bg-white min-h-10">
+    <div className="gap-2 min-h-10">
       <div className="flex gap-1 mb-2">
         {value.map((tag, index) => (
           <Badge
@@ -48,14 +46,14 @@ export function TagsInput({
             className="flex items-center gap-1 pl-2 pr-1 py-1"
           >
             {tag}
-            <button
+            <Button
               type="button"
               onClick={() => removeTag(index)}
               className="ml-1 hover:bg-muted rounded-full p-0.5 transition-colors"
               aria-label={`Remove ${tag} tag`}
             >
               <X className="h-3 w-3" />
-            </button>
+            </Button>
           </Badge>
         ))}
       </div>
