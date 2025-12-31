@@ -18,6 +18,7 @@ interface SupabaseQueryOptions<T> {
         column: keyof T;
         ascending: boolean;
     };
+    whereIsNotEqualTo?: Param<T>;
 }
 
 export function useSupabaseQuery<T>(options: SupabaseQueryOptions<T>) {
@@ -39,6 +40,13 @@ export function useSupabaseQuery<T>(options: SupabaseQueryOptions<T>) {
                 query = query.order(
                     options.orderBy.column as string,
                     { ascending: options.orderBy.ascending }
+                );
+            }
+
+            if (options.whereIsNotEqualTo) {
+                query = query.neq(
+                    options.whereIsNotEqualTo.name as string,
+                    options.whereIsNotEqualTo.value
                 );
             }
             

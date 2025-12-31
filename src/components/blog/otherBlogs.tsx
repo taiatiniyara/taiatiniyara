@@ -13,7 +13,10 @@ export default function OtherBlogs({ slug }: { slug?: string }) {
     orderBy: {
       column: "created_at",
       ascending: false,
-    }
+    },
+    whereIsNotEqualTo: slug
+      ? { name: "slug", value: slug }
+      : undefined,
   });
   if (isLoading) return <LoadingSpinner text="Loading Other Blogs..." />;
   if (error)
@@ -35,7 +38,6 @@ export default function OtherBlogs({ slug }: { slug?: string }) {
   return (
     <div className="w-full flex flex-col gap-4">
       {data
-        .filter((post) => post.slug !== slug)
         .slice(0, 3)
         .map((post) => (
           <div key={post.slug} className="mb-4 border shadow-md bg-card rounded-lg overflow-hidden">

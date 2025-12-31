@@ -1,4 +1,4 @@
-import { boolean, integer, json, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import { boolean, integer, json, pgTable, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 
 export const projects = pgTable("projects", {
     id: uuid("id").primaryKey().defaultRandom(),
@@ -22,7 +22,7 @@ export const blogPosts = pgTable("blog_posts", {
     title: varchar("title", { length: 255 }).notNull(),
     slug: varchar("slug", { length: 255 }).notNull().unique(),
     excerpt: varchar("excerpt", { length: 1000 }).notNull(),
-    content: varchar("content", { length: 5000 }).notNull(),
+    content: text("content").notNull(),
     tags: json("tags").notNull().$type<string[]>(),
     img_url: varchar("img_url", { length: 500 }),
     is_published: boolean("is_published").notNull().default(false),
@@ -63,7 +63,7 @@ export const lessons = pgTable("lessons", {
     course_id: uuid("course_id").notNull().references(() => courses.id),
     slug: varchar("slug", { length: 255 }).notNull().unique(),
     title: varchar("title", { length: 255 }).notNull(),
-    content: varchar("content", { length: 5000 }).notNull(),
+    content: text("content").notNull(),
     duration_minutes: integer("duration_minutes").notNull(),
     created_at: timestamp("created_at").notNull().defaultNow(),
     updated_at: timestamp("updated_at").notNull().defaultNow(),
