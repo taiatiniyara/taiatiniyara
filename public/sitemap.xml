@@ -1,5 +1,5 @@
-[dotenv@17.2.3] injecting env (4) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
-[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+[dotenv@17.2.3] injecting env (4) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
@@ -26,5 +26,53 @@
     <loc>https://taiatiniyara.com/courses</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/kILNGLyQ5ZdeYwHU</loc>
+    <lastmod>2025-12-27T09:19:43.257Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/Xi11ixcGO0aSDC9z</loc>
+    <lastmod>2025-12-27T08:56:48.340Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/weTAYGZNK9JhDqjr</loc>
+    <lastmod>2025-12-27T08:54:22.373Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/h7Qzq37olueyCGgm</loc>
+    <lastmod>2025-12-27T08:50:14.290Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/projects/dcS3P3arGwA2F3eV</loc>
+    <lastmod>2025-12-27T18:45:06.425Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/projects/WMVMPNsspivnURQa</loc>
+    <lastmod>2025-12-27T18:43:22.156Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/projects/0twX1IxZXF7jHZwm</loc>
+    <lastmod>2025-12-27T12:49:38.244Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/courses/Nz7EozWcZtldxHKL</loc>
+    <lastmod>2025-12-29T06:22:20.383Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>
