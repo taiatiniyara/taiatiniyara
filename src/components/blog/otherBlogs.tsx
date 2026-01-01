@@ -9,7 +9,7 @@ export default function OtherBlogs({ slug }: { slug?: string }) {
     queryKey: ["blog_posts_other"],
     tableName: "blog_posts",
     fields: ["slug", "excerpt", "title", "img_url", "created_at"],
-    numberOfItems: 3,
+    numberOfItems: 4,
     orderBy: {
       column: "created_at",
       ascending: false,

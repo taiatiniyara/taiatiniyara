@@ -1,5 +1,5 @@
-[dotenv@17.2.3] injecting env (4) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
-[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+[dotenv@17.2.3] injecting env (4) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  enable debug logging with { debug: true }
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
@@ -26,6 +26,18 @@
     <loc>https://taiatiniyara.com/courses</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/5F9f07sApYC9Erwa</loc>
+    <lastmod>2025-12-31T18:26:09.968Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/kae17KdDRxhADLkt</loc>
+    <lastmod>2025-12-31T12:49:59.413Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://taiatiniyara.com/blog/55UA03PnWAXuQoB3</loc>
