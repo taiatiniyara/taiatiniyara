@@ -32,7 +32,7 @@ export default function TopNavigation() {
   const { user, signOut } = useAuth();
   return (
     <>
-      <div className="bg-background/80 backdrop-blur-lg sticky top-0 z-50 border-b border-border">
+      <div className="bg-background/60 backdrop-blur-md sticky top-0 z-50 border-b border-border">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="flex gap-4 py-4 items-center justify-between">
             <a href="/">
