@@ -69,7 +69,7 @@ function RouteComponent() {
                     <img
                       src={project.img_url}
                       alt={project.title}
-                      className="w-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      className="w-full h-60 object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent" />
                   </div>
