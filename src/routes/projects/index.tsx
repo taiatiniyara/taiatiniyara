@@ -65,11 +65,11 @@ function RouteComponent() {
             >
               <div className="bg-card border rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.02] h-full flex flex-col">
                 {project.img_url && (
-                  <div className="relative overflow-hidden h-48">
+                  <div className="relative overflow-hidden">
                     <img
                       src={project.img_url}
                       alt={project.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      className="w-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent" />
                   </div>

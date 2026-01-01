@@ -87,10 +87,10 @@ function RouteComponent() {
                     </svg>
                     {new Date(post.created_at).toDateString()}
                   </div>
-                  <h2 className="text-xl sm:text-2xl font-bold mb-3 group-hover:text-primary transition-colors">
+                  <h2 className="text-xl sm:text-2xl font-bold mb-3 group-hover:text-primary line-clamp-2 transition-colors">
                     {post.title}
                   </h2>
-                  <p className="text-muted-foreground line-clamp-3 mb-4 flex-1">
+                  <p className="text-muted-foreground line-clamp-3 mb-4 flex-1 items-start">
                     {post.excerpt}
                   </p>
                   <div className="flex items-center text-primary font-medium group-hover:gap-2 transition-all">
