@@ -87,13 +87,13 @@ function RouteComponent() {
                     </svg>
                     {new Date(post.created_at).toDateString()}
                   </div>
-                  <h2 className="text-xl sm:text-2xl font-bold mb-3 group-hover:text-primary line-clamp-2 transition-colors">
+                  <h2 className="text-xl sm:text-2xl font-bold mb-3 group-hover:text-emerald-500 line-clamp-2 transition-colors">
                     {post.title}
                   </h2>
                   <p className="text-muted-foreground line-clamp-3 mb-4 flex-1 items-start">
                     {post.excerpt}
                   </p>
-                  <div className="flex items-center text-primary font-medium group-hover:gap-2 transition-all">
+                  <div className="flex items-center text-emerald-500 font-medium group-hover:gap-2 transition-all">
                     Read more
                     <svg className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

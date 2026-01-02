@@ -88,8 +88,8 @@ function RouteComponent() {
           <a
             className={`flex items-center gap-3 py-2 px-4 ${
               path === item.href
-                ? "bg-pink-200 text-pink-500 font-semibold"
-                : "hover:text-pink-500 transition-colors"
+                ? "bg-emerald-200 text-emerald-600 font-semibold"
+                : "hover:text-emerald-600 transition-colors"
             }`}
             href={item.href}
             key={item.href}

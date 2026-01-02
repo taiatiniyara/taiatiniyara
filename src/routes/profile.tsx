@@ -109,7 +109,7 @@ function ProfileContent() {
           <Card className="p-6 shadow-lg border-none">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold flex items-center gap-2">
-                <User className="w-5 h-5 text-pink-500" />
+                <User className="w-5 h-5 text-emerald-600" />
                 Personal Information
               </h2>
               {!isEditing && (
@@ -117,7 +117,7 @@ function ProfileContent() {
                   variant="ghost"
                   size="sm"
                   onClick={() => setIsEditing(true)}
-                  className="text-pink-500 hover:text-pink-700 hover:bg-pink-50"
+                  className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
                 >
                   <Edit2 className="w-4 h-4 mr-1" />
                   Edit
@@ -191,14 +191,14 @@ function ProfileContent() {
           {/* Account Activity Card */}
           <Card className="p-6 shadow-lg border-none">
             <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <Clock className="w-5 h-5 text-pink-500" />
+              <Clock className="w-5 h-5 text-emerald-600" />
               Account Activity
             </h2>
 
             <div className="space-y-4">
               <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
-                <div className="w-10 h-10 rounded-full bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center shrink-0">
-                  <Calendar className="w-5 h-5 text-pink-500" />
+                <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center shrink-0">
+                  <Calendar className="w-5 h-5 text-emerald-600" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-muted-foreground">
@@ -217,8 +217,8 @@ function ProfileContent() {
               </div>
 
               <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
-                <div className="w-10 h-10 rounded-full bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center shrink-0">
-                  <Clock className="w-5 h-5 text-pink-500" />
+                <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center shrink-0">
+                  <Clock className="w-5 h-5 text-emerald-600" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-muted-foreground">
@@ -292,7 +292,7 @@ function Badge({
   children: React.ReactNode;
 }) {
   const variants = {
-    default: "bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400",
+    default: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
     secondary: "bg-secondary text-secondary-foreground",
   };
 

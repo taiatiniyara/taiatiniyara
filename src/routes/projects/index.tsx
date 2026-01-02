@@ -75,7 +75,7 @@ function RouteComponent() {
                   </div>
                 )}
                 <div className="p-4 sm:p-6 flex-1 flex flex-col">
-                  <h2 className="text-xl sm:text-2xl font-bold mb-4 group-hover:text-primary transition-colors">
+                  <h2 className="text-xl sm:text-2xl font-bold mb-4 group-hover:text-emerald-500 transition-colors">
                     {project.title}
                   </h2>
 

@@ -45,7 +45,7 @@ export default function TopNavigation() {
                 <a
                   key={item.href}
                   href={item.href}
-                  className={`${path.split("/")[1] === item.href.slice(1) ? "text-pink-500 font-bold" : "hover:text-gray-400 transition-colors"}`}
+                  className={`${path.split("/")[1] === item.href.slice(1) ? "text-emerald-600 font-bold" : "hover:text-gray-400 transition-colors"}`}
                 >
                   {item.name}
                 </a>
@@ -84,7 +84,7 @@ export default function TopNavigation() {
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem
-                        className="text-pink-500 font-medium"
+                        className="text-emerald-600 font-medium"
                         onClick={async () => {
                           await signOut();
                           window.location.href = "/";
@@ -128,7 +128,7 @@ export default function TopNavigation() {
                 href={item.href}
                 className={`px-4 py-3 rounded-md text-lg ${
                   path.split("/")[1] === item.href.slice(1)
-                    ? "text-pink-500 font-semibold bg-pink-50 dark:bg-pink-950/30"
+                    ? "text-emerald-600 font-semibold bg-emerald-50 dark:bg-emerald-950/30"
                     : "hover:bg-accent transition-colors"
                 }`}
                 onClick={() => setMobileMenuOpen(false)}
@@ -158,7 +158,7 @@ export default function TopNavigation() {
                     Dashboard
                   </a>
                   <button
-                    className="w-full text-left px-4 py-3 rounded-md text-lg text-pink-500 font-medium hover:bg-pink-50 dark:hover:bg-pink-950/30 transition-colors"
+                    className="w-full text-left px-4 py-3 rounded-md text-lg text-emerald-600 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/30 transition-colors"
                     onClick={async () => {
                       await signOut();
                       setMobileMenuOpen(false);
