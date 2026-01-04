@@ -6,6 +6,8 @@ import { Calendar } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import { useStructuredData } from "@/hooks/useStructuredData";
 import { DetailPageLayout } from "@/components/ui/detail-page-layout";
+import { Breadcrumb, createBreadcrumbs } from "@/components/ui/breadcrumb";
+import { Heading } from "@/components/ui/heading";
 
 export const Route = createFileRoute("/blog/$slug")({
   component: RouteComponent,
@@ -82,7 +84,13 @@ function RouteComponent() {
               className="w-full h-48 sm:h-64 md:h-96 object-cover"
             />
             <div className="p-4 sm:p-6 md:p-8">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 leading-tight">{blogPost.title}</h1>
+              {/* Breadcrumbs at top */}
+              <Breadcrumb 
+                items={createBreadcrumbs("blog", { label: blogPost.title })}
+                className="mb-4 pb-4 border-b"
+              />
+
+              <Heading level={1} className="mb-4 leading-tight">{blogPost.title}</Heading>
               <div className="flex items-center gap-2 text-muted-foreground text-xs sm:text-sm mb-4 sm:mb-6 pb-4 sm:pb-6 border-b">
               <Calendar size={16} className="sm:w-4.5 sm:h-4.5" />
               <time dateTime={new Date(blogPost.created_at).toISOString()}>
@@ -100,6 +108,12 @@ function RouteComponent() {
               id="blog-content" 
               className="prose prose-lg max-w-none"
               dangerouslySetInnerHTML={{ __html: blogPost.content }}
+            />
+
+            {/* Breadcrumbs at bottom */}
+            <Breadcrumb 
+              items={createBreadcrumbs("blog", { label: blogPost.title })}
+              className="mt-8 pt-8 border-t"
             />
             </div>
           </article>

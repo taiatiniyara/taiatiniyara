@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { useSEO } from "@/hooks/useSEO";
+import { Heading } from "@/components/ui/heading";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -30,12 +31,12 @@ function Index() {
 
           {/* Main Heading */}
           <div className="space-y-4">
-            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight">
+            <Heading variant="hero">
               <span className="text-primary">Turn Your Vision</span>
-            </h1>
-            <h2 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-semibold text-muted-foreground">
+            </Heading>
+            <Heading level={2} className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-semibold text-muted-foreground">
               Into Powerful Software
-            </h2>
+            </Heading>
           </div>
 
           {/* Description */}

@@ -4,6 +4,7 @@ import type { Course } from "@/lib/drizzle/schema";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import EmptyListPlaceholder from "@/components/ui/empty-list-placeholder";
 import ErrorBox from "@/components/ui/error";
+import { Heading } from "@/components/ui/heading";
 export const Route = createFileRoute("/courses/")({
   component: RouteComponent,
 });
@@ -36,9 +37,9 @@ function RouteComponent() {
       <div className="relative overflow-hidden bg-linear-to-br from-primary/10 via-background to-chart-3/10 border-b">
         <div className="container mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-24">
           <div className="max-w-4xl mx-auto text-center space-y-4 sm:space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-            <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight">
+            <Heading variant="page">
               <span className="text-primary">Courses</span> & Learning
-            </h1>
+            </Heading>
             <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
               Explore our curated collection of courses to enhance your skills
             </p>
@@ -61,9 +62,9 @@ function RouteComponent() {
               />
 
               <div className="p-4">
-                <h2 className="text-xl sm:text-2xl font-bold mb-3">
+                <Heading variant="subsection" className="mb-3">
                   {course.title}
-                </h2>
+                </Heading>
                 <p className="text-sm sm:text-base text-muted-foreground mb-4">
                   {course.description}
                 </p>

@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Card } from '@/components/ui/card'
 import { useAuth } from '@/context/auth-context'
+import { Heading } from '@/components/ui/heading';
 
 export const Route = createFileRoute('/admin/')({
   component: RouteComponent,
@@ -12,7 +13,7 @@ function RouteComponent() {
   return (
     <div className="space-y-6 sm:space-y-8 w-full">
       <div>
-        <h1 className="text-2xl sm:text-3xl font-bold mb-2">Admin Dashboard</h1>
+        <Heading variant="section" className="mb-2">Admin Dashboard</Heading>
         <p className="text-muted-foreground">
           Welcome back, {user?.user_metadata?.fullName || 'Admin'}!
         </p>

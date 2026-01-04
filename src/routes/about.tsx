@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar, Mail, MapPin, Phone, Download, Code, Palette, Server, Smartphone, Cloud } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
+import { Heading } from "@/components/ui/heading";
 
 export const Route = createFileRoute("/about")({
   component: RouteComponent,
@@ -33,9 +34,9 @@ function RouteComponent() {
               </div>
             </div>
             
-            <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight">
+            <Heading variant="page">
               Hi, I'm <span className="text-primary">Taia Tiniyara</span>
-            </h1>
+            </Heading>
             <p className="text-xl sm:text-2xl font-semibold text-muted-foreground">
               Software Engineer
             </p>

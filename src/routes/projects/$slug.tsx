@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { useSEO } from "@/hooks/useSEO";
 import { useStructuredData } from "@/hooks/useStructuredData";
 import { DetailPageLayout } from "@/components/ui/detail-page-layout";
+import { Heading } from "@/components/ui/heading";
 
 export const Route = createFileRoute("/projects/$slug")({
   component: RouteComponent,
@@ -91,9 +92,9 @@ function RouteComponent() {
               {/* Tags Section */}
               {project.tags && project.tags.length > 0 && (
                 <div className="mb-6">
-                  <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+                  <Heading variant="label" className="mb-3">
                     Tags
-                  </h2>
+                  </Heading>
                   <div className="flex flex-wrap gap-2">
                     {project.tags.map((tag) => (
                       <Badge
