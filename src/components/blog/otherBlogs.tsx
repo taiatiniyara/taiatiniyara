@@ -10,13 +10,8 @@ export default function OtherBlogs({ slug }: { slug?: string }) {
     tableName: "blog_posts",
     fields: ["slug", "excerpt", "title", "img_url", "created_at"],
     numberOfItems: 4,
-    orderBy: {
-      column: "created_at",
-      ascending: false,
-    },
-    whereIsNotEqualTo: slug
-      ? { name: "slug", value: slug }
-      : undefined,
+    orderBy: { column: "created_at", ascending: false },
+    whereIsNotEqualTo: slug ? { name: "slug", value: slug } : undefined,
   });
   if (isLoading) return <LoadingSpinner text="Loading Other Blogs..." />;
   if (error)
@@ -37,30 +32,33 @@ export default function OtherBlogs({ slug }: { slug?: string }) {
 
   return (
     <div className="w-full flex flex-col gap-4">
-      {data
-        .slice(0, 3)
-        .map((post) => (
-          <div key={post.slug} className="mb-4 border shadow-md bg-card rounded-lg overflow-hidden">
-            {post.img_url && (
-              <img
-                src={post.img_url}
-                alt={post.title}
-                className="w-full h-40 object-cover"
-              />
-            )}
+      {data.map((post) => (
+        <div
+          key={post.slug}
+          className="mb-4 border shadow-md bg-card rounded-lg overflow-hidden"
+        >
+          {post.img_url && (
+            <img
+              src={post.img_url}
+              alt={post.title}
+              className="w-full h-40 object-cover"
+            />
+          )}
 
-            <div className="p-4">
+          <div className="p-4">
             <h3 className="text-lg font-bold text-foreground">{post.title}</h3>
-            <p className="text-sm line-clamp-3 my-2 text-muted-foreground">{post.excerpt}</p>
+            <p className="text-sm line-clamp-3 my-2 text-muted-foreground">
+              {post.excerpt}
+            </p>
             <a
               href={`/blog/${post.slug}`}
               className="text-primary font-medium underline inline-block hover:text-primary/80 transition-colors"
             >
               Read more
             </a>
-            </div>
           </div>
-        ))}
+        </div>
+      ))}
     </div>
   );
 }
