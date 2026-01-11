@@ -43,7 +43,7 @@ function RouteComponent() {
       renderItem={(project) => (
         <ItemCard
           title={project.title}
-          createdAt={project.created_at.toDateString()}
+          createdAt={project.created_at}
           tags={Array.isArray(project.technologies) ? project.technologies : []}
           onEdit={() => {
             setEditingProjectId(project.id);

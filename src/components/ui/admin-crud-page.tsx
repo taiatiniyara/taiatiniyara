@@ -72,7 +72,7 @@ export function AdminCrudPage<T extends { id: string }>({
         </FormWrapper>
       )}
 
-      <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-4">
         {data?.map((item) => (
           <React.Fragment key={item.id}>
             {renderItem(item)}

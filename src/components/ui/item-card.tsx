@@ -4,7 +4,7 @@ import { Badge } from "./badge";
 
 interface ItemCardProps {
   title: string;
-  createdAt: string;
+  createdAt: Date | string;
   onEdit: () => void;
   tags?: string[];
   children?: React.ReactNode;
