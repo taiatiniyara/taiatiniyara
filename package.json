@@ -6,9 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "postbuild": "tsx scripts/generate-blog-pages.ts",
     "lint": "eslint .",
     "preview": "vite preview",
-    "deploy": "drizzle-kit push && tsx src/lib/generate-sitemap.ts > public/sitemap.xml && tsc -b && vite build && firebase deploy && rm -rf dist && git add . && git commit -m 'Deploy' && git push",
+    "deploy": "drizzle-kit push && tsx src/lib/generate-sitemap.ts > public/sitemap.xml && tsc -b && vite build && tsx scripts/generate-blog-pages.ts && firebase deploy && rm -rf dist && git add . && git commit -m 'Deploy' && git push",
     "db-push": "drizzle-kit push",
     "generate-sitemap": "tsx src/lib/generate-sitemap.ts > public/sitemap.xml"
   },
@@ -53,6 +54,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
+    "react-snap": "^1.23.0",
     "tsx": "^4.21.0",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.4",

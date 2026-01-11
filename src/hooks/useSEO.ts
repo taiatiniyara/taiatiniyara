@@ -73,6 +73,7 @@ export function useSEO({
     updateMetaTag('meta[property="og:image:height"]', '630');
     updateMetaTag('meta[property="og:image:alt"]', finalOgTitle);
     updateMetaTag('meta[property="og:type"]', ogType);
+    updateMetaTag('meta[property="og:site_name"]', SITE_NAME);
     
     if (canonicalUrl) {
       updateMetaTag('meta[property="og:url"]', `${BASE_URL}${canonicalUrl}`);
