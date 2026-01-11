@@ -9,8 +9,9 @@ import CreateCourseCategoryForm from "@/components/courses/createCourseCategory"
 import { type Course } from "@/lib/drizzle/schema";
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 import EditCourseForm from "@/components/courses/editCourse";
+import { AdminHeader } from "@/components/ui/admin-header";
+import { FormWrapper } from "@/components/ui/form-wrapper";
 
 export const Route = createFileRoute("/admin/courses")({
   component: RouteComponent,
@@ -20,7 +21,7 @@ function RouteComponent() {
   const { data, error, isLoading } = useSupabaseQuery<Course>({
     queryKey: ["admin-courses"],
     tableName: "courses",
-    fields: ["id", "title", "created_at"],
+    fields: ["id", "title", "created_at", "img_url", "description"],
   });
 
   const [showCreateForm, setShowCreateForm] = React.useState<boolean>(false);
@@ -45,31 +46,27 @@ function RouteComponent() {
 
   return (
     <div className="w-full space-y-6">
-      <div className="flex justify-between items-center gap-4">
-        <div>
-          <h2 className="text-3xl font-bold mb-1">Courses</h2>
-          <p className="text-muted-foreground">Manage your courses</p>
-        </div>
+      <AdminHeader
+        title="Courses"
+        description="Manage your courses"
+        buttonText="Create Course"
+        showForm={showCreateForm}
+        onToggleForm={() => {
+          setShowCreateForm(!showCreateForm);
+          setEditingCourseId(null);
+        }}
+      />
 
-        <Button
-          onClick={() => {
-            setShowCreateForm(!showCreateForm);
-            setEditingCourseId(null);
-          }}
-        >
-          {showCreateForm ? (
-            "Cancel"
-          ) : (
-            <>
-              <Plus /> Create Course
-            </>
-          )}
-        </Button>
-      </div>
+      {showCreateForm && (
+        <FormWrapper>
+          <CreateCourseForm />
+        </FormWrapper>
+      )}
 
-      {showCreateForm ?? <CreateCourseForm />}
-      {editingCourseId === null ? null : (
-        <EditCourseForm courseId={editingCourseId} />
+      {editingCourseId && (
+        <FormWrapper title="Edit Course" onCancel={() => setEditingCourseId(null)}>
+          <EditCourseForm courseId={editingCourseId} />
+        </FormWrapper>
       )}
 
       <div className="grid grid-cols-2 gap-4 max-h-100 my-4">
@@ -89,6 +86,7 @@ function RouteComponent() {
               variant="outline"
               onClick={() => {
                 setEditingCourseId(course.id);
+                setShowCreateForm(false);
               }}
             >
               Edit

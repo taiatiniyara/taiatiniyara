@@ -2,11 +2,10 @@ import { useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { useAuth } from '@/context/auth-context';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { AuthFormWrapper } from '@/components/ui/auth-form-wrapper';
 import { ErrorMessage } from '@/components/ui/error-message';
 import { SuccessMessage } from '@/components/ui/success-message';
+import { AuthInputField } from '@/components/ui/auth-input-field';
 
 export function ForgotPasswordForm() {
   const [email, setEmail] = useState('');
@@ -55,18 +54,15 @@ export function ForgotPasswordForm() {
       <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
         {error && <ErrorMessage message={error} />}
 
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              required
-              disabled={loading}
-            />
-          </div>
+        <AuthInputField
+          id="email"
+          label="Email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="you@example.com"
+          disabled={loading}
+        />
 
           <Button type="submit" className="w-full" disabled={loading}>
             {loading ? 'Sending...' : 'Send Reset Link'}

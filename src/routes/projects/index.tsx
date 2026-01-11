@@ -1,11 +1,10 @@
-import EmptyListPlaceholder from "@/components/ui/empty-list-placeholder";
-import ErrorBox from "@/components/ui/error";
-import LoadingSpinner from "@/components/ui/loading-spinner";
 import { useSupabaseQuery } from "@/hooks/useSupabaseQuery";
 import type { Project } from "@/lib/drizzle/schema";
 import { createFileRoute } from "@tanstack/react-router";
 import { useSEO } from "@/hooks/useSEO";
-import { Heading } from "@/components/ui/heading";
+import { ContentListPage } from "@/components/ui/content-list-page";
+import { ContentCard } from "@/components/ui/content-card";
+import { Badge } from "@/components/ui/badge";
 
 export const Route = createFileRoute("/projects/")({
   component: RouteComponent,
@@ -21,76 +20,39 @@ function RouteComponent() {
     canonicalUrl: "/projects",
     ogType: "website",
   });
+  
   const { error, data, isLoading } = useSupabaseQuery<Project>({
     tableName: "projects",
-    fields: ["slug", "title", "img_url"],
+    fields: ["slug", "title", "img_url", "technologies"],
     queryKey: ["all-projects"],
   });
 
-  if (isLoading) {
-    return <LoadingSpinner text="Loading projects..." />;
-  }
-
-  if (error) {
-    return <ErrorBox message={error.message} />;
-  }
-
-  if (!data || data.length === 0) {
-    return <EmptyListPlaceholder text="No projects found." />;
-  }
-
   return (
-    <div className="min-h-screen bg-linear-to-b from-background via-background to-muted/20">
-      {/* Hero Section */}
-      <div className="relative overflow-hidden bg-linear-to-br from-primary/10 via-background to-chart-3/10 border-b">
-        <div className="container mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-24">
-          <div className="max-w-4xl mx-auto text-center space-y-4 sm:space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-            <Heading variant="page">
-              My <span className="text-primary">Projects</span>
-            </Heading>
-            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-              A showcase of software solutions and creative work
-            </p>
+    <ContentListPage
+      title={<>My <span className="text-primary">Projects</span></>}
+      description="A showcase of software solutions and creative work"
+      data={data}
+      isLoading={isLoading}
+      error={error}
+      emptyText="No projects found."
+      loadingText="Loading projects..."
+      getItemKey={(project) => project.slug}
+      renderItem={(project) => (
+        <ContentCard
+          title={project.title}
+          imageUrl={project.img_url}
+          imageAlt={project.title}
+          href={`/projects/${project.slug}`}
+        >
+          <div className="flex flex-wrap gap-2">
+            {Array.isArray(project.technologies) && project.technologies.map((tech) => (
+              <Badge key={tech} variant="outline">
+                {tech}
+              </Badge>
+            ))}
           </div>
-        </div>
-      </div>
-
-      {/* Projects Grid */}
-      <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-          {data?.map((project) => (
-            <a
-              key={project.slug}
-              href={`/projects/${project.slug}`}
-              className="group block animate-in fade-in slide-in-from-bottom-4 duration-700"
-            >
-              <div className="bg-card border rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.02] h-full flex flex-col">
-                {project.img_url && (
-                  <div className="relative overflow-hidden">
-                    <img
-                      src={project.img_url}
-                      alt={project.title}
-                      className="w-full h-60 object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent" />
-                  </div>
-                )}
-                <div className="p-4 sm:p-6 flex-1 flex flex-col">
-                  <Heading variant="subsection" className="mb-4 group-hover:text-emerald-500 transition-colors">
-                    {project.title}
-                  </Heading>
-
-                  <div className="flex flex-wrap gap-2">
-                    {project.technologies.map((tech) => (
-                      <span className="border px-1">{tech}</span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </a>
-          ))}
-        </div>
-      </div>
-    </div>
+        </ContentCard>
+      )}
+    />
   );
 }

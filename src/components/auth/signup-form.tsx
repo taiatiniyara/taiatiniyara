@@ -2,11 +2,10 @@ import { useState } from "react";
 import { useNavigate, Link } from "@tanstack/react-router";
 import { useAuth } from "@/context/auth-context";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { AuthFormWrapper } from "@/components/ui/auth-form-wrapper";
 import { ErrorMessage } from "@/components/ui/error-message";
 import { SuccessMessage } from "@/components/ui/success-message";
+import { AuthInputField } from "@/components/ui/auth-input-field";
 
 export function SignUpForm() {
   const [email, setEmail] = useState("");
@@ -68,85 +67,70 @@ export function SignUpForm() {
       <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
         {error && <ErrorMessage message={error} />}
 
-          <div className="space-y-2">
-            <Label htmlFor="firstName">First Name</Label>
-            <Input
-              id="firstName"
-              type="text"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              placeholder="John"
-              required
-              disabled={loading}
-            />
-          </div>
+        <AuthInputField
+          id="firstName"
+          label="First Name"
+          type="text"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          placeholder="John"
+          disabled={loading}
+        />
 
-          <div className="space-y-2">
-            <Label htmlFor="lastName">Last Name</Label>
-            <Input
-              id="lastName"
-              type="text"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              placeholder="Doe"
-              required
-              disabled={loading}
-            />
-          </div>
+        <AuthInputField
+          id="lastName"
+          label="Last Name"
+          type="text"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+          placeholder="Doe"
+          disabled={loading}
+        />
 
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              required
-              disabled={loading}
-            />
-          </div>
+        <AuthInputField
+          id="email"
+          label="Email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="you@example.com"
+          disabled={loading}
+        />
 
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              required
-              disabled={loading}
-            />
-          </div>
+        <AuthInputField
+          id="password"
+          label="Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="••••••••"
+          disabled={loading}
+        />
 
-          <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Confirm Password</Label>
-            <Input
-              id="confirmPassword"
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="••••••••"
-              required
-              disabled={loading}
-            />
-          </div>
+        <AuthInputField
+          id="confirmPassword"
+          label="Confirm Password"
+          type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          placeholder="••••••••"
+          disabled={loading}
+        />
 
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Creating account..." : "Sign Up"}
-          </Button>
+        <Button type="submit" className="w-full" disabled={loading}>
+          {loading ? "Creating account..." : "Sign Up"}
+        </Button>
 
-          <div className="text-center text-sm">
-            <span className="text-muted-foreground">Already have an account? </span>
-            <Link
-              to="/login"
-              className="font-medium text-primary hover:text-primary/80 transition-colors"
-            >
-              Sign in
-            </Link>
-          </div>
-        </form>
+        <div className="text-center text-sm">
+          <span className="text-muted-foreground">Already have an account? </span>
+          <Link
+            to="/login"
+            className="font-medium text-primary hover:text-primary/80 transition-colors"
+          >
+            Sign in
+          </Link>
+        </div>
+      </form>
     </AuthFormWrapper>
   );
 }
