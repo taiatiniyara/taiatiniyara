@@ -19,10 +19,10 @@ interface NavList {
 
 const navList: NavList[] = [
   { name: "Home", href: "/" },
-  { name: "Blog", href: "/blog" },
-  { name: "Courses", href: "/courses" },
   { name: "About", href: "/about" },
   { name: "Projects", href: "/projects" },
+  { name: "Blog", href: "/blog" },
+  { name: "Courses", href: "/courses" },
 ];
 
 export default function TopNavigation() {
@@ -36,9 +36,13 @@ export default function TopNavigation() {
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="flex gap-4 py-4 items-center justify-between">
             <a href="/">
-              <img src="/logo.svg" alt="Logo" width={40} />
+              <img
+                src="/logo.svg"
+                alt="Logo"
+                width={40}
+              />
             </a>
-            
+
             {/* Desktop Navigation */}
             <nav className="hidden md:flex gap-6">
               {navList.map((item) => (
@@ -55,7 +59,7 @@ export default function TopNavigation() {
             <div className="flex items-center gap-2">
               {/* Theme Toggle */}
               <ThemeToggle />
-              
+
               {/* Desktop Auth Button */}
               <div className="hidden md:block">
                 {user ? (
@@ -76,7 +80,9 @@ export default function TopNavigation() {
                       <DropdownMenuItem>
                         <a
                           href={
-                            user.user_metadata.role === "admin" ? "/admin" : "/student"
+                            user.user_metadata.role === "admin"
+                              ? "/admin"
+                              : "/student"
                           }
                         >
                           Dashboard
@@ -136,12 +142,15 @@ export default function TopNavigation() {
                 {item.name}
               </a>
             ))}
-            
+
             <div className="pt-4 mt-4 border-t border-border">
               {user ? (
                 <>
                   <div className="px-4 py-2 text-sm text-muted-foreground">
-                    Signed in as <span className="font-semibold">{user.user_metadata.fullName}</span>
+                    Signed in as{" "}
+                    <span className="font-semibold">
+                      {user.user_metadata.fullName}
+                    </span>
                   </div>
                   <a
                     href="/profile"
@@ -151,7 +160,11 @@ export default function TopNavigation() {
                     Profile
                   </a>
                   <a
-                    href={user.user_metadata.role === "admin" ? "/admin" : "/student"}
+                    href={
+                      user.user_metadata.role === "admin"
+                        ? "/admin"
+                        : "/student"
+                    }
                     className="block px-4 py-3 rounded-md text-lg hover:bg-accent transition-colors"
                     onClick={() => setMobileMenuOpen(false)}
                   >
