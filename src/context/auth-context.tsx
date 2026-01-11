@@ -11,7 +11,7 @@ interface AuthContextType {
   signUp: (
     email: string,
     password: string,
-    metadata?: { fullName?: string; role?: string }
+    metadata?: { fullName?: string; role?: "user" | "admin" }
   ) => Promise<{ error: AuthError | null }>;
   signIn: (
     email: string,
@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signUp = async (
     email: string,
     password: string,
-    metadata?: { fullName?: string; role?: string }
+    metadata?: { fullName?: string; role?: "user" | "admin" }
   ) => {
     const { error, data } = await supabase.auth.signUp({
       email,
@@ -66,7 +66,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       id: data.user?.id!,
       email: data.user?.email!,
       name: metadata?.fullName as string,
-      role: "user",
+      role: metadata?.role ?? "user",
       created_at: new Date(),
       updated_at: new Date(),
     };

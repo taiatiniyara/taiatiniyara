@@ -15,7 +15,7 @@ function RouteComponent() {
         <div className="max-w-5xl mx-auto space-y-8">
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-1000">
             <h1 className="text-4xl md:text-5xl font-bold mb-3">
-              Welcome, <span className="text-primary">{user?.user_metadata?.fullName?.split(' ')[0] || 'Student'}</span>!
+              Welcome, <span className="text-primary">{user?.user_metadata?.fullName?.split(' ')[0] || 'user'}</span>!
             </h1>
             <p className="text-xl text-muted-foreground">
               Your learning dashboard

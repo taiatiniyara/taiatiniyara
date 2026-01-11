@@ -99,7 +99,7 @@ function ProfileContent() {
                 className="flex items-center gap-1.5"
               >
                 <Shield className="w-3 h-3" />
-                {user?.user_metadata?.role || "Student"}
+                {user?.user_metadata?.role || "user"}
               </Badge>
             </div>
           </div>
@@ -183,7 +183,7 @@ function ProfileContent() {
                   Role
                 </Label>
                 <p className="mt-2 text-foreground font-medium capitalize">
-                  {user?.user_metadata?.role || "Student"}
+                  {user?.user_metadata?.role || "user"}
                 </p>
               </div>
             </div>

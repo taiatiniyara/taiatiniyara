@@ -1,9 +1,15 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { Book, LayoutDashboard, Stamp, Users, Menu, X, Pencil } from "lucide-react";
+import { createFileRoute, Outlet, Navigate } from "@tanstack/react-router";
+import {
+  Book,
+  LayoutDashboard,
+  Stamp,
+  Users,
+  Menu,
+  X,
+  Pencil,
+} from "lucide-react";
 import React, { useState } from "react";
-import { toast } from "sonner";
+import { useAuth } from "@/context/auth-context";
 
 export const Route = createFileRoute("/admin")({
   component: RouteComponent,
@@ -23,45 +29,25 @@ const sidebarListItems: SidebarListItem[] = [
   { text: "Users", href: "/admin/users", icon: <Users /> },
 ];
 
-const ADMIN_ACCESS_KEY = import.meta.env.VITE_ADMIN_ACCESS_KEY;
-const ADMIN_KEY = import.meta.env.VITE_ADMIN_KEY;
-
-if (!ADMIN_ACCESS_KEY || !ADMIN_KEY) {
-  throw new Error("Admin access key is not defined in environment variables.");
-}
-
 function RouteComponent() {
   const path = window.location.pathname;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, loading } = useAuth();
 
-  const adminKey =
-    typeof window !== "undefined" ? sessionStorage.getItem(ADMIN_KEY) : null;
-
-  if (!adminKey || adminKey !== ADMIN_ACCESS_KEY) {
+  if (loading) {
     return (
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-
-          const formData = new FormData(e.currentTarget);
-          const accessKey = formData.get(ADMIN_KEY);
-
-          if (accessKey && accessKey === ADMIN_ACCESS_KEY) {
-            sessionStorage.setItem(ADMIN_KEY, accessKey.toString());
-            window.location.reload();
-          } else {
-            toast.error("Invalid access key. Please try again.");
-          }
-        }}
-        className="p-8 space-y-4 border shadow m-4"
-      >
-        <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
-        <p>Enter Access Key to continue:</p>
-        <Input name={ADMIN_KEY} placeholder="Enter access key here..." />
-
-        <Button type="submit">Check</Button>
-      </form>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-lg">Loading...</div>
+      </div>
     );
+  }
+
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
+
+  if (user?.user_metadata?.role !== "admin") {
+    return <Navigate to="/unauthorized" />;
   }
 
   return (
@@ -81,7 +67,7 @@ function RouteComponent() {
           fixed lg:sticky top-0 lg:top-18.25 inset-y-0 left-0 z-40 w-64 lg:w-fit min-h-screen lg:h-[calc(100vh-73px)]
           flex flex-col border-r border-gray-300 gap-2 py-4 bg-background
           transition-transform duration-300 ease-in-out
-          ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+          ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         `}
       >
         {sidebarListItems.map((item) => (
@@ -109,8 +95,9 @@ function RouteComponent() {
         />
       )}
 
-      <div className="p-4 sm:p-6 w-full overflow-x-hidden"><Outlet /></div>
-      
+      <div className="p-4 sm:p-6 w-full overflow-x-hidden">
+        <Outlet />
+      </div>
     </div>
   );
 }
