@@ -2,6 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { useSEO } from "@/hooks/useSEO";
 import { Heading } from "@/components/ui/heading";
+import { useSupabaseQuery } from "@/hooks/useSupabaseQuery";
+import { type BlogPost } from "@/lib/drizzle/schema";
+import LoadingSpinner from "@/components/ui/loading-spinner";
+import ErrorBox from "@/components/ui/error";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -10,16 +14,24 @@ export const Route = createFileRoute("/")({
 function Index() {
   useSEO({
     title: "Software Engineering & Development in Fiji & the Pacific",
-    description: "Leading software engineering and development training in Fiji and the Pacific Islands. Expert software engineers, programmers, and developers offering comprehensive courses for Pacific professionals.",
-    keywords: "software engineer Fiji, programmer Fiji, software developer Fiji, web development Fiji, coding courses Fiji, developer training Pacific",
+    description:
+      "Leading software engineering and development training in Fiji and the Pacific Islands. Expert software engineers, programmers, and developers offering comprehensive courses for Pacific professionals.",
+    keywords:
+      "software engineer Fiji, programmer Fiji, software developer Fiji, web development Fiji, coding courses Fiji, developer training Pacific",
     canonicalUrl: "/",
     ogType: "website",
   });
-  return (
-    <div className="relative h-screen w-full overflow-hidden">
 
-      {/* Main Content */}
-      <div className="relative z-0 h-full flex flex-col items-center justify-center px-6 md:px-12">
+  const { isLoading, data, error } = useSupabaseQuery<BlogPost>({
+    tableName: "blog_posts",
+    queryKey: ["blog_posts", "latest"],
+    numberOfItems: 3,
+    orderBy: { column: "created_at", ascending: false },
+  });
+  return (
+    <div className="relative w-full">
+      {/* Hero Section */}
+      <div className="relative z-0 min-h-screen flex flex-col items-center justify-center px-6 md:px-12 py-20">
         <div className="max-w-5xl mx-auto text-center space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
           {/* Badge */}
           <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm">
@@ -34,7 +46,10 @@ function Index() {
             <Heading variant="hero">
               <span className="text-primary">Turn Your Vision</span>
             </Heading>
-            <Heading level={2} className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-semibold text-muted-foreground">
+            <Heading
+              level={2}
+              className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-semibold text-muted-foreground"
+            >
               Into Powerful Software
             </Heading>
           </div>
@@ -110,7 +125,11 @@ function Index() {
                   stroke="currentColor"
                   strokeWidth="2"
                 >
-                  <circle cx="12" cy="12" r="10"></circle>
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="10"
+                  ></circle>
                   <polyline points="12 6 12 12 16 14"></polyline>
                 </svg>
               </div>
@@ -134,6 +153,76 @@ function Index() {
               <span className="font-medium">Built to Grow</span>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Blog Section */}
+      <div className="relative z-0 w-full px-6 md:px-12 py-20 bg-muted/30">
+        <div className="max-w-6xl mx-auto">
+          {isLoading ? (
+            <div className="flex justify-center">
+              <LoadingSpinner text="Loading posts..." />
+            </div>
+          ) : error ? (
+            <ErrorBox message="Failed to load blog posts." />
+          ) : (
+            <div className="space-y-8">
+              <div className="text-center">
+                <Heading
+                  level={2}
+                  className="text-3xl md:text-4xl font-bold mb-4"
+                >
+                  Latest Blog Posts
+                </Heading>
+                <p className="text-muted-foreground">
+                  Insights and updates from the world of software development
+                </p>
+              </div>
+              <div className="grid md:grid-cols-3 gap-6">
+                {data?.map((post) => (
+                  <div
+                    key={post.id}
+                    className="group block bg-background border border-border rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+                  >
+                    {post.img_url && (
+                      <div className="overflow-hidden aspect-video">
+                        <img
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          src={post.img_url}
+                          alt={post.title}
+                        />
+                      </div>
+                    )}
+                    <div className="p-6 space-y-4">
+                      <h3 className="text-lg line-clamp-2 font-semibold mb-2 group-hover:text-primary transition-colors">
+                        {post.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground line-clamp-3">
+                        {post.excerpt}
+                      </p>
+
+                      <a
+                        className="text-emerald-500 text-sm"
+                        href={`/blog/${post.slug}`}
+                      >
+                        Read More
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {data && data.length > 0 && (
+                <div className="text-center pt-4">
+                  <a
+                    className="bg-emerald-600 px-4 py-3 hover:bg-emerald-700 text-white rounded-md text-sm font-medium transition-colors"
+                    href="/blog"
+                  >
+                    View All Posts
+                  </a>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
