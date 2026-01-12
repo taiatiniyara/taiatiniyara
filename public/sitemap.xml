@@ -1,5 +1,5 @@
-[dotenv@17.2.3] injecting env (2) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
-[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  override existing env vars with { override: true }
+[dotenv@17.2.3] injecting env (2) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
@@ -28,6 +28,24 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://taiatiniyara.com/blog/kbLZGY58TVJV9jtC</loc>
+    <lastmod>2026-01-11T10:08:32.481Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/cMfY6px53tibRp2Y</loc>
+    <lastmod>2026-01-11T08:40:04.761Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/dAfe3DiuEIRIqSkX</loc>
+    <lastmod>2026-01-11T08:22:52.710Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://taiatiniyara.com/blog/Bu04THNCqkmnxxTI</loc>
     <lastmod>2026-01-10T11:57:36.132Z</lastmod>
     <changefreq>monthly</changefreq>
@@ -35,7 +53,7 @@
   </url>
   <url>
     <loc>https://taiatiniyara.com/blog/eYe9Jw3smwQoCgC4</loc>
-    <lastmod>2026-01-10T09:27:46.583Z</lastmod>
+    <lastmod>2026-01-11T10:35:01.810Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

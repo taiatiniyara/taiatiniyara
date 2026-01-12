@@ -17,7 +17,7 @@ interface SEOProps {
 
 const SITE_NAME = 'Taia Tiniyara';
 const DEFAULT_TITLE = 'Taia Tiniyara - Software Engineering & Development in Fiji & the Pacific';
-const DEFAULT_DESCRIPTION = 'Leading software engineering and development training in Fiji and the Pacific Islands. Expert software engineers, programmers, and developers offering comprehensive courses for Pacific professionals.';
+const DEFAULT_DESCRIPTION = 'Helping software engineering and development training in Fiji and the Pacific Islands. Expert software engineers, programmers, and developers offering comprehensive courses for Pacific professionals.';
 const DEFAULT_IMAGE = 'https://taiatiniyara.com/og-image.jpg';
 const BASE_URL = 'https://taiatiniyara.com';
 
