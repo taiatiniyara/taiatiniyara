@@ -2,7 +2,7 @@ import EmptyListPlaceholder from "@/components/ui/empty-list-placeholder";
 import ErrorBox from "@/components/ui/error";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import { useSupabaseQuery } from "@/hooks/useSupabaseQuery";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Card } from "@/components/ui/card";
 import CreateCourseForm from "@/components/courses/createCouse";
 import CreateCourseCategoryForm from "@/components/courses/createCourseCategory";
@@ -21,7 +21,7 @@ function RouteComponent() {
   const { data, error, isLoading } = useSupabaseQuery<Course>({
     queryKey: ["admin-courses"],
     tableName: "courses",
-    fields: ["id", "title", "created_at", "img_url", "description"],
+    fields: ["id", "title", "created_at", "img_url", "description", "slug"],
   });
 
   const [showCreateForm, setShowCreateForm] = React.useState<boolean>(false);
@@ -69,28 +69,62 @@ function RouteComponent() {
         </FormWrapper>
       )}
 
-      <div className="grid grid-cols-2 gap-4 max-h-100 my-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-100 my-4">
         {data?.map((course) => (
           <Card
             key={course.id}
             className="p-6 hover:shadow-md transition-shadow"
           >
-            <img src={course.img_url || ""} alt="course-thumbnail" />
+            {course.img_url && (
+              <img 
+                src={course.img_url} 
+                alt={course.title}
+                className="w-full h-40 object-cover rounded-lg mb-4"
+              />
+            )}
 
-            <div>
-              <h3>{course.title}</h3>
-              <p className="p-3 line-clamp-3">{course.description}</p>
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold mb-2">{course.title}</h3>
+              <p className="text-sm text-muted-foreground line-clamp-3">{course.description}</p>
             </div>
 
-            <Button
-              variant="outline"
-              onClick={() => {
-                setEditingCourseId(course.id);
-                setShowCreateForm(false);
-              }}
-            >
-              Edit
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setEditingCourseId(course.id);
+                  setShowCreateForm(false);
+                }}
+              >
+                Edit
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                asChild
+              >
+                <Link 
+                  to="/admin/courses/$courseSlug/lessons"
+                  params={{ courseSlug: course.slug }}
+                >
+                  Manage Lessons
+                </Link>
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                asChild
+              >
+                <Link 
+                  to="/courses/$slug"
+                  params={{ slug: course.slug }}
+                  target="_blank"
+                >
+                  View
+                </Link>
+              </Button>
+            </div>
           </Card>
         ))}
       </div>

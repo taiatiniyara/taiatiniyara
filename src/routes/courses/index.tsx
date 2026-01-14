@@ -21,7 +21,11 @@ function RouteComponent() {
 
   return (
     <ContentListPage
-      title={<><span className="text-primary">Courses</span> & Learning</>}
+      title={
+        <>
+          <span className="text-primary">Courses</span> & Learning
+        </>
+      }
       description="Explore our curated collection of courses to enhance your skills"
       data={courses}
       isLoading={isLoading}
@@ -36,7 +40,7 @@ function RouteComponent() {
           imageAlt={course.title}
           href={`/courses/${course.slug}`}
         >
-          <p className="text-sm sm:text-base text-muted-foreground mb-4">
+          <p className="text-sm sm:text-base line-clamp-4 text-muted-foreground mb-4">
             {course.description}
           </p>
           <div className="text-primary font-medium flex items-center gap-1 group">

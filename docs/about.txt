@@ -1,2 +1,76 @@
-Name: Taia Tiniyara
-Software Engineer
+# Taia Tiniyara - Software Engineer & Educator
+
+## Professional Profile
+
+**Name:** Taia Tiniyara
+**Role:** Full-Stack Software Engineer & Technical Educator
+**Location:** [Your Location]
+**Email:** [Your Email]
+
+## About
+
+Passionate software engineer specializing in building modern web applications with cutting-edge technologies. Focused on creating intuitive user experiences and scalable backend systems. Dedicated to continuous learning and sharing knowledge through teaching and content creation.
+
+## Expertise
+
+### Frontend Development
+- React, TypeScript, Next.js
+- Modern CSS (Tailwind CSS, CSS-in-JS)
+- Responsive & accessible design
+- State management (TanStack Query, React Context)
+- Performance optimization
+
+### Backend Development
+- Node.js, Express
+- RESTful API design
+- Database design (PostgreSQL, Supabase)
+- Authentication & authorization
+- Serverless architecture
+
+### Tools & Technologies
+- Git & GitHub
+- Vite, Webpack
+- Drizzle ORM
+- Firebase, Supabase
+- CI/CD pipelines
+- Docker basics
+
+## Current Projects
+
+### Portfolio & Learning Platform (This Site)
+A comprehensive platform featuring:
+- Personal portfolio showcase
+- Technical blog
+- Course management system
+- Student progress tracking
+- Admin dashboard for content management
+
+**Tech Stack:** React 19, TypeScript, Supabase, TanStack Router, Tailwind CSS 4, Drizzle ORM
+
+## Teaching & Education
+
+Creating educational content to help developers learn modern web development:
+- Course creation on full-stack development
+- Technical blog posts
+- Code tutorials and examples
+- Best practices and design patterns
+
+## Professional Goals
+
+- Build scalable, user-friendly applications
+- Share knowledge through teaching and writing
+- Contribute to open-source projects
+- Stay current with emerging technologies
+- Help others grow in their development journey
+
+## Contact
+
+- **Website:** [Your Website]
+- **GitHub:** github.com/[yourusername]
+- **LinkedIn:** linkedin.com/in/[yourprofile]
+- **Twitter/X:** @[yourhandle]
+- **Email:** [your.email@example.com]
+
+---
+
+*Always learning, always building, always teaching.*

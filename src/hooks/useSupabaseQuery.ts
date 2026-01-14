@@ -19,12 +19,14 @@ interface SupabaseQueryOptions<T> {
         ascending: boolean;
     };
     whereIsNotEqualTo?: Param<T>;
+    enabled?: boolean;
 }
 
 export function useSupabaseQuery<T>(options: SupabaseQueryOptions<T>) {
     // Implementation goes here
     const { data, error, isLoading } = useQuery({
         queryKey: options.queryKey,
+        enabled: options.enabled !== false,
         queryFn: async () => {
             let query = supabase
                 .from(options.tableName)

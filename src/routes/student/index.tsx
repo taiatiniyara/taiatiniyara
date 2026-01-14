@@ -33,8 +33,8 @@ function RouteComponent() {
                 <div className="flex-1">
                   <h3 className="text-xl font-bold mb-2">My Courses</h3>
                   <p className="text-muted-foreground mb-4">View and manage your enrolled courses</p>
-                  <a href="/courses" className="text-primary font-medium hover:underline flex items-center gap-1 group">
-                    Browse Courses
+                  <a href="/student/courses" className="text-primary font-medium hover:underline flex items-center gap-1 group">
+                    View My Courses
                     <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>

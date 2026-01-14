@@ -7,6 +7,8 @@ import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
 import Heading from "@tiptap/extension-heading";
 import Image from "@tiptap/extension-image";
+import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
+import { common, createLowlight } from "lowlight";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
@@ -23,8 +25,12 @@ import {
   Undo,
   Redo,
   ImagePlus,
+  Code2,
+  FileCode,
 } from "lucide-react";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
+
+const lowlight = createLowlight(common);
 
 interface TiptapProps {
   content?: string;
@@ -32,9 +38,14 @@ interface TiptapProps {
 }
 
 const Tiptap = ({ content = "<p>Start writing your content here...</p>", onChange }: TiptapProps) => {
+  const [showHtmlSource, setShowHtmlSource] = useState(false);
+  const [htmlContent, setHtmlContent] = useState("");
+
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        codeBlock: false, // Disable default code block to use CodeBlockLowlight
+      }),
       Document,
       Paragraph,
       Text,
@@ -42,6 +53,9 @@ const Tiptap = ({ content = "<p>Start writing your content here...</p>", onChang
       Image.configure({
         inline: true,
         allowBase64: true,
+      }),
+      CodeBlockLowlight.configure({
+        lowlight,
       }),
     ],
     content: content,
@@ -67,6 +81,24 @@ const Tiptap = ({ content = "<p>Start writing your content here...</p>", onChang
       editor?.chain().focus().setImage({ src: url }).run();
     }
   }, [editor]);
+
+  const toggleHtmlSource = useCallback(() => {
+    if (!showHtmlSource) {
+      // Switching to HTML source view
+      setHtmlContent(editor?.getHTML() || "");
+    } else {
+      // Switching back to editor view
+      editor?.commands.setContent(htmlContent);
+      if (onChange) {
+        onChange(htmlContent);
+      }
+    }
+    setShowHtmlSource(!showHtmlSource);
+  }, [editor, showHtmlSource, htmlContent, onChange]);
+
+  const handleHtmlContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setHtmlContent(e.target.value);
+  };
 
   if (!editor) {
     return null;
@@ -228,6 +260,33 @@ const Tiptap = ({ content = "<p>Start writing your content here...</p>", onChang
           >
             <ImagePlus className="size-4" />
           </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+            className={cn(
+              editor.isActive("codeBlock") && "bg-muted text-foreground"
+            )}
+            title="Code Block"
+          >
+            <Code2 className="size-4" />
+          </Button>
+        </div>
+
+        <div className="flex items-center gap-1 border-r border-border pr-2">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            onClick={toggleHtmlSource}
+            className={cn(
+              showHtmlSource && "bg-muted text-foreground"
+            )}
+            title="HTML Source"
+          >
+            <FileCode className="size-4" />
+          </Button>
         </div>
 
         <div className="flex items-center gap-1">
@@ -254,10 +313,21 @@ const Tiptap = ({ content = "<p>Start writing your content here...</p>", onChang
         </div>
       </div>
 
-      {/* Editor Content */}
-      <div className="bg-card text-card-foreground ring-foreground/10 rounded-b-2xl ring-1 max-h-125 overflow-y-auto">
-        <EditorContent editor={editor} className="tiptap-editor" />
-      </div>
+      {/* Editor Content or HTML Source */}
+      {showHtmlSource ? (
+        <div className="bg-card text-card-foreground ring-foreground/10 rounded-b-2xl ring-1">
+          <textarea
+            value={htmlContent}
+            onChange={handleHtmlContentChange}
+            className="w-full min-h-50 max-h-125 p-6 bg-transparent border-none focus:outline-none font-mono text-sm resize-y"
+            placeholder="Edit HTML source..."
+          />
+        </div>
+      ) : (
+        <div className="bg-card text-card-foreground ring-foreground/10 rounded-b-2xl ring-1 max-h-125 overflow-y-auto">
+          <EditorContent editor={editor} className="tiptap-editor" />
+        </div>
+      )}
 
       {/* Bubble Menu */}
       {editor && (
@@ -425,6 +495,7 @@ const Tiptap = ({ content = "<p>Start writing your content here...</p>", onChang
           border-radius: 0.5rem;
           overflow-x: auto;
           margin: 1rem 0;
+          font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
         }
 
         .tiptap-editor .tiptap pre code {
@@ -432,6 +503,43 @@ const Tiptap = ({ content = "<p>Start writing your content here...</p>", onChang
           padding: 0;
           color: inherit;
           font-size: inherit;
+        }
+
+        /* Code Block Syntax Highlighting */
+        .tiptap-editor .tiptap .hljs-comment,
+        .tiptap-editor .tiptap .hljs-quote {
+          color: hsl(var(--muted-foreground));
+        }
+
+        .tiptap-editor .tiptap .hljs-variable,
+        .tiptap-editor .tiptap .hljs-template-variable,
+        .tiptap-editor .tiptap .hljs-attribute,
+        .tiptap-editor .tiptap .hljs-tag,
+        .tiptap-editor .tiptap .hljs-name,
+        .tiptap-editor .tiptap .hljs-selector-id,
+        .tiptap-editor .tiptap .hljs-selector-class {
+          color: hsl(var(--primary));
+        }
+
+        .tiptap-editor .tiptap .hljs-number,
+        .tiptap-editor .tiptap .hljs-literal,
+        .tiptap-editor .tiptap .hljs-meta,
+        .tiptap-editor .tiptap .hljs-link {
+          color: hsl(var(--destructive));
+        }
+
+        .tiptap-editor .tiptap .hljs-string,
+        .tiptap-editor .tiptap .hljs-symbol,
+        .tiptap-editor .tiptap .hljs-bullet,
+        .tiptap-editor .tiptap .hljs-addition {
+          color: #22c55e;
+        }
+
+        .tiptap-editor .tiptap .hljs-title,
+        .tiptap-editor .tiptap .hljs-section,
+        .tiptap-editor .tiptap .hljs-keyword,
+        .tiptap-editor .tiptap .hljs-selector-tag {
+          color: #3b82f6;
         }
 
         .tiptap-editor .tiptap strong {

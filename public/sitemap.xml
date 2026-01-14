@@ -1,5 +1,5 @@
-[dotenv@17.2.3] injecting env (2) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
-[dotenv@17.2.3] injecting env (0) from .env -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (2) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
@@ -180,6 +180,12 @@
   <url>
     <loc>https://taiatiniyara.com/projects/0twX1IxZXF7jHZwm</loc>
     <lastmod>2026-01-13T13:01:13.254Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/courses/Z22Ng7EYezHxJxXs</loc>
+    <lastmod>2026-01-13T14:42:09.519Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
