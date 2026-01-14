@@ -1,22 +1,35 @@
-import { useSupabaseQuery } from "@/hooks/useSupabaseQuery";
 import { createFileRoute } from "@tanstack/react-router";
-import type { Course } from "@/lib/drizzle/schema";
+import type { Course, CourseCategory } from "@/lib/drizzle/schema";
 import { ContentListPage } from "@/components/ui/content-list-page";
 import { ContentCard } from "@/components/ui/content-card";
+import { Badge } from "@/components/ui/badge";
+import { supabase } from "@/lib/supabase";
+import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/courses/")({
   component: RouteComponent,
 });
+
+type CourseWithCategory = Course & { 
+  course_categories: Pick<CourseCategory, "level"> 
+};
 
 function RouteComponent() {
   const {
     data: courses,
     error,
     isLoading,
-  } = useSupabaseQuery<Course>({
-    queryKey: ["courses"],
-    tableName: "courses",
-    fields: ["id", "title", "img_url", "description", "slug"],
+  } = useQuery({
+    queryKey: ["courses-with-level"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("courses")
+        .select("id, title, img_url, description, slug, course_categories(level)")
+        .returns<CourseWithCategory[]>();
+      
+      if (error) throw error;
+      return data;
+    },
   });
 
   return (
@@ -40,6 +53,11 @@ function RouteComponent() {
           imageAlt={course.title}
           href={`/courses/${course.slug}`}
         >
+          {course.course_categories?.level && (
+            <Badge variant="secondary" className="mb-3 w-fit">
+              {course.course_categories.level}
+            </Badge>
+          )}
           <p className="text-sm sm:text-base line-clamp-4 text-muted-foreground mb-4">
             {course.description}
           </p>

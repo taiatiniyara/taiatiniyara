@@ -1,5 +1,5 @@
-[dotenv@17.2.3] injecting env (2) from .env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
-[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+[dotenv@17.2.3] injecting env (2) from .env.local -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
@@ -180,6 +180,12 @@
   <url>
     <loc>https://taiatiniyara.com/projects/0twX1IxZXF7jHZwm</loc>
     <lastmod>2026-01-13T13:01:13.254Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/courses/0CEJ8F1Sdu4kdShq</loc>
+    <lastmod>2026-01-13T23:03:37.268Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
