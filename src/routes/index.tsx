@@ -6,6 +6,8 @@ import { useSupabaseQuery } from "@/hooks/useSupabaseQuery";
 import { type BlogPost, type Course } from "@/lib/drizzle/schema";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import ErrorBox from "@/components/ui/error";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -39,6 +41,26 @@ function Index() {
     numberOfItems: 3,
     fields: ["id", "title", "img_url", "description", "slug"],
   });
+
+  // Fetch enrollment counts for all courses
+  const { data: enrollmentCounts } = useQuery({
+    queryKey: ["enrollments", "counts"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("enrollments")
+        .select("course_id");
+      
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  // Calculate enrollment count per course
+  const getEnrollmentCount = (courseId: string) => {
+    if (!enrollmentCounts) return 0;
+    return enrollmentCounts.filter((e) => e.course_id === courseId).length;
+  };
+
   return (
     <div className="relative w-full">
       {/* Hero Section */}
@@ -211,6 +233,23 @@ function Index() {
                       <p className="text-sm text-muted-foreground line-clamp-3">
                         {course.description}
                       </p>
+
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                          />
+                        </svg>
+                        <span>{getEnrollmentCount(course.id)} students enrolled</span>
+                      </div>
 
                       <a
                         className="text-primary text-sm font-medium flex items-center gap-1 hover:gap-2 transition-all"
