@@ -12,6 +12,7 @@ interface QueryFilter<T> {
     ascending: boolean;
   };
   whereIsNotEqualTo?: Param<T>;
+  select?: string;
 }
 
 /**
@@ -23,10 +24,13 @@ export function buildSupabaseQuery<T>(
   filter: QueryFilter<T>,
   selectOptions?: string | { count?: 'exact' | 'planned' | 'estimated' }
 ) {
-  let query = typeof selectOptions === 'string' 
-    ? supabase.from(tableName).select(selectOptions)
-    : selectOptions
-    ? supabase.from(tableName).select('*', selectOptions)
+  // Use filter.select if provided, otherwise use selectOptions, otherwise default to '*'
+  const selectQuery = filter.select || selectOptions;
+  
+  let query = typeof selectQuery === 'string' 
+    ? supabase.from(tableName).select(selectQuery)
+    : selectQuery
+    ? supabase.from(tableName).select('*', selectQuery)
     : supabase.from(tableName).select('*');
 
   if (filter.params) {

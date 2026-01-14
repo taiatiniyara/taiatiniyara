@@ -1,4 +1,5 @@
 import OtherBlogs from "@/components/blog/otherBlogs";
+import BlogComments from "@/components/blog/blogComments";
 import { useSupabaseQuery } from "@/hooks/useSupabaseQuery";
 import type { BlogPost } from "@/lib/drizzle/schema";
 import { createFileRoute, useParams } from "@tanstack/react-router";
@@ -115,6 +116,11 @@ function RouteComponent() {
               items={createBreadcrumbs("blog", { label: blogPost.title })}
               className="mt-8 pt-8 border-t"
             />
+            </div>
+
+            {/* Comments Section */}
+            <div className="p-4 sm:p-6 md:p-8 pt-0">
+              <BlogComments blogPostId={blogPost.id} />
             </div>
           </article>
           <aside className="lg:w-80">

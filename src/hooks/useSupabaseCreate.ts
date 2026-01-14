@@ -1,26 +1,38 @@
 import { supabase, type tables } from "@/lib/supabase";
-import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
-interface SupabaseCreateOptions<T> {
-    // Define the options for the Supabase create here
+interface SupabaseCreateOptions {
     tableName: keyof typeof tables;
-    data: Partial<T>;
+    onSuccess?: () => void;
+    onError?: (error: Error) => void;
 }
 
-export function useSupabaseCreate<T>(options: SupabaseCreateOptions<T>) {
-    const { data, isLoading, error } = useQuery({
-        queryKey: [options.tableName + "_create"],
-        queryFn: async () => {
-            const { data, error } = await supabase
+export function useSupabaseCreate<T = any>(options: SupabaseCreateOptions) {
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<Error | null>(null);
+
+    const createItem = async (data: Partial<T>) => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const { data: result, error } = await supabase
                 .from(options.tableName)
-                .insert(options.data)
+                .insert(data)
                 .select();
             if (error) {
                 throw error;
             }
-            return data as T[];
+            options.onSuccess?.();
+            return result;
+        } catch (err) {
+            const error = err as Error;
+            setError(error);
+            options.onError?.(error);
+            throw error;
+        } finally {
+            setIsLoading(false);
         }
-    });
+    };
 
-    return { data, isLoading, error };
+    return { createItem, isLoading, error };
 }

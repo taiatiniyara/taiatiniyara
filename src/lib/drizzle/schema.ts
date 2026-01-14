@@ -119,3 +119,15 @@ export const lessonComments: any = pgTable("lesson_comments", {
 });
 export type LessonComment = typeof lessonComments.$inferSelect;
 export type NewLessonComment = typeof lessonComments.$inferInsert;
+
+export const blogComments: any = pgTable("blog_comments", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    blog_post_id: uuid("blog_post_id").notNull().references(() => blogPosts.id, { onDelete: 'cascade' }),
+    user_id: uuid("user_id").notNull().references(() => userProfiles.id, { onDelete: 'cascade' }),
+    parent_comment_id: uuid("parent_comment_id").references((): any => blogComments.id, { onDelete: 'cascade' }),
+    comment_text: text("comment_text").notNull(),
+    created_at: timestamp("created_at").notNull().defaultNow(),
+    updated_at: timestamp("updated_at").notNull().defaultNow(),
+});
+export type BlogComment = typeof blogComments.$inferSelect;
+export type NewBlogComment = typeof blogComments.$inferInsert;

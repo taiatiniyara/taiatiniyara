@@ -21,8 +21,8 @@ interface SupabaseQueryOptions<T> {
     enabled?: boolean;
 }
 
-export function useSupabaseQuery<T>(options: SupabaseQueryOptions<T>) {
-    const { data, error, isLoading } = useQuery({
+export function useSupabaseQuery<T>(options: SupabaseQueryOptions<T> & { select?: string }) {
+    const { data, error, isLoading, refetch } = useQuery({
         queryKey: options.queryKey,
         enabled: options.enabled !== false,
         queryFn: async () => {
@@ -30,6 +30,7 @@ export function useSupabaseQuery<T>(options: SupabaseQueryOptions<T>) {
                 params: options.params,
                 orderBy: options.orderBy,
                 whereIsNotEqualTo: options.whereIsNotEqualTo,
+                select: options.select,
             }).limit(options.numberOfItems || 100);
             
             const { data, error } = await query;
@@ -37,5 +38,5 @@ export function useSupabaseQuery<T>(options: SupabaseQueryOptions<T>) {
             return data as T[];
         }
     });
-    return { data, error, isLoading };
+    return { data, error, isLoading, refetch };
 }

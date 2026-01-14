@@ -8,6 +8,7 @@ if (!supabaseUrl) {
 }
 export const tables = {
     blog_posts: 'blog_posts',
+    blog_comments: 'blog_comments',
     course_categories: 'course_categories',
     courses: 'courses',
     user_profiles: 'user_profiles',
