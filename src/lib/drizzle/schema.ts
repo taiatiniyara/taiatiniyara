@@ -67,6 +67,7 @@ export const lessons = pgTable("lessons", {
     title: varchar("title", { length: 255 }).notNull(),
     content: text("content").notNull().default("<p>New lesson content...</p>"),
     duration_minutes: integer("duration_minutes").notNull(),
+    order: integer("order").notNull().$default(() => 0),
     created_at: timestamp("created_at").notNull().defaultNow(),
     updated_at: timestamp("updated_at").notNull().defaultNow(),
 });
@@ -92,7 +93,7 @@ export const enrollments = pgTable("enrollments", {
     review: varchar("review", { length: 2000 }),
     rating: integer("rating"),
     updated_at: timestamp("updated_at").notNull().defaultNow(),
-})
+});
 export type Enrollment = typeof enrollments.$inferSelect;
 export type NewEnrollment = typeof enrollments.$inferInsert;
 

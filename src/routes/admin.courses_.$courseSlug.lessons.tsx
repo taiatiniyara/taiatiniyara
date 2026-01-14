@@ -37,6 +37,7 @@ function RouteComponent() {
     tableName: "lessons",
     params: { name: "course_id", value: course?.id || "" },
     fields: ["id", "title", "slug", "duration_minutes", "created_at"],
+    orderBy: { column: "order", ascending: true },
     enabled: !!course?.id,
   });
 

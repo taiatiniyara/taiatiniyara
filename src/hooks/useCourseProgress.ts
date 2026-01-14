@@ -15,6 +15,7 @@ export function useCourseProgress({ courseId }: UseCourseProgressProps) {
     tableName: "lessons",
     params: { name: "course_id", value: courseId },
     fields: ["id"],
+    orderBy: { column: "order", ascending: true },
     enabled: !!courseId,
   });
 
