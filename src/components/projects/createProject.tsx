@@ -16,6 +16,10 @@ export default function CreateProjectForm() {
           type: "textarea",
         },
         {
+          name: "content",
+          type: "richtext",
+        },
+        {
           name: "technologies",
           type: "tags",
         },
@@ -34,6 +38,10 @@ export default function CreateProjectForm() {
         {
           name: "img_url",
           type: "text",
+        },
+        {
+          name: "ongoing",
+          type: "checkbox",
         },
       ]}
       defaultValues={{

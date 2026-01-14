@@ -85,9 +85,16 @@ function RouteComponent() {
               </div>
             )}
             <div className="p-4 sm:p-6 md:p-8">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">
-                {project.title}
-              </h1>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4 sm:mb-6">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">
+                  {project.title}
+                </h1>
+                {project.ongoing && (
+                  <Badge variant="default" className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 text-sm font-semibold w-fit">
+                    🚧 Ongoing Project
+                  </Badge>
+                )}
+              </div>
 
               {/* Tags Section */}
               {project.tags && project.tags.length > 0 && (
@@ -122,6 +129,23 @@ function RouteComponent() {
                   </p>
                 </div>
               </div>
+
+              {/* Content Section */}
+              {project.content && (
+                <>
+                  <Separator className="my-6" />
+                  <div className="mb-6">
+                    <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+                      Project Details
+                    </h2>
+                    <div 
+                      id="blog-content" 
+                      className="prose prose-lg max-w-none"
+                      dangerouslySetInnerHTML={{ __html: project.content }}
+                    />
+                  </div>
+                </>
+              )}
 
               {/* Technologies Section */}
               {project.technologies && project.technologies.length > 0 && (

@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { TagsInput } from "@/components/ui/tags-input";
+import { Checkbox } from "@/components/ui/checkbox";
 import Tiptap from "@/components/tiptap-lazy";
 
 interface FormFieldProps<T> {
@@ -22,7 +23,8 @@ interface FormFieldProps<T> {
       | "textarea"
       | "select"
       | "richtext"
-      | "tags";
+      | "tags"
+      | "checkbox";
     options?: { label?: string; value: string }[];
     editable?: boolean;
   };
@@ -77,6 +79,15 @@ export function FormField<T>({
           readOnly={!isEditable}
           required
         />
+      ) : field.type === "checkbox" ? (
+        <div className="flex items-center space-x-2">
+          <Checkbox
+            id={fieldName}
+            name={fieldName}
+            defaultChecked={value || false}
+            disabled={!isEditable}
+          />
+        </div>
       ) : field.type === "select" ? (
         <>
           <Select

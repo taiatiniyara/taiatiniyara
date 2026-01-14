@@ -22,6 +22,10 @@ export default function EditProjectForm({ projectId, useSlug = false }: EditProj
           type: "textarea",
         },
         {
+          name: "content",
+          type: "richtext",
+        },
+        {
           name: "technologies",
           type: "tags",
         },
@@ -40,6 +44,10 @@ export default function EditProjectForm({ projectId, useSlug = false }: EditProj
         {
           name: "img_url",
           type: "text",
+        },
+        {
+          name: "ongoing",
+          type: "checkbox",
         },
       ]}
     />

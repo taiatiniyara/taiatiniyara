@@ -23,7 +23,7 @@ function RouteComponent() {
   
   const { error, data, isLoading } = useSupabaseQuery<Project>({
     tableName: "projects",
-    fields: ["slug", "title", "img_url", "technologies"],
+    fields: ["slug", "title", "img_url", "technologies", "ongoing"],
     queryKey: ["all-projects"],
   });
 
@@ -44,7 +44,12 @@ function RouteComponent() {
           imageAlt={project.title}
           href={`/projects/${project.slug}`}
         >
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 items-center">
+            {project.ongoing && (
+              <Badge variant="default" className="bg-green-600 hover:bg-green-700">
+                🚧 Ongoing
+              </Badge>
+            )}
             {Array.isArray(project.technologies) && project.technologies.map((tech) => (
               <Badge key={tech} variant="outline">
                 {tech}

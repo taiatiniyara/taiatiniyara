@@ -15,7 +15,8 @@ interface CreateFormProps<T> {
       | "textarea"
       | "select"
       | "richtext"
-      | "tags";
+      | "tags"
+      | "checkbox";
     options?: {
       label?: string;
       value: string;
@@ -75,6 +76,12 @@ export default function CreateForm<T>(props: CreateFormProps<T>) {
           // For tags fields, use the stored array value
           if (field.type === "tags") {
             (data as any)[field.name] = tagsValues[String(field.name)] || [];
+            return;
+          }
+
+          // For checkbox fields, convert to boolean
+          if (field.type === "checkbox") {
+            (data as any)[field.name] = value === "on";
             return;
           }
 
