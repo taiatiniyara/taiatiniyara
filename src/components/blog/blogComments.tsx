@@ -77,7 +77,7 @@ function CommentItem({ comment, onReply, replyingTo, onCancelReply, onSubmitRepl
   return (
     <div className="space-y-3">
       <div className="flex gap-3">
-        <Avatar className="h-8 w-8 flex-shrink-0">
+        <Avatar className="h-8 w-8 shrink-0">
           <AvatarFallback className="text-xs">
             {getInitials(comment.user_profiles.name)}
           </AvatarFallback>
@@ -89,7 +89,7 @@ function CommentItem({ comment, onReply, replyingTo, onCancelReply, onSubmitRepl
               {formatDate(comment.created_at)}
             </span>
           </div>
-          <p className="text-sm text-foreground whitespace-pre-wrap break-words">
+          <p className="text-sm text-foreground whitespace-pre-wrap wrap-break-word">
             {comment.comment_text}
           </p>
           {user && (
@@ -112,7 +112,7 @@ function CommentItem({ comment, onReply, replyingTo, onCancelReply, onSubmitRepl
             value={replyText}
             onChange={(e) => setReplyText(e.target.value)}
             placeholder="Write a reply..."
-            className="min-h-[80px] resize-none"
+            className="min-h-20 resize-none"
             disabled={isSubmitting}
           />
           <div className="flex gap-2">
@@ -259,7 +259,7 @@ export default function BlogComments({ blogPostId }: BlogCommentsProps) {
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}
               placeholder="Share your thoughts..."
-              className="min-h-[100px] resize-none"
+              className="min-h-20 resize-none"
               disabled={isCreating}
             />
             <Button
