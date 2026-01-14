@@ -1,12 +1,13 @@
 import { useSupabaseQuery } from "@/hooks/useSupabaseQuery";
 import type { Lesson, Course } from "@/lib/drizzle/schema";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
 import { DetailPageLayout } from "@/components/ui/detail-page-layout";
 import { Heading } from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useProgressTracking } from "@/hooks/useProgressTracking";
 import { useAuth } from "@/context/auth-context";
+import { useCourseAccess } from "@/hooks/useCourseAccess";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/courses/$courseSlug/$lessonSlug")({
@@ -24,6 +25,11 @@ function RouteComponent() {
     params: { name: "slug", value: courseSlug },
   });
   const course = courseData?.[0];
+
+  // Check access: must be admin or enrolled
+  const { hasAccess, isLoading: checkingAccess, isEnrolled, isAdmin } = useCourseAccess({
+    courseId: course?.id || "",
+  });
 
   // Fetch the specific lesson
   const { data: lessonData, isLoading: lessonLoading, error: lessonError } = useSupabaseQuery<Lesson>({
@@ -47,7 +53,6 @@ function RouteComponent() {
     isCompleted, 
     isMarkingComplete, 
     markAsComplete,
-    hasEnrollment 
   } = useProgressTracking({ 
     courseId: course?.id || "", 
     lessonId: lesson?.id || "" 
@@ -63,8 +68,42 @@ function RouteComponent() {
     }
   };
 
-  const isLoading = courseLoading || lessonLoading;
+  const isLoading = courseLoading || lessonLoading || checkingAccess;
   const error = courseError || lessonError;
+
+  // Redirect if user doesn't have access and loading is complete
+  if (!isLoading && course && !hasAccess) {
+    if (!user) {
+      return <Navigate to="/login" search={{ redirect: `/courses/${courseSlug}/${lessonSlug}` }} />;
+    }
+    return (
+      <DetailPageLayout
+        isLoading={false}
+        error={null}
+        data={[]}
+        loadingText=""
+        errorMessage=""
+        emptyMessage=""
+      >
+        <Card className="max-w-2xl mx-auto p-8 text-center">
+          <div className="mb-6">
+            <svg className="w-16 h-16 mx-auto text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </div>
+          <Heading level={2} className="mb-4">Access Restricted</Heading>
+          <p className="text-muted-foreground mb-6">
+            This lesson is only available to enrolled students. Please enroll in the course to access all lessons.
+          </p>
+          <Button asChild>
+            <Link to="/courses/$slug" params={{ slug: courseSlug }}>
+              View Course Details
+            </Link>
+          </Button>
+        </Card>
+      </DetailPageLayout>
+    );
+  }
 
   // Find current lesson index for navigation
   const currentIndex = allLessons?.findIndex(l => l.slug === lessonSlug) ?? -1;
@@ -120,7 +159,7 @@ function RouteComponent() {
                 </div>
                 
                 {/* Progress tracking button */}
-                {user && hasEnrollment && (
+                {user && (isEnrolled || isAdmin) && (
                   <Button 
                     variant={isCompleted ? "secondary" : "default"}
                     onClick={handleMarkComplete}
@@ -144,6 +183,25 @@ function RouteComponent() {
                 className="prose prose-lg max-w-none"
                 dangerouslySetInnerHTML={{ __html: lesson.content }}
               />
+
+              {/* Progress tracking button at bottom */}
+              <div className="flex justify-center mt-8 pt-8 border-t">
+                {user && (isEnrolled || isAdmin) && (
+                  <Button 
+                    variant={isCompleted ? "secondary" : "default"}
+                    onClick={handleMarkComplete}
+                    disabled={isCompleted || isMarkingComplete}
+                    size="lg"
+                  >
+                    {isCompleted ? "✓ Completed" : isMarkingComplete ? "Marking..." : "Mark Complete"}
+                  </Button>
+                )}
+                {!user && (
+                  <Button variant="outline" size="lg" asChild>
+                    <Link to="/login">Sign in to track progress</Link>
+                  </Button>
+                )}
+              </div>
 
               {/* Breadcrumb at bottom */}
               <nav className="flex items-center gap-2 text-sm text-muted-foreground mt-8 pt-8 border-t">

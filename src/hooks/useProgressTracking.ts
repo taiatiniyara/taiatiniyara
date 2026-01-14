@@ -1,9 +1,9 @@
-import { useAuth } from "@/context/auth-context";
 import { useSupabaseQuery } from "./useSupabaseQuery";
 import { supabase } from "@/lib/supabase";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import type { ProgressTracking, Enrollment } from "@/lib/drizzle/schema";
+import { useEnrollmentData } from "./useEnrollmentData";
+import type { ProgressTracking } from "@/lib/drizzle/schema";
 
 interface UseProgressTrackingProps {
   courseId: string;
@@ -11,20 +11,9 @@ interface UseProgressTrackingProps {
 }
 
 export function useProgressTracking({ courseId, lessonId }: UseProgressTrackingProps) {
-  const { user } = useAuth();
   const queryClient = useQueryClient();
   const [isMarkingComplete, setIsMarkingComplete] = useState(false);
-
-  // First, get the enrollment for this user and course
-  const { data: enrollments } = useSupabaseQuery<Enrollment>({
-    queryKey: ["enrollment", courseId, user?.id || "anonymous"],
-    tableName: "enrollments",
-    enabled: !!user?.id && !!courseId,
-  });
-
-  const enrollment = enrollments?.find(
-    (e) => e.course_id === courseId && e.user_id === user?.id
-  );
+  const { enrollment, isEnrolled: hasEnrollment } = useEnrollmentData(courseId);
 
   // Get progress tracking for this lesson
   const { data: progressData, isLoading: loadingProgress } = useSupabaseQuery<ProgressTracking>({
@@ -72,6 +61,6 @@ export function useProgressTracking({ courseId, lessonId }: UseProgressTrackingP
     isMarkingComplete,
     markAsComplete,
     loadingProgress,
-    hasEnrollment: !!enrollment,
+    hasEnrollment,
   };
 }

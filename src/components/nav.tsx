@@ -91,9 +91,18 @@ export default function TopNavigation() {
                       <DropdownMenuSeparator />
                       <DropdownMenuItem
                         className="text-emerald-500 font-medium"
-                        onClick={async () => {
-                          await signOut();
-                          window.location.href = "/";
+                        onSelect={async (e) => {
+                          e.preventDefault();
+                          try {
+                            const { error } = await signOut();
+                            if (error) {
+                              console.error("Sign out error:", error);
+                            }
+                            // Force reload to clear state
+                            window.location.replace("/");
+                          } catch (err) {
+                            console.error("Sign out failed:", err);
+                          }
                         }}
                       >
                         Sign Out
@@ -173,9 +182,17 @@ export default function TopNavigation() {
                   <button
                     className="w-full text-left px-4 py-3 rounded-md text-lg text-emerald-500 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/30 transition-colors"
                     onClick={async () => {
-                      await signOut();
-                      setMobileMenuOpen(false);
-                      window.location.href = "/";
+                      try {
+                        const { error } = await signOut();
+                        if (error) {
+                          console.error("Sign out error:", error);
+                        }
+                        setMobileMenuOpen(false);
+                        // Force reload to clear state
+                        window.location.replace("/");
+                      } catch (err) {
+                        console.error("Sign out failed:", err);
+                      }
                     }}
                   >
                     Sign Out

@@ -5,28 +5,21 @@ import { Button } from "@/components/ui/button";
 import { AuthFormWrapper } from "@/components/ui/auth-form-wrapper";
 import { ErrorMessage } from "@/components/ui/error-message";
 import { AuthInputField } from "@/components/ui/auth-input-field";
+import { useAuthForm } from "@/hooks/useAuthForm";
 
 export function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const { loading, error, handleSubmit } = useAuthForm();
   const { signIn } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    setLoading(true);
-
-    const { error } = await signIn(email, password);
-
-    if (error) {
-      setError(error.message);
-      setLoading(false);
-    } else {
-      navigate({ to: "/profile" });
-    }
+    await handleSubmit(
+      () => signIn(email, password),
+      () => navigate({ to: "/profile" })
+    );
   };
 
   return (
@@ -34,7 +27,7 @@ export function LoginForm() {
       title="Welcome Back"
       description="Sign in to your account"
     >
-      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+      <form onSubmit={onSubmit} className="space-y-4 sm:space-y-6">
         {error && <ErrorMessage message={error} />}
 
         <AuthInputField

@@ -6,28 +6,16 @@ import { AuthFormWrapper } from '@/components/ui/auth-form-wrapper';
 import { ErrorMessage } from '@/components/ui/error-message';
 import { SuccessMessage } from '@/components/ui/success-message';
 import { AuthInputField } from '@/components/ui/auth-input-field';
+import { useAuthForm } from '@/hooks/useAuthForm';
 
 export function ForgotPasswordForm() {
   const [email, setEmail] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const { loading, error, success, handleSubmit } = useAuthForm();
   const { resetPassword } = useAuth();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    setLoading(true);
-
-    const { error } = await resetPassword(email);
-
-    if (error) {
-      setError(error.message);
-      setLoading(false);
-    } else {
-      setSuccess(true);
-      setLoading(false);
-    }
+    await handleSubmit(() => resetPassword(email));
   };
 
   if (success) {
@@ -51,7 +39,7 @@ export function ForgotPasswordForm() {
       title="Reset Password"
       description="Enter your email to receive a password reset link"
     >
-      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+      <form onSubmit={onSubmit} className="space-y-4 sm:space-y-6">
         {error && <ErrorMessage message={error} />}
 
         <AuthInputField

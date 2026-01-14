@@ -1,24 +1,13 @@
-import { useAuth } from "@/context/auth-context";
 import { useSupabaseQuery } from "./useSupabaseQuery";
-import type { ProgressTracking, Enrollment, Lesson } from "@/lib/drizzle/schema";
+import { useEnrollmentData } from "./useEnrollmentData";
+import type { ProgressTracking, Lesson } from "@/lib/drizzle/schema";
 
 interface UseCourseProgressProps {
   courseId: string;
 }
 
 export function useCourseProgress({ courseId }: UseCourseProgressProps) {
-  const { user } = useAuth();
-
-  // Get enrollment
-  const { data: enrollments } = useSupabaseQuery<Enrollment>({
-    queryKey: ["enrollment", courseId, user?.id || "anonymous"],
-    tableName: "enrollments",
-    enabled: !!user?.id && !!courseId,
-  });
-
-  const enrollment = enrollments?.find(
-    (e) => e.course_id === courseId && e.user_id === user?.id
-  );
+  const { enrollment, isEnrolled: hasEnrollment } = useEnrollmentData(courseId);
 
   // Get all lessons for this course
   const { data: lessons, isLoading: lessonsLoading } = useSupabaseQuery<Lesson>({
@@ -47,6 +36,6 @@ export function useCourseProgress({ courseId }: UseCourseProgressProps) {
     completedLessons,
     progressPercentage,
     isLoading: lessonsLoading || progressLoading,
-    hasEnrollment: !!enrollment,
+    hasEnrollment,
   };
 }

@@ -6,6 +6,7 @@ import { AuthFormWrapper } from "@/components/ui/auth-form-wrapper";
 import { ErrorMessage } from "@/components/ui/error-message";
 import { SuccessMessage } from "@/components/ui/success-message";
 import { AuthInputField } from "@/components/ui/auth-input-field";
+import { useAuthForm } from "@/hooks/useAuthForm";
 
 export function SignUpForm() {
   const [email, setEmail] = useState("");
@@ -13,40 +14,21 @@ export function SignUpForm() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const { loading, error, success, validatePassword, handleSubmit } = useAuthForm();
   const { signUp } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
-
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters");
-      return;
-    }
-
-    setLoading(true);
+    
+    if (!validatePassword(password, confirmPassword)) return;
 
     const fullName = `${firstName.trim()} ${lastName.trim()}`.trim();
 
-    const { error } = await signUp(email, password, { fullName, role: "user" });
-
-    if (error) {
-      setError(error.message);
-      setLoading(false);
-    } else {
-      setSuccess(true);
-      setLoading(false);
-      setTimeout(() => navigate({ to: "/login" }), 2000);
-    }
+    await handleSubmit(
+      () => signUp(email, password, { fullName, role: "user" }),
+      () => setTimeout(() => navigate({ to: "/login" }), 2000)
+    );
   };
 
   if (success) {
@@ -64,7 +46,7 @@ export function SignUpForm() {
       title="Create Account"
       description="Sign up for a new account"
     >
-      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+      <form onSubmit={onSubmit} className="space-y-4 sm:space-y-6">
         {error && <ErrorMessage message={error} />}
 
         <AuthInputField

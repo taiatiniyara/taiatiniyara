@@ -1,5 +1,6 @@
-import { supabase, type tables } from "@/lib/supabase";
+import { type tables } from "@/lib/supabase";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { buildSupabaseQuery } from "@/lib/supabase-query-builder";
 
 interface Param<T> {
     name: keyof T;
@@ -25,34 +26,18 @@ export function useSupabaseInfiniteQuery<T>(options: SupabaseInfiniteQueryOption
     return useInfiniteQuery({
         queryKey: options.queryKey,
         queryFn: async ({ pageParam = 0 }) => {
-            let query = supabase
-                .from(options.tableName)
-                .select('*', { count: 'exact' })
-                .range(pageParam, pageParam + pageSize - 1);
-            
-            // Apply filters
-            if (options.params) {
-                query = query.eq(options.params.name as string, options.params.value);
-            }
-
-            if (options.orderBy) {
-                query = query.order(
-                    options.orderBy.column as string,
-                    { ascending: options.orderBy.ascending }
-                );
-            }
-
-            if (options.whereIsNotEqualTo) {
-                query = query.neq(
-                    options.whereIsNotEqualTo.name as string,
-                    options.whereIsNotEqualTo.value
-                );
-            }
+            const query = buildSupabaseQuery<T>(
+                options.tableName,
+                {
+                    params: options.params,
+                    orderBy: options.orderBy,
+                    whereIsNotEqualTo: options.whereIsNotEqualTo,
+                },
+                { count: 'exact' }
+            ).range(pageParam, pageParam + pageSize - 1);
             
             const { data, error, count } = await query;
-            if (error) {
-                throw error;
-            }
+            if (error) throw error;
             return {
                 data: data as T[],
                 count: count || 0,

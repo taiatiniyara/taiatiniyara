@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { SITE_CONFIG } from '@/lib/constants';
 
 interface SEOProps {
   title?: string;
@@ -15,29 +16,23 @@ interface SEOProps {
   articleTags?: string[];
 }
 
-const SITE_NAME = 'Taia Tiniyara';
-const DEFAULT_TITLE = 'Taia Tiniyara - Software Engineering & Development in Fiji & the Pacific';
-const DEFAULT_DESCRIPTION = 'Helping software engineering and development training in Fiji and the Pacific Islands. Expert software engineers, programmers, and developers offering comprehensive courses for Pacific professionals.';
-const DEFAULT_IMAGE = 'https://taiatiniyara.com/og-image.jpg';
-const BASE_URL = 'https://taiatiniyara.com';
-
 export function useSEO({
   title,
-  description = DEFAULT_DESCRIPTION,
+  description = SITE_CONFIG.description,
   keywords,
   ogTitle,
   ogDescription,
-  ogImage = DEFAULT_IMAGE,
+  ogImage = SITE_CONFIG.defaultImage,
   ogType = 'website',
   canonicalUrl,
-  author = 'Taia Tiniyara',
+  author = SITE_CONFIG.author,
   publishedTime,
   modifiedTime,
   articleTags,
 }: SEOProps) {
   useEffect(() => {
-    const fullTitle = title ? `${title} | ${SITE_NAME}` : DEFAULT_TITLE;
-    const finalOgTitle = ogTitle || title || DEFAULT_TITLE;
+    const fullTitle = title ? `${title} | ${SITE_CONFIG.name}` : SITE_CONFIG.title;
+    const finalOgTitle = ogTitle || title || SITE_CONFIG.title;
     const finalOgDescription = ogDescription || description;
 
     // Update title
@@ -73,10 +68,10 @@ export function useSEO({
     updateMetaTag('meta[property="og:image:height"]', '630');
     updateMetaTag('meta[property="og:image:alt"]', finalOgTitle);
     updateMetaTag('meta[property="og:type"]', ogType);
-    updateMetaTag('meta[property="og:site_name"]', SITE_NAME);
+    updateMetaTag('meta[property="og:site_name"]', SITE_CONFIG.name);
     
     if (canonicalUrl) {
-      updateMetaTag('meta[property="og:url"]', `${BASE_URL}${canonicalUrl}`);
+      updateMetaTag('meta[property="og:url"]', `${SITE_CONFIG.baseUrl}${canonicalUrl}`);
     }
 
     // Update Twitter Card tags
@@ -118,12 +113,12 @@ export function useSEO({
         canonical.setAttribute('rel', 'canonical');
         document.head.appendChild(canonical);
       }
-      canonical.href = `${BASE_URL}${canonicalUrl}`;
+      canonical.href = `${SITE_CONFIG.baseUrl}${canonicalUrl}`;
     }
 
     // Cleanup function
     return () => {
-      document.title = DEFAULT_TITLE;
+      document.title = SITE_CONFIG.title;
     };
   }, [
     title,

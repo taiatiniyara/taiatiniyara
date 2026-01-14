@@ -73,4 +73,6 @@ Creating educational content to help developers learn modern web development:
 
 ---
 
+**Last Updated:** January 14, 2026
+
 *Always learning, always building, always teaching.*
