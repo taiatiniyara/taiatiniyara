@@ -12,6 +12,7 @@ import { useLessonAccess } from "@/hooks/useLessonAccess";
 import { formatDuration } from "@/lib/utils";
 import { toast } from "sonner";
 import { EnrollButton } from "@/components/courses/enrollButton";
+import { LessonComments } from "@/components/courses/lessonComments";
 import { useEffect } from "react";
 
 export const Route = createFileRoute("/courses/$courseSlug/$lessonSlug")({
@@ -335,6 +336,9 @@ function RouteComponent() {
               </div>
             </Card>
           )}
+
+          {/* Comments Section */}
+          {lesson && <LessonComments lessonId={lesson.id} />}
         </div>
       )}
     </DetailPageLayout>

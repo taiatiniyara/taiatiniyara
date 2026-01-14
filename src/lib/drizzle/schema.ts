@@ -107,3 +107,15 @@ export const progressTracking = pgTable("progress_tracking", {
 });
 export type ProgressTracking = typeof progressTracking.$inferSelect;
 export type NewProgressTracking = typeof progressTracking.$inferInsert;
+
+export const lessonComments: any = pgTable("lesson_comments", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    lesson_id: uuid("lesson_id").notNull().references(() => lessons.id, { onDelete: 'cascade' }),
+    user_id: uuid("user_id").notNull().references(() => userProfiles.id, { onDelete: 'cascade' }),
+    parent_comment_id: uuid("parent_comment_id").references((): any => lessonComments.id, { onDelete: 'cascade' }),
+    comment_text: text("comment_text").notNull(),
+    created_at: timestamp("created_at").notNull().defaultNow(),
+    updated_at: timestamp("updated_at").notNull().defaultNow(),
+});
+export type LessonComment = typeof lessonComments.$inferSelect;
+export type NewLessonComment = typeof lessonComments.$inferInsert;

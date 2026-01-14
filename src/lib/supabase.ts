@@ -14,7 +14,8 @@ export const tables = {
     projects: "projects",
     lessons: "lessons",
     enrollments: "enrollments",
-    progress_tracking: "progress_tracking"
+    progress_tracking: "progress_tracking",
+    lesson_comments: "lesson_comments"
 }
 
 export const supabase = createClient(supabaseUrl, supabasePublishableKey!);
