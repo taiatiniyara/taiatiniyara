@@ -8,8 +8,11 @@ import { Card } from "@/components/ui/card";
 import { useProgressTracking } from "@/hooks/useProgressTracking";
 import { useAuth } from "@/context/auth-context";
 import { useCourseAccess } from "@/hooks/useCourseAccess";
+import { useLessonAccess } from "@/hooks/useLessonAccess";
 import { formatDuration } from "@/lib/utils";
 import { toast } from "sonner";
+import { EnrollButton } from "@/components/courses/enrollButton";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/courses/$courseSlug/$lessonSlug")({
   component: RouteComponent,
@@ -19,6 +22,11 @@ function RouteComponent() {
   const { courseSlug, lessonSlug } = Route.useParams();
   const { user } = useAuth();
 
+  // Scroll to top when lesson changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [courseSlug, lessonSlug]);
+
   // Fetch the course
   const { data: courseData, isLoading: courseLoading, error: courseError } = useSupabaseQuery<Course>({
     queryKey: [`courses/${courseSlug}`],
@@ -27,7 +35,7 @@ function RouteComponent() {
   });
   const course = courseData?.[0];
 
-  // Check access: must be admin or enrolled
+  // Check access: must be admin or enrolled (only check if course exists)
   const { hasAccess, isLoading: checkingAccess, isEnrolled, isAdmin } = useCourseAccess({
     courseId: course?.id || "",
   });
@@ -47,6 +55,17 @@ function RouteComponent() {
     params: { name: "course_id", value: course?.id || "" },
     fields: ["id", "slug", "title", "duration_minutes"],
     enabled: !!course?.id,
+  });
+
+  // Check lesson access (previous lesson completion)
+  const { 
+    canAccessLesson, 
+    previousLesson,
+    isLoading: checkingLessonAccess 
+  } = useLessonAccess({ 
+    courseId: course?.id || "", 
+    lessonId: lesson?.id || "",
+    allLessons 
   });
 
   // Progress tracking
@@ -69,46 +88,70 @@ function RouteComponent() {
     }
   };
 
-  const isLoading = courseLoading || lessonLoading || checkingAccess;
+  const isLoading = courseLoading || lessonLoading || (checkingAccess && !!course?.id) || checkingLessonAccess;
   const error = courseError || lessonError;
 
-  // Redirect if user doesn't have access and loading is complete
-  if (!isLoading && course && !hasAccess) {
+  // Show enrollment screen if user doesn't have access and loading is complete
+  if (!isLoading && course && lesson && !hasAccess) {
     if (!user) {
       return <Navigate to="/login" search={{ redirect: `/courses/${courseSlug}/${lessonSlug}` }} />;
     }
     return (
-      <DetailPageLayout
-        isLoading={false}
-        error={null}
-        data={[]}
-        loadingText=""
-        errorMessage=""
-        emptyMessage=""
-      >
-        <Card className="max-w-2xl mx-auto p-8 text-center">
-          <div className="mb-6">
-            <svg className="w-16 h-16 mx-auto text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-            </svg>
+      <div className="min-h-screen bg-linear-to-b from-background via-background to-muted/20">
+        <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
+          <div className="max-w-5xl mx-auto space-y-6 sm:space-y-8">
+            <Card className="max-w-2xl mx-auto p-8 text-center">
+              <div className="mb-6">
+                <svg className="w-16 h-16 mx-auto text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              <Heading level={2} className="mb-4">Enroll to Access This Lesson</Heading>
+              <p className="text-muted-foreground mb-6">
+                This lesson is only available to enrolled students. Enroll in "{course.title}" to access all lessons and track your progress.
+              </p>
+              <EnrollButton courseId={course.id} courseTitle={course.title} />
+            </Card>
           </div>
-          <Heading level={2} className="mb-4">Access Restricted</Heading>
-          <p className="text-muted-foreground mb-6">
-            This lesson is only available to enrolled students. Please enroll in the course to access all lessons.
-          </p>
-          <Button asChild>
-            <Link to="/courses/$slug" params={{ slug: courseSlug }}>
-              View Course Details
-            </Link>
-          </Button>
-        </Card>
-      </DetailPageLayout>
+        </div>
+      </div>
+    );
+  }
+
+  // Show prerequisite screen if student hasn't completed previous lesson
+  if (!isLoading && course && lesson && hasAccess && !isAdmin && !canAccessLesson && previousLesson) {
+    return (
+      <div className="min-h-screen bg-linear-to-b from-background via-background to-muted/20">
+        <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
+          <div className="max-w-5xl mx-auto space-y-6 sm:space-y-8">
+            <Card className="max-w-2xl mx-auto p-8 text-center">
+              <div className="mb-6">
+                <svg className="w-16 h-16 mx-auto text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <Heading level={2} className="mb-4">Complete Previous Lesson First</Heading>
+              <p className="text-muted-foreground mb-6">
+                You need to complete "{previousLesson.title}" before accessing this lesson.
+              </p>
+              <Button size="lg" asChild>
+                <Link 
+                  to="/courses/$courseSlug/$lessonSlug" 
+                  params={{ courseSlug, lessonSlug: previousLesson.slug }}
+                >
+                  Go to Previous Lesson
+                </Link>
+              </Button>
+            </Card>
+          </div>
+        </div>
+      </div>
     );
   }
 
   // Find current lesson index for navigation
   const currentIndex = allLessons?.findIndex(l => l.slug === lessonSlug) ?? -1;
-  const previousLesson = currentIndex > 0 ? allLessons?.[currentIndex - 1] : null;
+  const prevLesson = currentIndex > 0 ? allLessons?.[currentIndex - 1] : null;
   const nextLesson = currentIndex >= 0 && currentIndex < (allLessons?.length || 0) - 1 ? allLessons?.[currentIndex + 1] : null;
 
   return (
@@ -225,16 +268,16 @@ function RouteComponent() {
 
           {/* Lesson Navigation */}
           <div className="flex items-center justify-between gap-4">
-            {previousLesson ? (
+            {prevLesson ? (
               <Button variant="outline" asChild>
                 <Link 
                   to="/courses/$courseSlug/$lessonSlug" 
-                  params={{ courseSlug, lessonSlug: previousLesson.slug }}
+                  params={{ courseSlug, lessonSlug: prevLesson.slug }}
                 >
                   <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                   </svg>
-                  Previous: {previousLesson.title}
+                  Previous: {prevLesson.title}
                 </Link>
               </Button>
             ) : (
