@@ -9,6 +9,7 @@ interface CreateFormProps<T> {
   fields: FormFieldType<T>[];
   tableName: keyof typeof tables;
   defaultValues?: Partial<T>;
+  beforeSubmit?: (data: Partial<T>) => Promise<Partial<T>>;
 }
 
 export default function CreateForm<T>(props: CreateFormProps<T>) {
@@ -43,10 +44,15 @@ export default function CreateForm<T>(props: CreateFormProps<T>) {
     setError(null);
 
     const formData = new FormData(e.currentTarget);
-    const data = processFormData(formData, props.fields, { richtextValues, tagsValues });
+    let data = processFormData(formData, props.fields, { richtextValues, tagsValues });
 
     if (props.defaultValues) {
       Object.assign(data, { ...props.defaultValues, ...data });
+    }
+
+    // Call beforeSubmit hook if provided
+    if (props.beforeSubmit) {
+      data = await props.beforeSubmit(data);
     }
 
     const result = await submitFormData(props.tableName, data, "create");

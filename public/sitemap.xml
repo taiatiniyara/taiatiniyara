@@ -1,5 +1,5 @@
-[dotenv@17.2.3] injecting env (2) from .env.local -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
-[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+[dotenv@17.2.3] injecting env (2) from .env.local -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
@@ -185,7 +185,7 @@
   </url>
   <url>
     <loc>https://taiatiniyara.com/courses/lfLwQeXMJnk1cQXZ</loc>
-    <lastmod>2026-01-14T05:18:34.615Z</lastmod>
+    <lastmod>2026-01-14T05:35:00.316Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
