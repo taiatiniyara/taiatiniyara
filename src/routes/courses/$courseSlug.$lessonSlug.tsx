@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { useProgressTracking } from "@/hooks/useProgressTracking";
 import { useAuth } from "@/context/auth-context";
 import { useCourseAccess } from "@/hooks/useCourseAccess";
+import { formatDuration } from "@/lib/utils";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/courses/$courseSlug/$lessonSlug")({
@@ -150,7 +151,7 @@ function RouteComponent() {
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
-                      <span>{lesson.duration_minutes} minutes</span>
+                      <span>{formatDuration(lesson.duration_minutes)}</span>
                     </div>
                     {allLessons && (
                       <span>Lesson {currentIndex + 1} of {allLessons.length}</span>
@@ -283,7 +284,7 @@ function RouteComponent() {
                         <span>{l.title}</span>
                       </div>
                       <span className="text-sm text-muted-foreground">
-                        {l.duration_minutes} min
+                        {formatDuration(l.duration_minutes)}
                       </span>
                     </div>
                   </Link>

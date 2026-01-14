@@ -1,5 +1,5 @@
 import { useSupabaseQuery } from "@/hooks/useSupabaseQuery";
-import type { Course, Lesson } from "@/lib/drizzle/schema";
+import type { Course, Lesson, ProgressTracking } from "@/lib/drizzle/schema";
 import { createFileRoute, useParams, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { DetailPageLayout } from "@/components/ui/detail-page-layout";
@@ -7,6 +7,9 @@ import { Heading } from "@/components/ui/heading";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { EnrollButton } from "@/components/courses/enrollButton";
+import { useEnrollmentData } from "@/hooks/useEnrollmentData";
+import { useAuth } from "@/context/auth-context";
+import { formatDuration } from "@/lib/utils";
 
 export const Route = createFileRoute("/courses/$slug")({
   component: RouteComponent,
@@ -14,6 +17,7 @@ export const Route = createFileRoute("/courses/$slug")({
 
 function RouteComponent() {
   const { slug } = useParams({ from: "/courses/$slug" });
+  const { user } = useAuth();
 
   const { data, isLoading, error } = useSupabaseQuery<Course>({
     queryKey: [`courses/${slug}`],
@@ -30,6 +34,23 @@ function RouteComponent() {
     fields: ["id", "slug", "title", "duration_minutes"],
     enabled: !!course?.id,
   });
+
+  // Get enrollment data for the current user
+  const { enrollment } = useEnrollmentData(course?.id || "");
+
+  // Get progress tracking for this enrollment
+  const { data: progressData } = useSupabaseQuery<ProgressTracking>({
+    queryKey: [`course-progress-${course?.id}`, enrollment?.id || "no-enrollment"],
+    tableName: "progress_tracking",
+    enabled: !!enrollment?.id && !!user?.id,
+  });
+
+  // Create a Set of completed lesson IDs for quick lookup
+  const completedLessonIds = new Set(
+    progressData
+      ?.filter(p => p.enrollment_id === enrollment?.id && p.is_completed)
+      .map(p => p.lesson_id) || []
+  );
 
   const totalDuration = lessons?.reduce((acc, lesson) => acc + lesson.duration_minutes, 0) || 0;
   
@@ -75,7 +96,7 @@ function RouteComponent() {
                     <svg className="w-5 h-5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <span>{totalDuration} minutes total</span>
+                    <span>{formatDuration(totalDuration)} total</span>
                   </div>
                 </>
               )}
@@ -116,33 +137,52 @@ function RouteComponent() {
             <Card className="p-6">
               <Heading level={2} className="mb-4">Course Curriculum</Heading>
               <div className="space-y-2">
-                {lessons.map((lesson, index) => (
-                  <Link
-                    key={lesson.id}
-                    to="/courses/$courseSlug/$lessonSlug"
-                    params={{ courseSlug: slug, lessonSlug: lesson.slug }}
-                    className="block p-4 rounded-lg hover:bg-muted transition-colors group"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4 flex-1">
-                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                          <span className="text-sm font-medium">{index + 1}</span>
+                {lessons.map((lesson, index) => {
+                  const isCompleted = completedLessonIds.has(lesson.id);
+                  
+                  return (
+                    <Link
+                      key={lesson.id}
+                      to="/courses/$courseSlug/$lessonSlug"
+                      params={{ courseSlug: slug, lessonSlug: lesson.slug }}
+                      className="block p-4 rounded-lg hover:bg-muted transition-colors group"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4 flex-1">
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
+                            isCompleted ? 'bg-green-500/10' : 'bg-primary/10'
+                          }`}>
+                            {isCompleted ? (
+                              <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                              </svg>
+                            ) : (
+                              <span className="text-sm font-medium">{index + 1}</span>
+                            )}
+                          </div>
+                          <div>
+                            <h4 className={`font-medium group-hover:text-primary transition-colors ${
+                              isCompleted ? 'text-muted-foreground' : ''
+                            }`}>
+                              {lesson.title}
+                              {isCompleted && (
+                                <Badge variant="secondary" className="ml-2 text-xs bg-green-500/10 text-green-700 dark:text-green-400">
+                                  Completed
+                                </Badge>
+                              )}
+                            </h4>
+                          </div>
                         </div>
-                        <div>
-                          <h4 className="font-medium group-hover:text-primary transition-colors">
-                            {lesson.title}
-                          </h4>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <span>{formatDuration(lesson.duration_minutes)}</span>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span>{lesson.duration_minutes} min</span>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
+                    </Link>
+                  );
+                })}
               </div>
             </Card>
           )}

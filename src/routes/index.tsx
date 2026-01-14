@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useSEO } from "@/hooks/useSEO";
 import { Heading } from "@/components/ui/heading";
 import { useSupabaseQuery } from "@/hooks/useSupabaseQuery";
-import { type BlogPost } from "@/lib/drizzle/schema";
+import { type BlogPost, type Course } from "@/lib/drizzle/schema";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import ErrorBox from "@/components/ui/error";
 
@@ -27,6 +27,17 @@ function Index() {
     queryKey: ["blog_posts", "latest"],
     numberOfItems: 3,
     orderBy: { column: "created_at", ascending: false },
+  });
+
+  const { 
+    isLoading: coursesLoading, 
+    data: courses, 
+    error: coursesError 
+  } = useSupabaseQuery<Course>({
+    tableName: "courses",
+    queryKey: ["courses", "featured"],
+    numberOfItems: 3,
+    fields: ["id", "title", "img_url", "description", "slug"],
   });
   return (
     <div className="relative w-full">
@@ -153,6 +164,89 @@ function Index() {
               <span className="font-medium">Built to Grow</span>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Courses Section */}
+      <div className="relative z-0 w-full px-6 md:px-12 py-20">
+        <div className="max-w-6xl mx-auto">
+          {coursesLoading ? (
+            <div className="flex justify-center">
+              <LoadingSpinner text="Loading courses..." />
+            </div>
+          ) : coursesError ? (
+            <ErrorBox message="Failed to load courses." />
+          ) : (
+            <div className="space-y-8">
+              <div className="text-center">
+                <Heading
+                  level={2}
+                  className="text-3xl md:text-4xl font-bold mb-4"
+                >
+                  Featured <span className="text-primary">Courses</span>
+                </Heading>
+                <p className="text-muted-foreground">
+                  Level up your skills with our comprehensive courses
+                </p>
+              </div>
+              <div className="grid md:grid-cols-3 gap-6">
+                {courses?.map((course) => (
+                  <div
+                    key={course.id}
+                    className="group block bg-background border border-border rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+                  >
+                    {course.img_url && (
+                      <div className="overflow-hidden aspect-video">
+                        <img
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          src={course.img_url}
+                          alt={course.title}
+                        />
+                      </div>
+                    )}
+                    <div className="p-6 space-y-4">
+                      <h3 className="text-lg line-clamp-2 font-semibold mb-2 group-hover:text-primary transition-colors">
+                        {course.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground line-clamp-3">
+                        {course.description}
+                      </p>
+
+                      <a
+                        className="text-primary text-sm font-medium flex items-center gap-1 hover:gap-2 transition-all"
+                        href={`/courses/${course.slug}`}
+                      >
+                        Start Learning
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {courses && courses.length > 0 && (
+                <div className="text-center pt-4">
+                  <a
+                    className="bg-primary px-4 py-3 hover:opacity-90 text-primary-foreground rounded-md text-sm font-medium transition-all inline-block"
+                    href="/courses"
+                  >
+                    Browse All Courses
+                  </a>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 

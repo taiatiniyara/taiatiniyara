@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AdminHeader } from "@/components/ui/admin-header";
 import { FormWrapper } from "@/components/ui/form-wrapper";
+import { formatDuration } from "@/lib/utils";
 import CreateLessonForm from "@/components/courses/createLesson";
 import EditLessonForm from "@/components/courses/editLesson";
 import React from "react";
@@ -108,7 +109,7 @@ function RouteComponent() {
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <span>{lesson.duration_minutes} minutes</span>
+                        <span>{formatDuration(lesson.duration_minutes)}</span>
                       </div>
                       <span>Slug: {lesson.slug}</span>
                     </div>
