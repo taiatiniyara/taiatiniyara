@@ -8,7 +8,6 @@ import { Card } from "@/components/ui/card";
 import { useProgressTracking } from "@/hooks/useProgressTracking";
 import { useAuth } from "@/context/auth-context";
 import { useCourseAccess } from "@/hooks/useCourseAccess";
-import { useLessonAccess } from "@/hooks/useLessonAccess";
 import { formatDuration } from "@/lib/utils";
 import { toast } from "sonner";
 import { EnrollButton } from "@/components/courses/enrollButton";
@@ -59,17 +58,6 @@ function RouteComponent() {
     enabled: !!course?.id,
   });
 
-  // Check lesson access (previous lesson completion)
-  const { 
-    canAccessLesson, 
-    previousLesson,
-    isLoading: checkingLessonAccess 
-  } = useLessonAccess({ 
-    courseId: course?.id || "", 
-    lessonId: lesson?.id || "",
-    allLessons 
-  });
-
   // Progress tracking
   const { 
     isCompleted, 
@@ -90,7 +78,7 @@ function RouteComponent() {
     }
   };
 
-  const isLoading = courseLoading || lessonLoading || (checkingAccess && !!course?.id) || checkingLessonAccess;
+  const isLoading = courseLoading || lessonLoading || (checkingAccess && !!course?.id);
   const error = courseError || lessonError;
 
   // Show enrollment screen if user doesn't have access and loading is complete
@@ -113,37 +101,6 @@ function RouteComponent() {
                 This lesson is only available to enrolled students. Enroll in "{course.title}" to access all lessons and track your progress.
               </p>
               <EnrollButton courseId={course.id} courseTitle={course.title} />
-            </Card>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Show prerequisite screen if student hasn't completed previous lesson
-  if (!isLoading && course && lesson && hasAccess && !isAdmin && !canAccessLesson && previousLesson) {
-    return (
-      <div className="min-h-screen bg-linear-to-b from-background via-background to-muted/20">
-        <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
-          <div className="max-w-5xl mx-auto space-y-6 sm:space-y-8">
-            <Card className="max-w-2xl mx-auto p-8 text-center">
-              <div className="mb-6">
-                <svg className="w-16 h-16 mx-auto text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
-              </div>
-              <Heading level={2} className="mb-4">Complete Previous Lesson First</Heading>
-              <p className="text-muted-foreground mb-6">
-                You need to complete "{previousLesson.title}" before accessing this lesson.
-              </p>
-              <Button size="lg" asChild>
-                <Link 
-                  to="/courses/$courseSlug/$lessonSlug" 
-                  params={{ courseSlug, lessonSlug: previousLesson.slug }}
-                >
-                  Go to Previous Lesson
-                </Link>
-              </Button>
             </Card>
           </div>
         </div>
