@@ -33,6 +33,12 @@ function RouteComponent() {
   const [currentPage, setCurrentPage] = React.useState(1);
   const [itemsPerPage, setItemsPerPage] = React.useState(10);
 
+  // Reset to page 1 when filter changes
+  // IMPORTANT: This hook must be before any conditional returns to prevent React error #310
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [filterStatus]);
+
   if (isLoading) return <LoadingSpinner text="Loading blog posts..." />;
   if (error) return <ErrorBox message={error.message} />;
 
@@ -52,11 +58,6 @@ function RouteComponent() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedPosts = filteredPosts?.slice(startIndex, endIndex);
-
-  // Reset to page 1 when filter changes
-  React.useEffect(() => {
-    setCurrentPage(1);
-  }, [filterStatus]);
 
   if (!data || data.length === 0) {
     return (
