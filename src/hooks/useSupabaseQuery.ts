@@ -43,11 +43,16 @@ export function useSupabaseQuery<T>(
         queryKey: options.queryKey,
         enabled: options.enabled !== false,
         queryFn: async () => {
+            // Convert fields array to select string if fields is provided
+            const selectString = options.fields 
+                ? options.fields.join(',')
+                : options.select;
+            
             const query = buildSupabaseQuery<T>(options.tableName, {
                 params: options.params,
                 orderBy: options.orderBy,
                 whereIsNotEqualTo: options.whereIsNotEqualTo,
-                select: options.select,
+                select: selectString,
             }).limit(options.numberOfItems || PAGINATION.defaultLimit);
             
             const { data, error } = await query;

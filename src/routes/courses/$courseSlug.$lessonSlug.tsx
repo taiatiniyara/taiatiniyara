@@ -51,11 +51,12 @@ function RouteComponent() {
 
   // Fetch all lessons for this course (for navigation)
   const { data: allLessons } = useSupabaseQuery<Lesson>({
-    queryKey: [`course-lessons/${course?.id || "none"}`],
+    queryKey: [`course-lessons-ordered/${course?.id || "none"}`],
     tableName: "lessons",
     params: { name: "course_id", value: course?.id || "" },
-    fields: ["id", "slug", "title", "duration_minutes"],
+    fields: ["id", "slug", "title", "duration_minutes", "order"],
     enabled: !!course?.id,
+    orderBy: {column: "order", ascending: true},
   });
 
   // Progress tracking
@@ -213,7 +214,7 @@ function RouteComponent() {
           </Card>
 
           {/* Lesson Navigation */}
-          <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center md:flex-row sm:flex-col justify-between gap-4">
             {prevLesson ? (
               <Button variant="outline" asChild>
                 <Link 
@@ -254,7 +255,7 @@ function RouteComponent() {
             <Card className="p-6">
               <Heading level={3} className="mb-4">Course Lessons</Heading>
               <div className="space-y-2">
-                {allLessons.map((l, index) => (
+                {allLessons.sort((a, b) => a.order - b.order).map((l) => (
                   <Link
                     key={l.id}
                     to="/courses/$courseSlug/$lessonSlug"
@@ -268,7 +269,7 @@ function RouteComponent() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <span className="text-sm text-muted-foreground">
-                          {index + 1}
+                          {l.order}
                         </span>
                         <span>{l.title}</span>
                       </div>
