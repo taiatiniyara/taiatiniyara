@@ -1,23 +1,31 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useSupabaseQuery } from "@/hooks/useSupabaseQuery";
 import { useAuth } from "@/context/auth-context";
-import { useCourseProgress } from "@/hooks/useCourseProgress";
-import type { Enrollment, Course } from "@/lib/drizzle/schema";
+import type { Enrollment, Course, Lesson, ProgressTracking } from "@/lib/drizzle/schema";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import ErrorBox from "@/components/ui/error";
 import EmptyListPlaceholder from "@/components/ui/empty-list-placeholder";
 import { ContentCard } from "@/components/ui/content-card";
 import { Heading } from "@/components/ui/heading";
+import { useState } from "react";
 
 export const Route = createFileRoute("/student/courses")({
   component: RouteComponent,
 });
 
-function CourseCard({ course, enrollment }: { course: Course; enrollment: Enrollment }) {
-  const { progressPercentage, completedLessons, totalLessons } = useCourseProgress({ 
-    courseId: course.id 
-  });
-
+function CourseCardWithProgress({ 
+  course, 
+  enrollment,
+  progressPercentage,
+  completedLessons,
+  totalLessons,
+}: { 
+  course: Course; 
+  enrollment: Enrollment;
+  progressPercentage: number;
+  completedLessons: number;
+  totalLessons: number;
+}) {
   return (
     <ContentCard
       title={course.title}
@@ -72,6 +80,8 @@ function CourseCard({ course, enrollment }: { course: Course; enrollment: Enroll
 
 function RouteComponent() {
   const { user } = useAuth();
+  const [sortBy, setSortBy] = useState<'recent' | 'progress' | 'name'>('recent');
+  const [filterBy, setFilterBy] = useState<'all' | 'in-progress' | 'completed' | 'not-started'>('all');
 
   // Fetch user's enrollments
   const { data: enrollments, isLoading: enrollmentsLoading, error: enrollmentsError } = useSupabaseQuery<Enrollment>({
@@ -92,11 +102,71 @@ function RouteComponent() {
     enabled: courseIds.length > 0,
   });
 
+  // Fetch all lessons for enrolled courses
+  const { data: allLessons } = useSupabaseQuery<Lesson>({
+    queryKey: ["enrolled-course-lessons-list", user?.id || "anonymous"],
+    tableName: "lessons",
+    enabled: courseIds.length > 0,
+  });
+
+  // Fetch all progress tracking
+  const { data: allProgress } = useSupabaseQuery<ProgressTracking>({
+    queryKey: ["user-progress-list", user?.id || "anonymous"],
+    tableName: "progress_tracking",
+    enabled: myEnrollments && myEnrollments.length > 0,
+  });
+
   // Filter courses to only show enrolled ones
-  const myCourses = allCourses?.filter(course => courseIds.includes(course.id));
+  let myCourses = allCourses?.filter(course => courseIds.includes(course.id)) || [];
 
   const isLoading = enrollmentsLoading || coursesLoading;
   const error = enrollmentsError || coursesError;
+
+  // Calculate progress for all courses at once
+  const coursesWithProgress = myCourses.map(course => {
+    const enrollment = myEnrollments?.find(e => e.course_id === course.id);
+    const courseLessons = allLessons?.filter(l => l.course_id === course.id) || [];
+    const courseProgress = allProgress?.filter(p => p.enrollment_id === enrollment?.id) || [];
+    const completed = courseProgress.filter(p => p.is_completed).length;
+    const total = courseLessons.length;
+    const progressPercentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+    
+    return { 
+      course, 
+      enrollment,
+      progressPercentage,
+      completedLessons: completed,
+      totalLessons: total,
+    };
+  });
+
+  // Filter courses
+  let filteredCourses = coursesWithProgress;
+  if (filterBy !== 'all') {
+    filteredCourses = coursesWithProgress.filter(({ progressPercentage }) => {
+      if (filterBy === 'completed') return progressPercentage === 100;
+      if (filterBy === 'in-progress') return progressPercentage > 0 && progressPercentage < 100;
+      if (filterBy === 'not-started') return progressPercentage === 0;
+      return true;
+    });
+  }
+
+  // Sort courses
+  const sortedCourses = [...filteredCourses].sort((a, b) => {
+    if (sortBy === 'name') {
+      return a.course.title.localeCompare(b.course.title);
+    }
+    if (sortBy === 'progress') {
+      return b.progressPercentage - a.progressPercentage;
+    }
+    // Sort by recent (enrollment date)
+    if (sortBy === 'recent') {
+      const dateA = a.enrollment?.enrolled_at ? new Date(a.enrollment.enrolled_at).getTime() : 0;
+      const dateB = b.enrollment?.enrolled_at ? new Date(b.enrollment.enrolled_at).getTime() : 0;
+      return dateB - dateA;
+    }
+    return 0;
+  });
 
   if (isLoading) {
     return <LoadingSpinner text="Loading your courses..." />;
@@ -114,9 +184,12 @@ function RouteComponent() {
         <div className="flex justify-center mt-6">
           <a 
             href="/courses" 
-            className="text-primary hover:underline font-medium"
+            className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors"
           >
-            Browse Available Courses →
+            Browse Available Courses
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
           </a>
         </div>
       </div>
@@ -126,21 +199,90 @@ function RouteComponent() {
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="mb-8">
-        <Heading level={1} className="mb-2">My Courses</Heading>
-        <p className="text-muted-foreground">
-          You're enrolled in {myCourses.length} {myCourses.length === 1 ? 'course' : 'courses'}
-        </p>
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <Heading level={1} className="mb-2">My Courses</Heading>
+            <p className="text-muted-foreground">
+              {filteredCourses.length === myCourses.length 
+                ? `You're enrolled in ${myCourses.length} ${myCourses.length === 1 ? 'course' : 'courses'}`
+                : `Showing ${filteredCourses.length} of ${myCourses.length} ${myCourses.length === 1 ? 'course' : 'courses'}`
+              }
+            </p>
+          </div>
+          <a 
+            href="/courses" 
+            className="hidden sm:flex items-center gap-2 text-primary hover:underline font-medium"
+          >
+            Browse More Courses
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+
+        {/* Filters and Sorting */}
+        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+          <div className="flex items-center gap-2">
+            <label htmlFor="filter" className="text-sm font-medium text-muted-foreground">
+              Filter:
+            </label>
+            <select
+              id="filter"
+              value={filterBy}
+              onChange={(e) => setFilterBy(e.target.value as typeof filterBy)}
+              className="px-3 py-2 rounded-md border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+            >
+              <option value="all">All Courses</option>
+              <option value="in-progress">In Progress</option>
+              <option value="not-started">Not Started</option>
+              <option value="completed">Completed</option>
+            </select>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <label htmlFor="sort" className="text-sm font-medium text-muted-foreground">
+              Sort by:
+            </label>
+            <select
+              id="sort"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+              className="px-3 py-2 rounded-md border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+            >
+              <option value="recent">Recently Enrolled</option>
+              <option value="progress">Progress</option>
+              <option value="name">Name (A-Z)</option>
+            </select>
+          </div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {myCourses.map((course) => {
-          const enrollment = myEnrollments?.find(e => e.course_id === course.id);
-          
-          return enrollment ? (
-            <CourseCard key={course.id} course={course} enrollment={enrollment} />
-          ) : null;
-        })}
-      </div>
+      {filteredCourses.length === 0 ? (
+        <div className="text-center py-12">
+          <p className="text-muted-foreground mb-4">No courses match your current filter.</p>
+          <button
+            onClick={() => setFilterBy('all')}
+            className="text-primary hover:underline font-medium"
+          >
+            Clear Filter
+          </button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {sortedCourses.map(({ course, enrollment, progressPercentage, completedLessons, totalLessons }) => 
+            enrollment ? (
+              <CourseCardWithProgress 
+                key={course.id} 
+                course={course} 
+                enrollment={enrollment}
+                progressPercentage={progressPercentage}
+                completedLessons={completedLessons}
+                totalLessons={totalLessons}
+              />
+            ) : null
+          )}
+        </div>
+      )}
     </div>
   );
 }
