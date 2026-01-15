@@ -1,4 +1,4 @@
-[dotenv@17.2.3] injecting env (2) from .env.local -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (2) from .env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
 [dotenv@17.2.3] injecting env (0) from .env -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
