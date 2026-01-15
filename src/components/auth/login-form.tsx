@@ -6,6 +6,7 @@ import { AuthFormWrapper } from "@/components/ui/auth-form-wrapper";
 import { ErrorMessage } from "@/components/ui/error-message";
 import { AuthInputField } from "@/components/ui/auth-input-field";
 import { useAuthForm } from "@/hooks/useAuthForm";
+import { supabase, tables } from "@/lib/supabase";
 
 export function LoginForm() {
   const [email, setEmail] = useState("");
@@ -18,7 +19,25 @@ export function LoginForm() {
     e.preventDefault();
     await handleSubmit(
       () => signIn(email, password),
-      () => navigate({ to: "/profile" })
+      async () => {
+        // Fetch user profile to determine role
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+
+          const { data: profile } = await supabase
+            .from(tables.user_profiles)
+            .select("role")
+            .eq("id", user.id)
+            .single();
+          
+          // Redirect based on role
+          if (profile?.role.toString().toLowerCase() === "admin") {
+            navigate({ to: "/admin" });
+          } else {
+            navigate({ to: "/student" });
+          }
+        }
+      }
     );
   };
 
