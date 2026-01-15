@@ -81,10 +81,10 @@ function ProfileContent() {
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-background via-background to-muted/20 py-8 sm:py-12 px-4">
+    <div className="min-h-screen bg-linear-to-br from-background via-background to-muted/20 py-6 sm:py-8 md:py-12 px-4 sm:px-6">
       <div className="mx-auto max-w-4xl">
         {/* Header Card */}
-        <Card className="mb-6 p-6 border-none shadow-lg">
+        <Card className="mb-4 sm:mb-6 p-4 sm:p-6 border-none shadow-lg">
           <div>
             <Heading variant="section" className="text-foreground">
               {user?.user_metadata?.fullName || "User"}

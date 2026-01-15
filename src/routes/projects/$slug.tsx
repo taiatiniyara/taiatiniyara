@@ -9,6 +9,7 @@ import { useSEO } from "@/hooks/useSEO";
 import { useStructuredData } from "@/hooks/useStructuredData";
 import { DetailPageLayout } from "@/components/ui/detail-page-layout";
 import { Heading } from "@/components/ui/heading";
+import { Breadcrumb, createBreadcrumbs } from "@/components/ui/breadcrumb";
 
 export const Route = createFileRoute("/projects/$slug")({
   component: RouteComponent,
@@ -85,6 +86,12 @@ function RouteComponent() {
               </div>
             )}
             <div className="p-4 sm:p-6 md:p-8">
+              {/* Breadcrumb */}
+              <Breadcrumb
+                items={createBreadcrumbs("projects", { label: project.title })}
+                className="mb-4 pb-4 border-b"
+              />
+
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4 sm:mb-6">
                 <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">
                   {project.title}

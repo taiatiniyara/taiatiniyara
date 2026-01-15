@@ -65,17 +65,22 @@ function RouteComponent() {
       <div
         className={`
           fixed lg:sticky top-0 lg:top-18.25 inset-y-0 left-0 z-40 w-64 lg:w-fit min-h-screen lg:h-[calc(100vh-73px)]
-          flex flex-col border-r border-gray-300 gap-2 py-4 bg-background
+          flex flex-col border-r border-border gap-1 py-4 px-2 bg-background
           transition-transform duration-300 ease-in-out
           ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         `}
       >
+        <div className="px-3 py-2 mb-2">
+          <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            Admin Menu
+          </h2>
+        </div>
         {sidebarListItems.map((item) => (
           <a
-            className={`flex items-center gap-3 py-2 px-4 ${
+            className={`flex items-center gap-3 py-3 px-4 rounded-md transition-all ${
               path === item.href
-                ? "bg-emerald-200 text-emerald-500 font-semibold"
-                : "hover:text-emerald-500 transition-colors"
+                ? "bg-primary text-primary-foreground font-semibold shadow-sm"
+                : "hover:bg-muted hover:text-primary transition-colors"
             }`}
             href={item.href}
             key={item.href}

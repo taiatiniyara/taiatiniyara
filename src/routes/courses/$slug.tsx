@@ -10,6 +10,7 @@ import { EnrollButton } from "@/components/courses/enrollButton";
 import { useEnrollmentData } from "@/hooks/useEnrollmentData";
 import { useAuth } from "@/context/auth-context";
 import { formatDuration } from "@/lib/utils";
+import { Breadcrumb, createBreadcrumbs } from "@/components/ui/breadcrumb";
 
 export const Route = createFileRoute("/courses/$slug")({
   component: RouteComponent,
@@ -65,18 +66,24 @@ function RouteComponent() {
       emptyMessage="Course not found."
     >
       {course && (
-        <div className="max-w-5xl mx-auto space-y-6 sm:space-y-8">
+        <div className="max-w-5xl mx-auto space-y-4 sm:space-y-6 md:space-y-8">
           {/* Course Header */}
           <div className="bg-card border rounded-lg shadow-md overflow-hidden">
             {course.img_url && (
               <img 
                 src={course.img_url} 
                 alt={course.title}
-                className="w-full h-48 sm:h-64 object-cover"
+                className="w-full h-40 sm:h-48 md:h-64 object-cover"
               />
             )}
-            <div className="sm:p-6 md:p-8">
-            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-6">
+            <div className="p-4 sm:p-6 md:p-8">
+            {/* Breadcrumb */}
+            <Breadcrumb
+              items={createBreadcrumbs("courses", { label: course.title })}
+              className="mb-4 pb-4 border-b"
+            />
+
+            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4 sm:mb-6">
               <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
               </svg>
@@ -85,17 +92,17 @@ function RouteComponent() {
             <p className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-6">{course.description}</p>
             
             {/* Course Stats */}
-            <div className="flex flex-wrap items-center gap-4 mb-6">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
               {lessons && (
                 <>
-                  <div className="flex items-center gap-2 text-sm">
-                    <svg className="w-5 h-5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="flex items-center gap-2 text-xs sm:text-sm">
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                     </svg>
                     <span>{lessons.length} lessons</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <svg className="w-5 h-5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="flex items-center gap-2 text-xs sm:text-sm">
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <span>{formatDuration(totalDuration)} total</span>
@@ -106,8 +113,8 @@ function RouteComponent() {
 
             {/* Technologies */}
             {course.technologies && course.technologies.length > 0 && (
-              <div className="mb-4">
-                <h3 className="text-sm font-semibold mb-2">Technologies:</h3>
+              <div className="mb-3 sm:mb-4">
+                <h3 className="text-xs sm:text-sm font-semibold mb-2">Technologies:</h3>
                 <div className="flex flex-wrap gap-2">
                   {course.technologies.map((tech) => (
                     <Badge key={tech} variant="secondary">{tech}</Badge>
@@ -119,7 +126,7 @@ function RouteComponent() {
             {/* Tags */}
             {course.tags && course.tags.length > 0 && (
               <div>
-                <h3 className="text-sm font-semibold mb-2">Tags:</h3>
+                <h3 className="text-xs sm:text-sm font-semibold mb-2">Tags:</h3>
                 <div className="flex flex-wrap gap-2">
                   {course.tags.map((tag) => (
                     <Badge key={tag} variant="outline">{tag}</Badge>
@@ -137,8 +144,8 @@ function RouteComponent() {
 
           {/* Lessons List */}
           {lessons && lessons.length > 0 && (
-            <Card className="p-6">
-              <Heading level={2} className="mb-4">Course Curriculum</Heading>
+            <Card className="p-4 sm:p-6">
+              <Heading level={2} className="mb-3 sm:mb-4">Course Curriculum</Heading>
               <div className="space-y-2">
                 {lessons.map((lesson, index) => {
                   const isCompleted = completedLessonIds.has(lesson.id);
@@ -148,23 +155,23 @@ function RouteComponent() {
                       key={lesson.id}
                       to="/courses/$courseSlug/$lessonSlug"
                       params={{ courseSlug: slug, lessonSlug: lesson.slug }}
-                      className="block p-4 rounded-lg hover:bg-muted transition-colors group"
+                      className="block p-3 sm:p-4 rounded-lg hover:bg-muted transition-colors group"
                     >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4 flex-1">
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                          <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shrink-0 ${
                             isCompleted ? 'bg-green-500/10' : 'bg-primary/10'
                           }`}>
                             {isCompleted ? (
-                              <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <svg className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                               </svg>
                             ) : (
-                              <span className="text-sm font-medium">{index + 1}</span>
+                              <span className="text-xs sm:text-sm font-medium">{index + 1}</span>
                             )}
                           </div>
-                          <div>
-                            <h4 className={`font-medium group-hover:text-primary transition-colors ${
+                          <div className="min-w-0 flex-1">
+                            <h4 className={`text-sm sm:text-base font-medium group-hover:text-primary transition-colors wrap-break-word ${
                               isCompleted ? 'text-muted-foreground' : ''
                             }`}>
                               {lesson.title}
@@ -176,8 +183,8 @@ function RouteComponent() {
                             </h4>
                           </div>
                         </div>
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-muted-foreground shrink-0">
+                          <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
                           <span>{formatDuration(lesson.duration_minutes)}</span>

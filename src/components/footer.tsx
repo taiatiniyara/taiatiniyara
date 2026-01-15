@@ -1,22 +1,22 @@
 export default function Footer() {
   return (
     <footer className="bg-slate-950 dark:bg-slate-900 text-slate-300 dark:text-slate-400 mt-auto border-t border-slate-800">
-      <div className="container mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="space-y-4">
-            <h3 className="text-xl font-bold text-white">Taia Tiniyara</h3>
+            <h3 className="text-lg sm:text-xl font-bold text-white">Taia Tiniyara</h3>
             <p className="text-sm text-slate-400">
               Assisting the Pacific through innovative systems design and problem-solving software.
             </p>
           </div>
 
           <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-white">Quick Links</h4>
-            <ul className="space-y-2">
+            <h4 className="text-base sm:text-lg font-semibold text-white">Quick Links</h4>
+            <ul className="space-y-3">
               <li>
                 <a
                   href="/"
-                  className="text-sm hover:text-white transition-colors"
+                  className="text-sm hover:text-white transition-colors inline-block py-1"
                 >
                   Home
                 </a>
@@ -24,7 +24,7 @@ export default function Footer() {
               <li>
                 <a
                   href="/about"
-                  className="text-sm hover:text-white transition-colors"
+                  className="text-sm hover:text-white transition-colors inline-block py-1"
                 >
                   About
                 </a>
@@ -32,7 +32,7 @@ export default function Footer() {
               <li>
                 <a
                   href="/courses"
-                  className="text-sm hover:text-white transition-colors"
+                  className="text-sm hover:text-white transition-colors inline-block py-1"
                 >
                   Courses
                 </a>
@@ -40,7 +40,7 @@ export default function Footer() {
               <li>
                 <a
                   href="/blog"
-                  className="text-sm hover:text-white transition-colors"
+                  className="text-sm hover:text-white transition-colors inline-block py-1"
                 >
                   Blog
                 </a>
@@ -49,12 +49,12 @@ export default function Footer() {
           </div>
 
           <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-white">Resources</h4>
-            <ul className="space-y-2">
+            <h4 className="text-base sm:text-lg font-semibold text-white">Resources</h4>
+            <ul className="space-y-3">
               <li>
                 <a
                   href="/projects"
-                  className="text-sm hover:text-white transition-colors"
+                  className="text-sm hover:text-white transition-colors inline-block py-1"
                 >
                   Projects
                 </a>
@@ -62,7 +62,7 @@ export default function Footer() {
               <li>
                 <a
                   href="/profile"
-                  className="text-sm hover:text-white transition-colors"
+                  className="text-sm hover:text-white transition-colors inline-block py-1"
                 >
                   Profile
                 </a>
@@ -70,7 +70,7 @@ export default function Footer() {
               <li>
                 <a
                   href="/login"
-                  className="text-sm hover:text-white transition-colors"
+                  className="text-sm hover:text-white transition-colors inline-block py-1"
                 >
                   Login
                 </a>
@@ -78,7 +78,7 @@ export default function Footer() {
               <li>
                 <a
                   href="/signup"
-                  className="text-sm hover:text-white transition-colors"
+                  className="text-sm hover:text-white transition-colors inline-block py-1"
                 >
                   Sign Up
                 </a>
@@ -87,12 +87,12 @@ export default function Footer() {
           </div>
 
           <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-white">Contact</h4>
-            <ul className="space-y-2 text-sm text-slate-400">
-              <li>Email: info@taiatiniyara.com</li>
+            <h4 className="text-base sm:text-lg font-semibold text-white">Contact</h4>
+            <ul className="space-y-3 text-sm text-slate-400">
+              <li className="wrap-break-word">Email: info@taiatiniyara.com</li>
               <li>Phone: +679 9860831</li>
-              <li className="pt-4">
-                <div className="flex gap-4">
+              <li className="pt-2">
+                <div className="flex flex-wrap gap-3 sm:gap-4">
                   <a
                     href="https://www.facebook.com/taiatiniyara"
                     target="_blank"

@@ -21,11 +21,11 @@ function RouteComponent() {
     <div className="min-h-screen bg-linear-to-b from-background via-background to-muted/20">
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-linear-to-br from-primary/10 via-background to-chart-3/10 border-b">
-        <div className="container mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-24">
-          <div className="max-w-4xl mx-auto text-center space-y-4 sm:space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+        <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16 lg:py-24">
+          <div className="max-w-4xl mx-auto text-center space-y-3 sm:space-y-4 md:space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
             {/* Profile Image */}
-            <div className="flex justify-center mb-6">
-              <div className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-full overflow-hidden border-4 border-primary/20 shadow-xl">
+            <div className="flex justify-center mb-4 sm:mb-6">
+              <div className="relative w-28 h-28 sm:w-32 sm:h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 rounded-full overflow-hidden border-4 border-primary/20 shadow-xl">
                 <img 
                   src="/taia.jpg" 
                   alt="Taia Tiniyara" 
@@ -37,20 +37,20 @@ function RouteComponent() {
             <Heading variant="page">
               Hi, I'm <span className="text-primary">Taia Tiniyara</span>
             </Heading>
-            <p className="text-xl sm:text-2xl font-semibold text-muted-foreground">
+            <p className="text-lg sm:text-xl md:text-2xl font-semibold text-muted-foreground">
               Software Engineer
             </p>
-            <div className="flex flex-wrap justify-center gap-4 sm:gap-6 text-sm sm:text-base text-muted-foreground">
+            <div className="flex flex-wrap justify-center gap-3 sm:gap-4 md:gap-6 text-xs sm:text-sm md:text-base text-muted-foreground px-4">
               <div className="flex items-center gap-2">
                 <MapPin size={18} className="text-primary" />
                 <span>Lami, Fiji</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Phone size={18} className="text-primary" />
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <Phone size={16} className="text-primary sm:w-4.5 sm:h-4.5" />
                 <a href="tel:+6799860831" className="hover:text-primary transition-colors">+679 986 0831</a>
               </div>
-              <div className="flex items-center gap-2">
-                <Mail size={18} className="text-primary" />
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <Mail size={16} className="text-primary sm:w-4.5 sm:h-4.5" />
                 <a href="mailto:mail@taiatiniyara.com" className="hover:text-primary transition-colors">mail@taiatiniyara.com</a>
               </div>
             </div>
@@ -79,61 +79,61 @@ function RouteComponent() {
         {/* Technical Skills */}
         <section className="mb-12 sm:mb-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
           <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">Technical Expertise</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-6">
-            <Card className="p-4 sm:p-6 hover:shadow-xl transition-all duration-300 hover:scale-105">
-              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                <Code className="w-6 h-6 text-primary" />
+          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6">
+            <Card className="p-4 sm:p-5 md:p-6 hover:shadow-xl transition-all duration-300 hover:scale-105">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary/10 flex items-center justify-center mb-3 sm:mb-4">
+                <Code className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
               </div>
-              <h3 className="font-bold text-lg mb-3">Programming</h3>
-              <ul className="space-y-1 text-sm text-muted-foreground">
+              <h3 className="font-bold text-base sm:text-lg mb-2 sm:mb-3">Programming</h3>
+              <ul className="space-y-1 text-xs sm:text-sm text-muted-foreground">
                 <li>• JavaScript / TypeScript</li>
                 <li>• Python / Golang</li>
                 <li>• C# / Kotlin / Dart</li>
               </ul>
             </Card>
 
-            <Card className="p-4 sm:p-6 hover:shadow-xl transition-all duration-300 hover:scale-105">
-              <div className="w-12 h-12 rounded-full bg-chart-3/10 flex items-center justify-center mb-4">
-                <Server className="w-6 h-6 text-chart-3" />
+            <Card className="p-4 sm:p-5 md:p-6 hover:shadow-xl transition-all duration-300 hover:scale-105">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-chart-3/10 flex items-center justify-center mb-3 sm:mb-4">
+                <Server className="w-5 h-5 sm:w-6 sm:h-6 text-chart-3" />
               </div>
-              <h3 className="font-bold text-lg mb-3">Frameworks</h3>
-              <ul className="space-y-1 text-sm text-muted-foreground">
+              <h3 className="font-bold text-base sm:text-lg mb-2 sm:mb-3">Frameworks</h3>
+              <ul className="space-y-1 text-xs sm:text-sm text-muted-foreground">
                 <li>• React JS / Next JS</li>
                 <li>• ASP.NET Core</li>
                 <li>• Node.js / Express</li>
               </ul>
             </Card>
 
-            <Card className="p-4 sm:p-6 hover:shadow-xl transition-all duration-300 hover:scale-105">
-              <div className="w-12 h-12 rounded-full bg-chart-2/10 flex items-center justify-center mb-4">
-                <Smartphone className="w-6 h-6 text-chart-2" />
+            <Card className="p-4 sm:p-5 md:p-6 hover:shadow-xl transition-all duration-300 hover:scale-105">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-chart-2/10 flex items-center justify-center mb-3 sm:mb-4">
+                <Smartphone className="w-5 h-5 sm:w-6 sm:h-6 text-chart-2" />
               </div>
-              <h3 className="font-bold text-lg mb-3">Databases & BaaS</h3>
-              <ul className="space-y-1 text-sm text-muted-foreground">
+              <h3 className="font-bold text-base sm:text-lg mb-2 sm:mb-3">Databases & BaaS</h3>
+              <ul className="space-y-1 text-xs sm:text-sm text-muted-foreground">
                 <li>• MySQL / PostgreSQL</li>
                 <li>• Firebase / Supabase</li>
                 <li>• MongoDB</li>
               </ul>
             </Card>
 
-            <Card className="p-4 sm:p-6 hover:shadow-xl transition-all duration-300 hover:scale-105">
-              <div className="w-12 h-12 rounded-full bg-chart-5/10 flex items-center justify-center mb-4">
-                <Cloud className="w-6 h-6 text-chart-5" />
+            <Card className="p-4 sm:p-5 md:p-6 hover:shadow-xl transition-all duration-300 hover:scale-105">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-chart-5/10 flex items-center justify-center mb-3 sm:mb-4">
+                <Cloud className="w-5 h-5 sm:w-6 sm:h-6 text-chart-5" />
               </div>
-              <h3 className="font-bold text-lg mb-3">Cloud & GIS</h3>
-              <ul className="space-y-1 text-sm text-muted-foreground">
+              <h3 className="font-bold text-base sm:text-lg mb-2 sm:mb-3">Cloud & GIS</h3>
+              <ul className="space-y-1 text-xs sm:text-sm text-muted-foreground">
                 <li>• Google Cloud Platform</li>
                 <li>• AWS</li>
                 <li>• GIS Applications</li>
               </ul>
             </Card>
 
-            <Card className="p-4 sm:p-6 hover:shadow-xl transition-all duration-300 hover:scale-105">
-              <div className="w-12 h-12 rounded-full bg-chart-4/10 flex items-center justify-center mb-4">
-                <Palette className="w-6 h-6 text-chart-4" />
+            <Card className="p-4 sm:p-5 md:p-6 hover:shadow-xl transition-all duration-300 hover:scale-105">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-chart-4/10 flex items-center justify-center mb-3 sm:mb-4">
+                <Palette className="w-5 h-5 sm:w-6 sm:h-6 text-chart-4" />
               </div>
-              <h3 className="font-bold text-lg mb-3">Design</h3>
-              <ul className="space-y-1 text-sm text-muted-foreground">
+              <h3 className="font-bold text-base sm:text-lg mb-2 sm:mb-3">Design</h3>
+              <ul className="space-y-1 text-xs sm:text-sm text-muted-foreground">
                 <li>• Adobe XD / Figma</li>
                 <li>• Photoshop / Illustrator</li>
                 <li>• UI/UX Design</li>
@@ -146,10 +146,10 @@ function RouteComponent() {
         <section className="mb-12 sm:mb-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
           <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">Professional Experience</h2>
           <div className="space-y-6">
-            <Card className="p-6 sm:p-8 shadow-lg border-l-4 border-l-primary">
-              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-4">
+            <Card className="p-4 sm:p-6 md:p-8 shadow-lg border-l-4 border-l-primary">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3 sm:mb-4">
                 <div>
-                  <h3 className="text-xl font-bold text-primary">Software Engineer</h3>
+                  <h3 className="text-lg sm:text-xl font-bold text-primary">Software Engineer</h3>
                   <p className="text-muted-foreground">Self-Employed</p>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -165,10 +165,10 @@ function RouteComponent() {
               </ul>
             </Card>
 
-            <Card className="p-6 sm:p-8 shadow-lg">
-              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-4">
+            <Card className="p-4 sm:p-6 md:p-8 shadow-lg">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3 sm:mb-4">
                 <div>
-                  <h3 className="text-xl font-bold">Graphic & Web Designer</h3>
+                  <h3 className="text-lg sm:text-xl font-bold">Graphic & Web Designer</h3>
                   <p className="text-muted-foreground">Peniel Layman's Ministry, Fiji</p>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -183,10 +183,10 @@ function RouteComponent() {
               </ul>
             </Card>
 
-            <Card className="p-6 sm:p-8 shadow-lg">
-              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-4">
+            <Card className="p-4 sm:p-6 md:p-8 shadow-lg">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3 sm:mb-4">
                 <div>
-                  <h3 className="text-xl font-bold">Medical Missionary Training</h3>
+                  <h3 className="text-lg sm:text-xl font-bold">Medical Missionary Training</h3>
                   <p className="text-muted-foreground">Three Angels Missionary College & Health Retreat</p>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -194,7 +194,7 @@ function RouteComponent() {
                   <span>2020</span>
                 </div>
               </div>
-              <p className="text-muted-foreground">
+              <p className="text-sm sm:text-base text-muted-foreground">
                 Completed comprehensive medical missionary course and practical training at Nacilau, Rakiraki, Fiji
               </p>
             </Card>
@@ -204,19 +204,19 @@ function RouteComponent() {
         {/* Education */}
         <section className="mb-12 sm:mb-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
           <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">Education</h2>
-          <Card className="p-6 sm:p-8 shadow-lg">
-            <h3 className="text-xl font-bold mb-2">Bachelor of Commerce</h3>
-            <p className="text-muted-foreground mb-2">University of the South Pacific</p>
-            <p className="text-sm text-muted-foreground mb-3">Majors: Information Systems & Management, Public Administration</p>
+          <Card className="p-4 sm:p-6 md:p-8 shadow-lg">
+            <h3 className="text-lg sm:text-xl font-bold mb-2">Bachelor of Commerce</h3>
+            <p className="text-sm sm:text-base text-muted-foreground mb-2">University of the South Pacific</p>
+            <p className="text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-3">Majors: Information Systems & Management, Public Administration</p>
             <p className="text-sm">2012 - 60% Completed</p>
           </Card>
         </section>
 
         {/* CTA Section */}
         <section className="text-center animate-in fade-in slide-in-from-bottom-4 duration-700">
-          <Card className="p-8 sm:p-12 shadow-xl bg-linear-to-br from-primary/5 to-chart-3/5">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-4">Let's Work Together</h2>
-            <p className="text-muted-foreground mb-6 sm:mb-8 max-w-2xl mx-auto">
+          <Card className="p-6 sm:p-8 md:p-12 shadow-xl bg-linear-to-br from-primary/5 to-chart-3/5">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4">Let's Work Together</h2>
+            <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 md:mb-8 max-w-2xl mx-auto px-4">
               Interested in collaborating or learning more about my work? Download my full CV.
             </p>
             <div className="flex justify-center">

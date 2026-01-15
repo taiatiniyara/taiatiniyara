@@ -4,64 +4,93 @@
 
 **Name:** Taia Tiniyara
 **Role:** Full-Stack Software Engineer & Technical Educator
-**Location:** [Your Location]
-**Email:** [Your Email]
+**Specialization:** Modern Web Development & Learning Platform Architecture
+**Focus:** Building scalable applications with cutting-edge technologies
 
 ## About
 
-Passionate software engineer specializing in building modern web applications with cutting-edge technologies. Focused on creating intuitive user experiences and scalable backend systems. Dedicated to continuous learning and sharing knowledge through teaching and content creation.
+Passionate software engineer specializing in building modern web applications with cutting-edge technologies. Expert in creating intuitive user experiences and scalable backend systems. Dedicated to continuous learning and sharing knowledge through teaching, content creation, and building educational platforms.
+
+Currently focused on developing comprehensive learning management systems that make quality education accessible to developers worldwide.
 
 ## Expertise
 
 ### Frontend Development
-- React, TypeScript, Next.js
-- Modern CSS (Tailwind CSS, CSS-in-JS)
-- Responsive & accessible design
-- State management (TanStack Query, React Context)
-- Performance optimization
+- React 19, TypeScript, Next.js
+- TanStack Router & TanStack Query (React Query)
+- Modern CSS (Tailwind CSS 4, CSS-in-JS)
+- Responsive & accessible design (Radix UI)
+- State management (React Context, TanStack Query)
+- Performance optimization & code splitting
+- Rich text editors (TipTap) with code highlighting
 
 ### Backend Development
 - Node.js, Express
-- RESTful API design
+- RESTful API design & implementation
 - Database design (PostgreSQL, Supabase)
-- Authentication & authorization
+- Authentication & authorization (Supabase Auth)
 - Serverless architecture
+- Real-time data synchronization
+- Type-safe database queries (Drizzle ORM)
 
 ### Tools & Technologies
-- Git & GitHub
-- Vite, Webpack
-- Drizzle ORM
-- Firebase, Supabase
-- CI/CD pipelines
+- Git & GitHub (Version control & CI/CD)
+- Vite (Modern build tooling)
+- Drizzle ORM (Type-safe database layer)
+- Firebase & Supabase (BaaS platforms)
+- ESLint & TypeScript (Code quality)
 - Docker basics
+- SEO optimization & structured data
 
 ## Current Projects
 
-### Portfolio & Learning Platform (This Site)
-A comprehensive platform featuring:
-- Personal portfolio showcase
-- Technical blog
-- Course management system
-- Student progress tracking
+### Portfolio & Learning Platform (This Application)
+A comprehensive full-stack platform featuring:
+- Personal portfolio showcase with filterable projects
+- Technical blog with rich text editor and comments
+- Complete Learning Management System (LMS)
+- Student enrollment and progress tracking
+- Course management with lessons and categories
 - Admin dashboard for content management
+- User authentication and authorization
+- SEO-optimized with dynamic sitemaps
+- Dark/light mode support
+- Responsive design for all devices
 
-**Tech Stack:** React 19, TypeScript, Supabase, TanStack Router, Tailwind CSS 4, Drizzle ORM
+**Tech Stack:** 
+- Frontend: React 19, TypeScript, Vite, TanStack Router, Tailwind CSS 4
+- Backend: Supabase (PostgreSQL, Auth, Real-time)
+- ORM: Drizzle ORM (Type-safe queries)
+- UI: Radix UI, Custom components
+- Rich Text: TipTap with code highlighting
+
+**Key Features:**
+- Type-safe end-to-end with TypeScript
+- Reusable component architecture
+- Custom hooks for data management
+- Comprehensive documentation
+- Production-ready and actively maintained
 
 ## Teaching & Education
 
-Creating educational content to help developers learn modern web development:
-- Course creation on full-stack development
-- Technical blog posts
-- Code tutorials and examples
-- Best practices and design patterns
+Creating educational content and platforms to help developers learn modern web development:
+- **Course Creation** - Comprehensive courses on full-stack development
+- **Technical Blog** - In-depth articles on web technologies
+- **Code Tutorials** - Step-by-step implementation guides
+- **Best Practices** - Design patterns and architectural decisions
+- **Learning Platform** - Building tools for effective online education
+- **Open Knowledge** - Sharing insights from real-world projects
 
 ## Professional Goals
 
-- Build scalable, user-friendly applications
-- Share knowledge through teaching and writing
-- Contribute to open-source projects
-- Stay current with emerging technologies
-- Help others grow in their development journey
+- Build scalable, user-friendly applications that solve real problems
+- Create and maintain high-quality educational platforms
+- Share knowledge through teaching, writing, and open collaboration
+- Contribute to open-source projects and the developer community
+- Stay current with emerging technologies and best practices
+- Help others grow in their development journey through mentorship
+- Write clean, maintainable, and well-documented code
+- Promote type-safety and modern development practices
 
 ## Contact
 
@@ -73,6 +102,6 @@ Creating educational content to help developers learn modern web development:
 
 ---
 
-**Last Updated:** January 14, 2026
+**Last Updated:** January 15, 2026
 
-*Always learning, always building, always teaching.*
+*Building the future of web development, one line of code at a time.*

@@ -64,8 +64,8 @@ function Index() {
   return (
     <div className="relative w-full">
       {/* Hero Section */}
-      <div className="relative z-0 min-h-screen flex flex-col items-center justify-center px-6 md:px-12 py-20">
-        <div className="max-w-5xl mx-auto text-center space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+      <div className="relative z-0 min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 md:px-12 py-16 sm:py-20">
+        <div className="max-w-5xl mx-auto text-center space-y-6 sm:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
           {/* Badge */}
           <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm">
             <span className="w-2 h-2 rounded-full bg-primary animate-pulse mr-2" />
@@ -88,18 +88,18 @@ function Index() {
           </div>
 
           {/* Description */}
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed px-4">
             Whether you need a web app, mobile solution, or cloud
             infrastructure, get a partner who turns your challenges into
             elegant, scalable software that drives results.
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
-            <a href="/projects">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center pt-4 w-full max-w-md mx-auto sm:max-w-none">
+            <a href="/projects" className="w-full sm:w-auto">
               <Button
                 size="lg"
-                className="text-base px-8 py-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+                className="w-full text-base px-6 sm:px-8 py-5 sm:py-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
               >
                 See What's Possible
                 <svg
@@ -119,11 +119,11 @@ function Index() {
                 </svg>
               </Button>
             </a>
-            <a href="/about">
+            <a href="/about" className="w-full sm:w-auto">
               <Button
                 size="lg"
                 variant="outline"
-                className="text-base px-8 py-6 backdrop-blur-sm bg-background/50 hover:bg-background/80 transition-all duration-300"
+                className="w-full text-base px-6 sm:px-8 py-5 sm:py-6 backdrop-blur-sm bg-background/50 hover:bg-background/80 transition-all duration-300"
               >
                 How I Can Help
               </Button>
@@ -131,9 +131,9 @@ function Index() {
           </div>
 
           {/* Stats or Tech Stack Icons */}
-          <div className="pt-12 flex flex-wrap justify-center gap-6 md:gap-8 text-sm text-muted-foreground">
-            <div className="flex flex-col items-center gap-2 group cursor-default">
-              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+          <div className="pt-8 sm:pt-12 flex flex-wrap justify-center gap-6 sm:gap-6 md:gap-8 text-sm text-muted-foreground px-4">
+            <div className="flex flex-col items-center gap-2 group cursor-default min-w-25">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                 <svg
                   width="24"
                   height="24"
@@ -148,8 +148,8 @@ function Index() {
               </div>
               <span className="font-medium">Quality You Trust</span>
             </div>
-            <div className="flex flex-col items-center gap-2 group cursor-default">
-              <div className="w-12 h-12 rounded-full bg-chart-3/10 flex items-center justify-center group-hover:bg-chart-3/20 transition-colors">
+            <div className="flex flex-col items-center gap-2 group cursor-default min-w-25">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-chart-3/10 flex items-center justify-center group-hover:bg-chart-3/20 transition-colors">
                 <svg
                   width="24"
                   height="24"
@@ -168,8 +168,8 @@ function Index() {
               </div>
               <span className="font-medium">Results On Time</span>
             </div>
-            <div className="flex flex-col items-center gap-2 group cursor-default">
-              <div className="w-12 h-12 rounded-full bg-chart-2/10 flex items-center justify-center group-hover:bg-chart-2/20 transition-colors">
+            <div className="flex flex-col items-center gap-2 group cursor-default min-w-25">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-chart-2/10 flex items-center justify-center group-hover:bg-chart-2/20 transition-colors">
                 <svg
                   width="24"
                   height="24"
@@ -190,7 +190,7 @@ function Index() {
       </div>
 
       {/* Courses Section */}
-      <div className="relative z-0 w-full px-6 md:px-12 py-20">
+      <div className="relative z-0 w-full px-4 sm:px-6 md:px-12 py-12 sm:py-16 md:py-20">
         <div className="max-w-6xl mx-auto">
           {coursesLoading ? (
             <div className="flex justify-center">
@@ -211,7 +211,7 @@ function Index() {
                   Level up your skills with our comprehensive courses
                 </p>
               </div>
-              <div className="grid md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
                 {courses?.map((course) => (
                   <div
                     key={course.id}
@@ -226,8 +226,8 @@ function Index() {
                         />
                       </div>
                     )}
-                    <div className="p-6 space-y-4">
-                      <h3 className="text-lg line-clamp-2 font-semibold mb-2 group-hover:text-primary transition-colors">
+                    <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
+                      <h3 className="text-base sm:text-lg line-clamp-2 font-semibold mb-2 group-hover:text-primary transition-colors">
                         {course.title}
                       </h3>
                       <p className="text-sm text-muted-foreground line-clamp-3">
@@ -290,7 +290,7 @@ function Index() {
       </div>
 
       {/* Blog Section */}
-      <div className="relative z-0 w-full px-6 md:px-12 py-20 bg-muted/30">
+      <div className="relative z-0 w-full px-4 sm:px-6 md:px-12 py-12 sm:py-16 md:py-20 bg-muted/30">
         <div className="max-w-6xl mx-auto">
           {isLoading ? (
             <div className="flex justify-center">
@@ -311,7 +311,7 @@ function Index() {
                   Insights and updates from the world of software development
                 </p>
               </div>
-              <div className="grid md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
                 {data?.map((post) => (
                   <div
                     key={post.id}
@@ -326,8 +326,8 @@ function Index() {
                         />
                       </div>
                     )}
-                    <div className="p-6 space-y-4">
-                      <h3 className="text-lg line-clamp-2 font-semibold mb-2 group-hover:text-primary transition-colors">
+                    <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
+                      <h3 className="text-base sm:text-lg line-clamp-2 font-semibold mb-2 group-hover:text-primary transition-colors">
                         {post.title}
                       </h3>
                       <p className="text-sm text-muted-foreground line-clamp-3">
@@ -335,10 +335,13 @@ function Index() {
                       </p>
 
                       <a
-                        className="text-emerald-500 text-sm"
+                        className="flex items-center text-primary font-medium group-hover:gap-2 transition-all text-sm"
                         href={`/blog/${post.slug}`}
                       >
                         Read More
+                        <svg className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
                       </a>
                     </div>
                   </div>

@@ -35,3 +35,51 @@ export const TIME = {
   reloadDelay: 2000,
   successRedirectDelay: 2000,
 } as const;
+
+// Pagination
+export const PAGINATION = {
+  defaultLimit: 100,
+  itemsPerPage: 10,
+} as const;
+
+// Filter Status
+export const FILTER_STATUS = {
+  all: 'all',
+  ongoing: 'ongoing',
+  completed: 'completed',
+} as const;
+
+export type FilterStatus = typeof FILTER_STATUS[keyof typeof FILTER_STATUS];
+
+// Course Difficulty Levels
+export const DIFFICULTY_LEVELS = {
+  beginner: 'Beginner',
+  intermediate: 'Intermediate',
+  advanced: 'Advanced',
+} as const;
+
+// Duration formatting
+export const DURATION = {
+  minHoursDecimal: 1,
+  decimalPlaces: 1,
+} as const;
+
+// Slug generation
+export const SLUG_CONFIG = {
+  length: 16,
+  characters: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
+} as const;
+
+// Reading time calculation
+export const READING = {
+  wordsPerMinute: 200,
+} as const;
+
+// Social media share URLs
+export const SOCIAL_SHARE_URLS = {
+  facebook: (url: string, _title?: string) => `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+  twitter: (url: string, title?: string) => `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}${title ? `&text=${encodeURIComponent(title)}` : ''}`,
+  linkedin: (url: string, _title?: string) => `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
+} as const;
+
+export type SocialPlatform = keyof typeof SOCIAL_SHARE_URLS;

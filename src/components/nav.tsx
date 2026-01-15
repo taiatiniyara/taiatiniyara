@@ -135,13 +135,13 @@ export default function TopNavigation() {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 top-18 z-50 bg-background/95 backdrop-blur-lg">
-          <nav className="flex flex-col p-4 space-y-2">
+        <div className="md:hidden fixed inset-0 top-18.25 z-40 bg-background/95 backdrop-blur-lg overflow-y-auto">
+          <nav className="flex flex-col p-6 space-y-3 pb-safe">
             {navList.map((item) => (
               <a
                 key={item.href}
                 href={item.href}
-                className={`px-4 py-3 rounded-md text-lg ${
+                className={`px-6 py-4 rounded-lg text-lg font-medium min-h-12 flex items-center ${
                   path.split("/")[1] === item.href.slice(1)
                     ? "text-emerald-500 font-semibold bg-emerald-50 dark:bg-emerald-950/30"
                     : "hover:bg-accent transition-colors"
@@ -152,10 +152,10 @@ export default function TopNavigation() {
               </a>
             ))}
 
-            <div className="pt-4 mt-4 border-t border-border">
+            <div className="pt-6 mt-6 border-t border-border">
               {user ? (
                 <>
-                  <div className="px-4 py-2 text-sm text-muted-foreground">
+                  <div className="px-6 py-3 text-sm text-muted-foreground bg-muted/50 rounded-lg mb-3">
                     Signed in as{" "}
                     <span className="font-semibold">
                       {user.user_metadata.fullName}
@@ -163,7 +163,7 @@ export default function TopNavigation() {
                   </div>
                   <a
                     href="/profile"
-                    className="block px-4 py-3 rounded-md text-lg hover:bg-accent transition-colors"
+                    className="px-6 py-4 rounded-lg text-lg min-h-12 flex items-center hover:bg-accent transition-colors"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Profile
@@ -174,13 +174,13 @@ export default function TopNavigation() {
                         ? "/admin"
                         : "/student"
                     }
-                    className="block px-4 py-3 rounded-md text-lg hover:bg-accent transition-colors"
+                    className="px-6 py-4 rounded-lg text-lg min-h-12 flex items-center hover:bg-accent transition-colors"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Dashboard
                   </a>
                   <button
-                    className="w-full text-left px-4 py-3 rounded-md text-lg text-emerald-500 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/30 transition-colors"
+                    className="w-full text-left px-6 py-4 rounded-lg text-lg min-h-12 flex items-center text-emerald-500 font-semibold hover:bg-emerald-50 dark:hover:bg-emerald-950/30 transition-colors"
                     onClick={async () => {
                       try {
                         const { error } = await signOut();
@@ -200,7 +200,8 @@ export default function TopNavigation() {
                 </>
               ) : (
                 <Button
-                  className="w-full"
+                  className="w-full min-h-12 text-lg"
+                  size="lg"
                   onClick={() => {
                     setMobileMenuOpen(false);
                     window.location.href = "/login";

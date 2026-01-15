@@ -11,6 +11,7 @@ import { FormWrapper } from "@/components/ui/form-wrapper";
 import { formatDuration } from "@/lib/utils";
 import CreateLessonForm from "@/components/courses/createLesson";
 import EditLessonForm from "@/components/courses/editLesson";
+import { Breadcrumb, createBreadcrumbs } from "@/components/ui/breadcrumb";
 import React from "react";
 
 export const Route = createFileRoute("/admin/courses_/$courseSlug/lessons")({
@@ -56,15 +57,15 @@ function RouteComponent() {
   return (
     <div className="w-full space-y-6">
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-        <Link to="/admin/courses" className="hover:text-primary transition-colors">
-          Courses
-        </Link>
-        <span>/</span>
-        <span className="text-foreground">{course.title}</span>
-        <span>/</span>
-        <span className="text-foreground">Lessons</span>
-      </nav>
+      <Breadcrumb
+        items={createBreadcrumbs(
+          "admin",
+          { label: "Lessons" },
+          [{ label: "Courses", href: "/admin/courses" }, { label: course.title, href: "#" }]
+        )}
+        className="mb-4"
+        showStructuredData={false}
+      />
 
       <AdminHeader
         title={`Lessons for "${course.title}"`}

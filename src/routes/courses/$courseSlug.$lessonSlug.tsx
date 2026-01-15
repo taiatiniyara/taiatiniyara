@@ -13,6 +13,7 @@ import { formatDuration } from "@/lib/utils";
 import { toast } from "sonner";
 import { EnrollButton } from "@/components/courses/enrollButton";
 import { LessonComments } from "@/components/courses/lessonComments";
+import { Breadcrumb, createBreadcrumbs } from "@/components/ui/breadcrumb";
 import { useEffect } from "react";
 
 export const Route = createFileRoute("/courses/$courseSlug/$lessonSlug")({
@@ -170,21 +171,14 @@ function RouteComponent() {
           <Card className="overflow-hidden shadow-xl">
             <div className="p-4 sm:p-6 md:p-8">
               {/* Breadcrumb */}
-              <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-4 pb-4 border-b">
-                <Link to="/courses" className="hover:text-primary transition-colors">
-                  Courses
-                </Link>
-                <span>/</span>
-                <Link 
-                  to="/courses/$slug" 
-                  params={{ slug: courseSlug }}
-                  className="hover:text-primary transition-colors"
-                >
-                  {course.title}
-                </Link>
-                <span>/</span>
-                <span className="text-foreground">{lesson.title}</span>
-              </nav>
+              <Breadcrumb
+                items={createBreadcrumbs(
+                  "courses",
+                  { label: lesson.title },
+                  [{ label: course.title, href: `/courses/${courseSlug}` }]
+                )}
+                className="mb-4 pb-4 border-b"
+              />
 
               {/* Lesson Header */}
               <div className="flex items-start justify-between gap-4 mb-6">
@@ -249,21 +243,15 @@ function RouteComponent() {
               </div>
 
               {/* Breadcrumb at bottom */}
-              <nav className="flex items-center gap-2 text-sm text-muted-foreground mt-8 pt-8 border-t">
-                <Link to="/courses" className="hover:text-primary transition-colors">
-                  Courses
-                </Link>
-                <span>/</span>
-                <Link 
-                  to="/courses/$slug" 
-                  params={{ slug: courseSlug }}
-                  className="hover:text-primary transition-colors"
-                >
-                  {course.title}
-                </Link>
-                <span>/</span>
-                <span className="text-foreground">{lesson.title}</span>
-              </nav>
+              <Breadcrumb
+                items={createBreadcrumbs(
+                  "courses",
+                  { label: lesson.title },
+                  [{ label: course.title, href: `/courses/${courseSlug}` }]
+                )}
+                className="mt-8 pt-8 border-t"
+                showStructuredData={false}
+              />
             </div>
           </Card>
 

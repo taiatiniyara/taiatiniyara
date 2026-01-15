@@ -22,7 +22,7 @@ export function ContentCard({
     >
       <div className="bg-card border rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.02] h-full flex flex-col">
         {imageUrl && (
-          <div className="relative overflow-hidden h-48">
+          <div className="relative overflow-hidden h-40 sm:h-48">
             <img
               src={imageUrl}
               alt={imageAlt}
