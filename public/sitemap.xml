@@ -1,5 +1,5 @@
-[dotenv@17.2.3] injecting env (2) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
-[dotenv@17.2.3] injecting env (0) from .env -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (2) from .env.local -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
@@ -216,6 +216,24 @@
   <url>
     <loc>https://taiatiniyara.com/projects/0twX1IxZXF7jHZwm</loc>
     <lastmod>2026-01-13T13:01:13.254Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/courses/iNwxFn15ZZlaBrO9</loc>
+    <lastmod>2026-01-15T13:31:45.038Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/courses/RZyDrI6cEf4793U0</loc>
+    <lastmod>2026-01-15T12:19:24.805Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/courses/xf9qFj7fJHw1K8wu</loc>
+    <lastmod>2026-01-15T08:17:34.790Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
