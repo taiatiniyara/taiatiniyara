@@ -1,8 +1,19 @@
 import { createRootRoute, Outlet, useLocation } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { lazy, Suspense } from "react";
 import { Toaster } from "sonner";
-import { AuthProvider } from "@/context/auth-context";import { ThemeProvider } from "@/context/theme-context";import TopNavigation from "@/components/nav";
+import { AuthProvider } from "@/context/auth-context";
+import { ThemeProvider } from "@/context/theme-context";
+import TopNavigation from "@/components/nav";
 import Footer from "@/components/footer";
+
+// Lazy load devtools only in development
+const TanStackRouterDevtools = import.meta.env.DEV
+  ? lazy(() =>
+      import("@tanstack/react-router-devtools").then((res) => ({
+        default: res.TanStackRouterDevtools,
+      }))
+    )
+  : () => null;
 
 const RootLayout = () => {
   const location = useLocation();
@@ -20,7 +31,11 @@ const RootLayout = () => {
           </main>
           {!hideFooter && <Footer />}
           <Toaster richColors position="bottom-right" />
-          <TanStackRouterDevtools />
+          {import.meta.env.DEV && (
+            <Suspense fallback={null}>
+              <TanStackRouterDevtools />
+            </Suspense>
+          )}
         </div>
       </AuthProvider>
     </ThemeProvider>
