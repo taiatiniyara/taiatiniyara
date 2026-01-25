@@ -4,17 +4,30 @@ import LoadingSpinner from "../ui/loading-spinner";
 import ErrorBox from "../ui/error";
 import EmptyListPlaceholder from "../ui/empty-list-placeholder";
 import { Clock, TrendingUp } from "lucide-react";
-import { Badge } from "../ui/badge";
+import { useMemo } from "react";
 
 export default function OtherBlogs({ slug }: { slug?: string }) {
   const { isLoading, error, data } = useSupabaseQuery<BlogPost>({
-    queryKey: ["blog_posts_other"],
+    queryKey: ["blog_posts_other", slug || "all"],
     tableName: "blog_posts",
     fields: ["slug", "excerpt", "title", "img_url", "created_at", "content"],
-    numberOfItems: 4,
-    orderBy: { column: "created_at", ascending: false },
+    numberOfItems: 20, // Fetch more to ensure variety after randomization
     whereIsNotEqualTo: slug ? { name: "slug", value: slug } : undefined,
   });
+
+  // Randomize and select 4 blogs client-side
+  const randomBlogs = useMemo(() => {
+    if (!data || data.length === 0) return [];
+    
+    // Shuffle array using Fisher-Yates algorithm
+    const shuffled = [...data];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    
+    return shuffled.slice(0, 4);
+  }, [data]);
 
   const calculateReadTime = (content: string) => {
     const text = content.replace(/<[^>]*>/g, '');
@@ -32,7 +45,7 @@ export default function OtherBlogs({ slug }: { slug?: string }) {
       />
     );
 
-  if (!data || data.filter((post) => post.slug !== slug).length === 0)
+  if (!data || data.length === 0)
     return (
       <div className="w-full">
         <EmptyListPlaceholder text="No other blog posts available." />
@@ -45,7 +58,7 @@ export default function OtherBlogs({ slug }: { slug?: string }) {
         <TrendingUp className="w-5 h-5 text-primary" />
         <h3 className="text-xl font-bold">More Articles</h3>
       </div>
-      {data.map((post, index) => (
+      {randomBlogs.map((post) => (
         <a
           key={post.slug}
           href={`/blog/${post.slug}`}
@@ -58,11 +71,6 @@ export default function OtherBlogs({ slug }: { slug?: string }) {
                 alt={post.title}
                 className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
               />
-            )}
-            {index === 0 && (
-              <Badge className="absolute top-2 right-2 bg-primary/90 text-white">
-                Latest
-              </Badge>
             )}
           </div>
 

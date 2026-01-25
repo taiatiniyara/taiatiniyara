@@ -23,6 +23,7 @@ const navList: NavList[] = [
   { name: "Projects", href: "/projects" },
   { name: "Blog", href: "/blog" },
   { name: "Courses", href: "/courses" },
+  { name: "Playground", href: "/playground" },
 ];
 
 export default function TopNavigation() {
