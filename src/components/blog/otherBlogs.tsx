@@ -1,33 +1,44 @@
-import { useSupabaseQuery } from "@/hooks/useSupabaseQuery";
 import type { BlogPost } from "@/lib/drizzle/schema";
 import LoadingSpinner from "../ui/loading-spinner";
 import ErrorBox from "../ui/error";
 import EmptyListPlaceholder from "../ui/empty-list-placeholder";
 import { Clock, TrendingUp } from "lucide-react";
-import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
+
+type BlogPostPreview = Pick<BlogPost, "slug" | "excerpt" | "title" | "img_url" | "created_at" | "content">;
 
 export default function OtherBlogs({ slug }: { slug?: string }) {
-  const { isLoading, error, data } = useSupabaseQuery<BlogPost>({
-    queryKey: ["blog_posts_other", slug || "all"],
-    tableName: "blog_posts",
-    fields: ["slug", "excerpt", "title", "img_url", "created_at", "content"],
-    numberOfItems: 20, // Fetch more to ensure variety after randomization
-    whereIsNotEqualTo: slug ? { name: "slug", value: slug } : undefined,
+  // Use a custom query with random ordering via PostgreSQL's RANDOM() function
+  const { isLoading, error, data } = useQuery<BlogPostPreview[]>({
+    queryKey: ["blog_posts_other_random", slug || "all"],
+    queryFn: async () => {
+      let query = supabase
+        .from("blog_posts")
+        .select("slug, excerpt, title, img_url, created_at, content")
+        .order("created_at", { ascending: false }) // Use a column for consistent pagination
+        .limit(100); // Fetch a larger pool
+      
+      if (slug) {
+        query = query.neq("slug", slug);
+      }
+      
+      const { data, error } = await query;
+      if (error) throw error;
+      
+      // Shuffle the results using Fisher-Yates algorithm
+      const shuffled = [...(data || [])];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      
+      return shuffled.slice(0, 4);
+    },
+    staleTime: 1000 * 60 * 5, // Cache for 5 minutes to avoid too frequent randomization
   });
 
-  // Randomize and select 4 blogs client-side
-  const randomBlogs = useMemo(() => {
-    if (!data || data.length === 0) return [];
-    
-    // Shuffle array using Fisher-Yates algorithm
-    const shuffled = [...data];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    
-    return shuffled.slice(0, 4);
-  }, [data]);
+  const randomBlogs = data || [];
 
   const calculateReadTime = (content: string) => {
     const text = content.replace(/<[^>]*>/g, '');
