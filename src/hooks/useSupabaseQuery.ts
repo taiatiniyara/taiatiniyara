@@ -9,7 +9,7 @@ interface Param<T> {
 }
 
 interface SupabaseQueryOptions<T> {
-    queryKey: string[];
+    queryKey: readonly string[] | string[];
     tableName: keyof typeof tables;
     fields?: (keyof T)[];
     params?: Param<T>;
@@ -21,6 +21,7 @@ interface SupabaseQueryOptions<T> {
     whereIsNotEqualTo?: Param<T>;
     enabled?: boolean;
     select?: string;
+    staleTime?: number;
 }
 
 interface SupabaseQueryResult<T> {
@@ -40,8 +41,9 @@ export function useSupabaseQuery<T>(
     options: SupabaseQueryOptions<T>
 ): SupabaseQueryResult<T> {
     const { data, error, isLoading, refetch } = useQuery({
-        queryKey: options.queryKey,
+        queryKey: options.queryKey as any[],
         enabled: options.enabled !== false,
+        staleTime: options.staleTime,
         queryFn: async () => {
             // Convert fields array to select string if fields is provided
             const selectString = options.fields 

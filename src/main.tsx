@@ -2,23 +2,14 @@ import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import "./index.css";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { createOptimizedQueryClient, setupPersistentCache } from "@/lib/cache-config";
 
-// Optimize QueryClient configuration for better performance
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      // Reduce refetch on window focus for better performance
-      refetchOnWindowFocus: false,
-      // Cache data for 5 minutes
-      gcTime: 1000 * 60 * 5,
-      staleTime: 1000 * 60 * 1,
-      // Retry failed requests with exponential backoff
-      retry: 1,
-      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
-    },
-  },
-});
+// Create optimized query client with advanced caching
+const queryClient = createOptimizedQueryClient();
+
+// Setup persistent cache with IndexedDB/localStorage
+setupPersistentCache(queryClient);
 
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";
