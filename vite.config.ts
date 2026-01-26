@@ -121,38 +121,6 @@ export default defineConfig({
         },
         chunkFileNames: 'assets/js/[name]-[hash].js',
         entryFileNames: 'assets/js/[name]-[hash].js',
-        // Advanced code splitting strategy
-        manualChunks: (id) => {
-          // Vendor chunks
-          if (id.includes('node_modules')) {
-            // React ecosystem (keep together to avoid circular dependencies)
-            if (id.includes('react') || id.includes('react-dom') || id.includes('react/')) {
-              return 'vendor-react';
-            }
-            // TanStack ecosystem
-            if (id.includes('@tanstack')) {
-              return 'vendor-tanstack';
-            }
-            // Supabase
-            if (id.includes('supabase')) {
-              return 'vendor-supabase';
-            }
-            // TipTap (heavy editor) - keep separate
-            if (id.includes('@tiptap') || id.includes('prosemirror')) {
-              return 'vendor-editor';
-            }
-            // lucide-react - keep in a single chunk to preserve dynamic exports
-            if (id.includes('lucide-react')) {
-              return 'vendor-icons';
-            }
-            // UI components (radix, etc.)
-            if (id.includes('@radix') || id.includes('radix-ui')) {
-              return 'vendor-ui';
-            }
-            // Other dependencies
-            return 'vendor-misc';
-          }
-        },
       },
     },
     // Target modern browsers for smaller bundles
@@ -170,7 +138,6 @@ export default defineConfig({
       '@tanstack/react-router',
       '@tanstack/react-query',
       '@supabase/supabase-js',
-      'lucide-react', // Include lucide-react to properly handle its exports
     ],
     exclude: ['@tiptap/react', '@tiptap/starter-kit'],
   },
