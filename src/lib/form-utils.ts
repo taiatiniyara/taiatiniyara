@@ -72,12 +72,38 @@ export async function submitFormData<T>(
   matchColumn: string = "id"
 ): Promise<SubmitResult> {
   if (mode === "create") {
-    const result = await supabase.from(tableName).insert(data);
+    const result = await supabase.from(tableName).insert(data).select();
     if (result.error) {
       toast.error(`Error creating: ${result.error.message}`);
       return { success: false, error: result.error.message };
     }
-    toast.success("Created successfully!");
+    
+    // If creating a blog post, trigger email notification
+    if (tableName === "blog_posts" && result.data && result.data.length > 0) {
+      try {
+        const blogPost = result.data[0];
+        console.log("Invoking send-blog-email with:", blogPost);
+        const { data: emailData, error: emailError } = await supabase.functions.invoke("send-blog-email", {
+          body: { record: blogPost },
+        });
+        
+        console.log("Email function response:", { data: emailData, error: emailError });
+        
+        if (emailError) {
+          console.error("Error sending blog notification emails:", emailError);
+          toast.warning(`Blog created, but email notifications failed: ${emailError.message}`);
+        } else {
+          console.log("Email function succeeded:", emailData);
+          toast.success("Blog created and notification emails sent!");
+        }
+      } catch (emailError) {
+        console.error("Error invoking email function:", emailError);
+        toast.success("Blog created successfully!");
+      }
+    } else {
+      toast.success("Created successfully!");
+    }
+    
     return { success: true, error: null };
   } else {
     const result = await supabase

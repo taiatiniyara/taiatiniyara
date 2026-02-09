@@ -3,7 +3,6 @@ import tailwindcss from "@tailwindcss/vite"
 import react from "@vitejs/plugin-react"
 import { defineConfig } from "vite"
 import { tanstackRouter } from '@tanstack/router-plugin/vite'
-import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -14,100 +13,25 @@ export default defineConfig({
     }),
     react(),
     tailwindcss(),
-    VitePWA({
-      registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'robots.txt', 'sitemap.xml'],
-      manifest: {
-        name: 'Taia',
-        short_name: 'Taia',
-        description: 'Learning platform',
-        theme_color: '#ffffff',
-        icons: [
-          {
-            src: '/icon-192x192.png',
-            sizes: '192x192',
-            type: 'image/png'
-          },
-          {
-            src: '/icon-512x512.png',
-            sizes: '512x512',
-            type: 'image/png'
-          }
-        ]
-      },
-      workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
-        runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'google-fonts-cache',
-              expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365 // 1 year
-              },
-              cacheableResponse: {
-                statuses: [0, 200]
-              }
-            }
-          },
-          {
-            urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'gstatic-fonts-cache',
-              expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365 // 1 year
-              },
-              cacheableResponse: {
-                statuses: [0, 200]
-              }
-            }
-          },
-          {
-            urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'images-cache',
-              expiration: {
-                maxEntries: 60,
-                maxAgeSeconds: 60 * 60 * 24 * 30 // 30 days
-              }
-            }
-          },
-          {
-            urlPattern: ({ url }) => url.origin.includes('supabase'),
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'supabase-api-cache',
-              expiration: {
-                maxEntries: 100,
-                maxAgeSeconds: 60 * 10 // 10 minutes
-              },
-              cacheableResponse: {
-                statuses: [0, 200]
-              }
-            }
-          }
-        ]
-      }
-    })
   ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      'use-sync-external-store/shim/with-selector.js': path.resolve(__dirname, "./src/shims/use-sync-external-store-with-selector.ts"),
+      'use-sync-external-store/shim/index.js': path.resolve(__dirname, "./src/shims/use-sync-external-store-shim.ts"),
+      'use-sync-external-store/shim/with-selector': path.resolve(__dirname, "./src/shims/use-sync-external-store-with-selector.ts"),
+      'use-sync-external-store/shim': path.resolve(__dirname, "./src/shims/use-sync-external-store-shim.ts"),
     },
+    dedupe: ['react', 'react-dom'],
   },
   build: {
-    // Enable CSS code splitting for better caching
+    // Enable CSS code splitting
     cssCodeSplit: true,
-    // Increase chunk size warning limit - vendor chunks can be larger since they're cached
+    // Increase chunk size warning limit
     chunkSizeWarningLimit: 800,
     rollupOptions: {
       output: {
-        // Optimize asset file names for better caching
+        // Optimize asset file names
         assetFileNames: (assetInfo) => {
           const info = assetInfo.name?.split('.');
           const ext = info?.[info.length - 1];
@@ -135,11 +59,15 @@ export default defineConfig({
     include: [
       'react',
       'react-dom',
+      'react/jsx-runtime',
       '@tanstack/react-router',
       '@tanstack/react-query',
       '@supabase/supabase-js',
     ],
     exclude: ['@tiptap/react', '@tiptap/starter-kit'],
+    esbuildOptions: {
+      target: 'es2020',
+    },
   },
   // Server configuration for development
   server: {
@@ -153,8 +81,7 @@ export default defineConfig({
   // Preview server configuration
   preview: {
     headers: {
-      // Cache static assets aggressively
-      'Cache-Control': 'public, max-age=31536000, immutable',
+      'Cache-Control': 'no-store, no-cache, must-revalidate',
     },
   },
 })

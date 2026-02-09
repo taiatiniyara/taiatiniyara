@@ -35,7 +35,6 @@ export default function OtherBlogs({ slug }: { slug?: string }) {
       
       return shuffled.slice(0, 4);
     },
-    staleTime: 1000 * 60 * 5, // Cache for 5 minutes to avoid too frequent randomization
   });
 
   const randomBlogs = data || [];

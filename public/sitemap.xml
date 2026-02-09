@@ -1,5 +1,5 @@
-[dotenv@17.2.3] injecting env (2) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
-[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+[dotenv@17.2.3] injecting env (2) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
@@ -26,6 +26,150 @@
     <loc>https://taiatiniyara.com/courses</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/gJuTwKEE868TMBgf</loc>
+    <lastmod>2026-02-08T09:52:06.145Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/HZWgfHJ3wALti2NH</loc>
+    <lastmod>2026-02-08T09:48:54.199Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/YB18GPvtT4nBJthw</loc>
+    <lastmod>2026-02-08T09:41:01.156Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/Fsy3hlr6t582Of0j</loc>
+    <lastmod>2026-02-05T07:14:01.473Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/BN5P4ZLbO5aM83s0</loc>
+    <lastmod>2026-02-05T07:03:59.792Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/4xOE4DBnlvk5tSPb</loc>
+    <lastmod>2026-02-05T06:59:02.158Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/MKHQXdCIvcox7El1</loc>
+    <lastmod>2026-02-03T22:16:43.160Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/oZrXxa4hKNnaU73f</loc>
+    <lastmod>2026-02-03T22:13:34.455Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/ULsUmvkXTh8iNr1x</loc>
+    <lastmod>2026-02-03T22:10:52.595Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/KpfLwQEmjXeA4lq7</loc>
+    <lastmod>2026-02-03T22:06:43.388Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/HoOyivsk0otz6VFf</loc>
+    <lastmod>2026-02-02T19:58:07.626Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/IPF0FSCj2UoJUTOU</loc>
+    <lastmod>2026-02-02T19:56:18.795Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/hwswdjWV8iVpzqR0</loc>
+    <lastmod>2026-02-02T19:34:45.754Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/XSA1tgxZ76OQhPeL</loc>
+    <lastmod>2026-01-30T21:47:11.725Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/DAYge6u0qNT6WQXE</loc>
+    <lastmod>2026-01-30T21:40:58.957Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/awKQWBLOnSoYuZl3</loc>
+    <lastmod>2026-01-29T12:46:01.861Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/otrQ6bEbjbexRbhO</loc>
+    <lastmod>2026-01-28T05:29:48.207Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/wdxR3o3uRk3YPj4p</loc>
+    <lastmod>2026-01-28T05:26:16.175Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/dJQ7Bh0shHk07hNy</loc>
+    <lastmod>2026-01-28T05:22:55.459Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/1POBb1bzKLRVKMb1</loc>
+    <lastmod>2026-01-28T05:21:29.475Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/hmkmfT2DI7VqYGbo</loc>
+    <lastmod>2026-01-26T21:34:36.227Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/Ep6rBOmv5WdJZZIU</loc>
+    <lastmod>2026-01-26T20:37:56.792Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/mV2PbB9sNfA0hAM2</loc>
+    <lastmod>2026-01-26T20:32:38.993Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/blog/sFBkiGbJTR8O87Y6</loc>
+    <lastmod>2026-01-26T20:24:33.074Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://taiatiniyara.com/blog/OTIhOa9TcuspG2jM</loc>
@@ -102,12 +246,6 @@
   <url>
     <loc>https://taiatiniyara.com/blog/PbgAOEpqgss6kaBP</loc>
     <lastmod>2026-01-23T06:00:15.738Z</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://taiatiniyara.com/blog/K54seciAxOLpuuA7</loc>
-    <lastmod>2026-01-23T05:57:42.114Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -203,7 +341,7 @@
   </url>
   <url>
     <loc>https://taiatiniyara.com/blog/5pJjeuwSf8t7ZRTQ</loc>
-    <lastmod>2026-01-19T06:37:05.631Z</lastmod>
+    <lastmod>2026-01-30T21:51:29.638Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -460,6 +598,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://taiatiniyara.com/projects/ee1Z2oPzRspHle4S</loc>
+    <lastmod>2026-01-28T21:48:23.489Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://taiatiniyara.com/projects/dcS3P3arGwA2F3eV</loc>
     <lastmod>2026-01-13T13:07:09.933Z</lastmod>
     <changefreq>monthly</changefreq>
@@ -473,7 +617,13 @@
   </url>
   <url>
     <loc>https://taiatiniyara.com/projects/0twX1IxZXF7jHZwm</loc>
-    <lastmod>2026-01-13T13:01:13.254Z</lastmod>
+    <lastmod>2026-02-08T08:04:56.655Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://taiatiniyara.com/courses/mqA3r7V79Cy1kCTa</loc>
+    <lastmod>2026-02-08T22:43:33.314Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
