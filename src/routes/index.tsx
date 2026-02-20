@@ -31,10 +31,10 @@ function Index() {
     orderBy: { column: "created_at", ascending: false },
   });
 
-  const { 
-    isLoading: coursesLoading, 
-    data: courses, 
-    error: coursesError 
+  const {
+    isLoading: coursesLoading,
+    data: courses,
+    error: coursesError,
   } = useSupabaseQuery<Course>({
     tableName: "courses",
     queryKey: ["courses", "featured"],
@@ -49,7 +49,7 @@ function Index() {
       const { data, error } = await supabase
         .from("enrollments")
         .select("course_id");
-      
+
       if (error) throw error;
       return data;
     },
@@ -64,128 +64,144 @@ function Index() {
   return (
     <div className="relative w-full">
       {/* Hero Section */}
-      <div className="relative z-0 min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 md:px-12 py-16 sm:py-20">
-        <div className="max-w-5xl mx-auto text-center space-y-6 sm:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-          {/* Badge */}
-          <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm">
-            <span className="w-2 h-2 rounded-full bg-primary animate-pulse mr-2" />
-            <span className="text-sm font-medium text-primary">
-              Ready to transform your ideas
-            </span>
-          </div>
+      <div className="relative z-0 min-h-[calc(100svh-73px)] px-4 sm:px-6 md:px-12 py-8 sm:py-10 md:py-12 flex items-center">
+        <div className="max-w-6xl mx-auto grid w-full items-center gap-8 lg:grid-cols-2 lg:gap-12">
+          <div className="text-center lg:text-left space-y-5 sm:space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+            {/* Badge */}
+            <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm">
+              <span className="w-2 h-2 rounded-full bg-primary animate-pulse mr-2" />
+              <span className="text-sm font-medium text-primary">
+                Ready to transform your ideas
+              </span>
+            </div>
 
-          {/* Main Heading */}
-          <div className="space-y-4">
-            <Heading variant="hero">
-              <span className="text-primary">Turn Your Vision</span>
-            </Heading>
-            <Heading
-              level={2}
-              className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-semibold text-muted-foreground"
-            >
-              Into Powerful Software
-            </Heading>
-          </div>
-
-          {/* Description */}
-          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed px-4">
-            Whether you need a web app, mobile solution, or cloud
-            infrastructure, get a partner who turns your challenges into
-            elegant, scalable software that drives results.
-          </p>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center pt-4 w-full max-w-md mx-auto sm:max-w-none">
-            <a href="/projects" className="w-full sm:w-auto">
-              <Button
-                size="lg"
-                className="w-full text-base px-6 sm:px-8 py-5 sm:py-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+            {/* Main Heading */}
+            <div className="space-y-4">
+              <Heading variant="hero">
+                <span className="text-primary">Turn Your Vision</span>
+              </Heading>
+              <Heading
+                level={2}
+                className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-semibold text-muted-foreground"
               >
-                See What's Possible
-                <svg
-                  className="ml-2"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
+                Into Powerful Software
+              </Heading>
+            </div>
+
+            {/* Description */}
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto lg:mx-0 leading-relaxed px-4 lg:px-0">
+              Whether you need a web app, mobile solution, or cloud
+              infrastructure, get a partner who turns your challenges into
+              elegant, scalable software that drives results.
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start items-stretch sm:items-center pt-4 w-full max-w-md mx-auto lg:mx-0 sm:max-w-none">
+              <a
+                href="/projects"
+                className="w-full sm:w-auto"
+              >
+                <Button
+                  size="lg"
+                  className="w-full text-base px-6 sm:px-8 py-5 sm:py-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
                 >
-                  <path
-                    d="M6 12L10 8L6 4"
+                  See What's Possible
+                  <svg
+                    className="ml-2"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                  >
+                    <path
+                      d="M6 12L10 8L6 4"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </Button>
+              </a>
+              <a
+                href="/about"
+                className="w-full sm:w-auto"
+              >
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="w-full text-base px-6 sm:px-8 py-5 sm:py-6 backdrop-blur-sm bg-background/50 hover:bg-background/80 transition-all duration-300"
+                >
+                  How I Can Help
+                </Button>
+              </a>
+            </div>
+
+            {/* Stats or Tech Stack Icons */}
+            <div className="pt-6 sm:pt-8 flex flex-wrap justify-center lg:justify-start gap-6 sm:gap-6 md:gap-8 text-sm text-muted-foreground px-4 lg:px-0">
+              <div className="flex flex-col items-center gap-2 group cursor-default min-w-25">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </Button>
-            </a>
-            <a href="/about" className="w-full sm:w-auto">
-              <Button
-                size="lg"
-                variant="outline"
-                className="w-full text-base px-6 sm:px-8 py-5 sm:py-6 backdrop-blur-sm bg-background/50 hover:bg-background/80 transition-all duration-300"
-              >
-                How I Can Help
-              </Button>
-            </a>
+                  >
+                    <polyline points="16 18 22 12 16 6"></polyline>
+                    <polyline points="8 6 2 12 8 18"></polyline>
+                  </svg>
+                </div>
+                <span className="font-medium">Quality You Trust</span>
+              </div>
+              <div className="flex flex-col items-center gap-2 group cursor-default min-w-25">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-chart-3/10 flex items-center justify-center group-hover:bg-chart-3/20 transition-colors">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                    ></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                </div>
+                <span className="font-medium">Results On Time</span>
+              </div>
+              <div className="flex flex-col items-center gap-2 group cursor-default min-w-25">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-chart-2/10 flex items-center justify-center group-hover:bg-chart-2/20 transition-colors">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                    <path d="M2 17l10 5 10-5"></path>
+                    <path d="M2 12l10 5 10-5"></path>
+                  </svg>
+                </div>
+                <span className="font-medium">Built to Grow</span>
+              </div>
+            </div>
           </div>
 
-          {/* Stats or Tech Stack Icons */}
-          <div className="pt-8 sm:pt-12 flex flex-wrap justify-center gap-6 sm:gap-6 md:gap-8 text-sm text-muted-foreground px-4">
-            <div className="flex flex-col items-center gap-2 group cursor-default min-w-25">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <polyline points="16 18 22 12 16 6"></polyline>
-                  <polyline points="8 6 2 12 8 18"></polyline>
-                </svg>
-              </div>
-              <span className="font-medium">Quality You Trust</span>
-            </div>
-            <div className="flex flex-col items-center gap-2 group cursor-default min-w-25">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-chart-3/10 flex items-center justify-center group-hover:bg-chart-3/20 transition-colors">
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="10"
-                  ></circle>
-                  <polyline points="12 6 12 12 16 14"></polyline>
-                </svg>
-              </div>
-              <span className="font-medium">Results On Time</span>
-            </div>
-            <div className="flex flex-col items-center gap-2 group cursor-default min-w-25">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-chart-2/10 flex items-center justify-center group-hover:bg-chart-2/20 transition-colors">
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                  <path d="M2 17l10 5 10-5"></path>
-                  <path d="M2 12l10 5 10-5"></path>
-                </svg>
-              </div>
-              <span className="font-medium">Built to Grow</span>
-            </div>
-          </div>
+          <img
+            src="/dev.svg"
+            alt="Technology workspace showcasing modern software development"
+            className="w-full h-auto max-h-[50svh] lg:max-h-[60svh] rounded-[1.35rem] object-contain"
+            loading="eager"
+            decoding="async"
+          />
         </div>
       </div>
 
@@ -248,7 +264,9 @@ function Index() {
                             d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
                           />
                         </svg>
-                        <span>{getEnrollmentCount(course.id)} students enrolled</span>
+                        <span>
+                          {getEnrollmentCount(course.id)} students enrolled
+                        </span>
                       </div>
 
                       <a
@@ -339,8 +357,18 @@ function Index() {
                         href={`/blog/${post.slug}`}
                       >
                         Read More
-                        <svg className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        <svg
+                          className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
                         </svg>
                       </a>
                     </div>
