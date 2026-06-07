@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 
 export default function AdminLoginPage() {
   const router = useRouter()
@@ -36,7 +37,7 @@ export default function AdminLoginPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background">
-      <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4 p-8">
+      <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4 p-8" noValidate>
         <div className="space-y-2 text-center">
           <h1 className="text-2xl font-semibold tracking-tight">Admin Login</h1>
           <p className="text-sm text-muted-foreground">
@@ -44,16 +45,24 @@ export default function AdminLoginPage() {
           </p>
         </div>
         <div className="space-y-2">
-          <input
+          <label htmlFor="admin-password" className="sr-only">
+            Password
+          </label>
+          <Input
+            id="admin-password"
             type="password"
+            name="current-password"
+            autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             autoFocus
+            aria-describedby={error ? "login-error" : undefined}
           />
           {error && (
-            <p className="text-sm text-destructive">{error}</p>
+            <p id="login-error" className="text-sm text-destructive" role="alert">
+              {error}
+            </p>
           )}
         </div>
         <Button type="submit" className="w-full" disabled={loading}>

@@ -1,47 +1,55 @@
 # Roadmap — Taia Tiniyara
 
-## Phase 1: Foundation (blocks everything)
-
-| # | Task | Depends On | Status |
-|---|---|---|---|
-| 1 | Drizzle + better-sqlite3 setup (schema, db connection, migrations) | — | ⬜ |
-| 2 | Admin auth (env var password, cookie session, middleware) | 1 | ⬜ |
-| 3 | Admin layout + dashboard stats page | 2 | ⬜ |
-| 4 | Public layout: Navbar, theme toggle, smooth scroll, footer | — | ⬜ |
+## Phase 1: Foundation
+| # | Task | Status |
+|---|---|---|
+| 1 | Drizzle + better-sqlite3 setup (schema, db connection) | ✅ Done |
+| 2 | Admin auth (env var password, cookie session) | ✅ Done |
+| 3 | Admin layout + dashboard stats page | ✅ Done |
+| 4 | Public layout: Navbar, theme toggle, smooth scroll, footer | ✅ Done |
 
 ## Phase 2: Admin CRUD
-
-| # | Task | Depends On | Status |
-|---|---|---|---|
-| 5 | Admin: Services CRUD | 3 | ⬜ |
-| 6 | Admin: Portfolio Projects CRUD (R2 image URLs) | 3, 1 | ⬜ |
-| 7 | Admin: Products CRUD (R2 image URLs) | 3, 1 | ⬜ |
-| 8 | Admin: Blog Posts CRUD (TipTap editor, R2 JSON + images) | 3, 1 | ⬜ |
-| 9 | Admin: Contact Messages viewer | 3, 1 | ⬜ |
+| # | Task | Status |
+|---|---|---|
+| 5 | Admin: Services CRUD | ✅ Done |
+| 6 | Admin: Portfolio Projects CRUD (R2 image URLs) | ✅ Done |
+| 7 | Admin: Products CRUD (R2 image URLs) | ✅ Done |
+| 8 | Admin: Blog Posts CRUD (TipTap editor, R2 JSON + images) | ✅ Done |
+| 9 | Admin: Contact Messages viewer | ✅ Done |
 
 ## Phase 3: R2 Integration
-
-| # | Task | Depends On | Status |
-|---|---|---|---|
-| 10 | R2 server-side upload handler | — | ⬜ |
+| # | Task | Status |
+|---|---|---|
+| 10 | R2 server-side upload handler | ✅ Done |
 
 ## Phase 4: Public Pages
-
-| # | Task | Depends On | Status |
-|---|---|---|---|
-| 11 | Hero section | 4 | ⬜ |
-| 12 | Services section (DB-driven) | 4, 1 | ⬜ |
-| 13 | Portfolio section (DB-driven) | 4, 1 | ⬜ |
-| 14 | Products section (DB-driven, conditionally rendered) | 4, 1 | ⬜ |
-| 15 | Contact form + Nodemailer | 4, 1 | ⬜ |
-| 16 | Blog listing page (card grid, 9/page, paginated) | 4, 1 | ⬜ |
-| 17 | Blog post page (TipTap JSON renderer) | 4, 1 | ⬜ |
-| 18 | Privacy policy page | 4 | ⬜ |
+| # | Task | Status |
+|---|---|---|
+| 11 | Hero section | ✅ Done |
+| 12 | Services section (DB-driven) | ✅ Done |
+| 13 | Portfolio section (DB-driven) | ✅ Done |
+| 14 | Products section (DB-driven, conditionally rendered) | ✅ Done |
+| 15 | Contact form + Nodemailer | ✅ Done |
+| 16 | Blog listing page (card grid, 9/page, paginated) | ✅ Done |
+| 17 | Blog post page (TipTap JSON renderer) | ✅ Done |
+| 18 | Privacy policy page | ✅ Done |
 
 ## Phase 5: Polish
+| # | Task | Status |
+|---|---|---|
+| 19 | SEO metadata + Open Graph (all pages) | ✅ Done |
+| 20 | Scroll-triggered fade-in animations | ✅ Done |
+| 21 | Codebase refactor: consolidate repeated code, remove dead code | ✅ Done |
+| 22 | Shared components: Loading, ErrorDisplay, InputField, TipTapContent | ✅ Done |
+| 23 | JSON-LD structured data for Organization and BlogPosting | ✅ Done |
+| 24 | robots.txt and sitemap.xml auto-generation | ✅ Done |
+| 25 | Remove unused packages and dead code | ✅ Done |
 
-| # | Task | Depends On | Status |
-|---|---|---|---|
-| 19 | SEO metadata + Open Graph (all pages) | 4 | ⬜ |
-| 20 | Scroll-triggered fade-in animations | 4 | ⬜ |
-| 21 | Final lint + build check | all | ⬜ |
+## Future
+| # | Task | Status |
+|---|---|---|
+| 26 | Image optimization (next/image with R2) | ⬜ |
+| 27 | Analytics integration | ⬜ |
+| 28 | RSS/Atom feed for blog | ⬜ |
+| 29 | Newsletter signup | ⬜ |
+| 30 | Automated tests | ⬜ |

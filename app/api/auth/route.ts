@@ -1,12 +1,23 @@
 import { NextRequest, NextResponse } from "next/server"
-import { verifyPassword, createSessionToken } from "@/lib/auth"
+import { verifyPassword, createSessionToken, COOKIE_NAME } from "@/lib/auth"
 
-const COOKIE_NAME = "taiatiniyara_session"
 const SESSION_TTL = 60 * 60 * 24
 
 export async function POST(request: NextRequest) {
-  const body = await request.json().catch(() => ({}))
-  const action = body.action
+  const contentType = request.headers.get("content-type") || ""
+  let body: Record<string, unknown> = {}
+
+  if (contentType.includes("application/json")) {
+    body = await request.json().catch(() => ({}))
+  } else {
+    const text = await request.text().catch(() => "")
+    const params = new URLSearchParams(text)
+    params.forEach((value, key) => {
+      body[key] = value
+    })
+  }
+
+  const action = body.action as string | undefined
 
   if (action === "login") {
     const password = body.password
@@ -19,7 +30,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid password" }, { status: 401 })
     }
 
-    const token = createSessionToken()
+    const token = await createSessionToken()
     const response = NextResponse.json({ success: true })
     response.cookies.set(COOKIE_NAME, token, {
       httpOnly: true,
