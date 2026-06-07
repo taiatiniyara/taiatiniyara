@@ -1,8 +1,22 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createContact } from "@/lib/data"
 import { sendContactEmail } from "@/lib/email"
+import { checkRateLimit, getClientIp } from "@/lib/rate-limiter"
+
+const RATE_LIMIT = 3
+const RATE_WINDOW_MS = 15 * 60 * 1000
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIp(request)
+  const { allowed, retryAfter } = checkRateLimit(ip, RATE_LIMIT, RATE_WINDOW_MS)
+
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Too many messages. Please try again later." },
+      { status: 429, headers: { "retry-after": String(retryAfter) } }
+    )
+  }
+
   try {
     const body = await request.json()
     const { name, email, message } = body

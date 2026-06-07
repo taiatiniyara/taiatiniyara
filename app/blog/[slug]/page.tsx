@@ -1,11 +1,11 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { getPostBySlug } from "@/lib/data"
+import { getPostBySlug, getRelatedPosts } from "@/lib/data"
 import { getR2Object } from "@/lib/r2"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, Clock } from "lucide-react"
-import { parseTags } from "@/lib/utils"
+import { ArrowLeft, Clock, BookOpen } from "lucide-react"
+import { getReadingTime, parseTags } from "@/lib/utils"
 import { TipTapContent } from "@/components/blog/tip-tap-content"
 
 interface PageProps {
@@ -29,7 +29,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: post.seoDesc || post.excerpt || "",
       type: "article",
       publishedTime: post.publishedAt || undefined,
-      images: post.coverUrl ? [{ url: post.coverUrl, width: 1200, height: 630, alt: post.title }] : [],
     },
   }
 }
@@ -41,6 +40,7 @@ export default async function BlogPostPage({ params }: PageProps) {
   if (!post) notFound()
 
   const tags = parseTags(post.tags)
+  const relatedPosts = await getRelatedPosts(slug)
 
   let content: unknown = null
   if (post.contentR2Key) {
@@ -90,6 +90,12 @@ export default async function BlogPostPage({ params }: PageProps) {
                 </time>
               </div>
             )}
+            {!!content && (
+              <div className="flex items-center gap-1">
+                <BookOpen className="size-3" />
+                {getReadingTime(content)}
+              </div>
+            )}
             {tags.length > 0 && (
               <div className="flex flex-wrap gap-1">
                 {tags.map((tag) => (
@@ -126,6 +132,61 @@ export default async function BlogPostPage({ params }: PageProps) {
           )}
         </div>
       </div>
+
+      {relatedPosts.length > 0 && (
+        <section className="mt-16 border-t pt-16">
+          <div className="mx-auto max-w-6xl px-4">
+            <h2 className="text-2xl font-bold tracking-tight text-center">Related Posts</h2>
+            <div className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              {relatedPosts.map((rp) => (
+                <Link
+                  key={rp.id}
+                  href={`/blog/${rp.slug}`}
+                  className="group flex flex-col overflow-hidden rounded-lg border bg-card transition-all hover:shadow-lg hover:border-primary/20"
+                >
+                  {rp.coverUrl && (
+                    <div className="aspect-video overflow-hidden bg-muted">
+                      <img
+                        src={rp.coverUrl}
+                        alt={rp.title}
+                        loading="lazy"
+                        decoding="async"
+                        className="size-full object-cover transition-transform group-hover:scale-105"
+                      />
+                    </div>
+                  )}
+                  <div className="flex flex-1 flex-col p-6">
+                    <h3 className="text-lg font-semibold group-hover:text-primary transition-colors line-clamp-2">
+                      {rp.title}
+                    </h3>
+                    {rp.excerpt && (
+                      <p className="mt-2 flex-1 text-sm text-muted-foreground line-clamp-2">
+                        {rp.excerpt}
+                      </p>
+                    )}
+                    <div className="mt-4 flex items-center gap-3 text-xs text-muted-foreground">
+                      <span className="flex items-center gap-1">
+                        <BookOpen className="size-3" />
+                        {getReadingTime(rp.excerpt || "")}
+                      </span>
+                      {rp.publishedAt && (
+                        <span className="flex items-center gap-1">
+                          <Clock className="size-3" />
+                          {new Date(rp.publishedAt).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </article>
   )
 }

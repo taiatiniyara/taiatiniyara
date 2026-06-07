@@ -1,23 +1,33 @@
 <!-- BEGIN:nextjs-agent-rules -->
+
 # This is NOT the Next.js you know
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
+This version has breaking changes — APIs, conventions, and file structure may
+all differ from your training data. Read the relevant guide in
+`node_modules/next/dist/docs/` before writing any code. Heed deprecation
+notices.
+
 <!-- END:nextjs-agent-rules -->
 
 # Taia Tiniyara — Project Context
 
 ## What This Is
-A single-page business website for **Taia Tiniyara, LLC** — a software engineering studio.
+
+A single-page business website for **Taia Tiniyara, LLC** — a software
+engineering studio.
+
 - Client services: web apps, mobile apps, APIs (TypeScript/Node.js)
 - SaaS products: internal products, added over time
 - Blog: engineering content, TipTap rich text editor
 - Admin dashboard: CRUD all content, view contact messages
 
 ## Tech Stack
+
 - **Next.js 16** (App Router, RSC)
 - **React 19**, TypeScript 5, Tailwind CSS v4
 - **shadcn/ui v4** (radix-sera style, mist base, purple primary)
-- **SQLite** via **better-sqlite3 + Drizzle ORM** (db file at `data/taiatiniyara.db`)
+- **SQLite** via **better-sqlite3 + Drizzle ORM** (db file at
+  `data/taiatiniyara.db`)
 - **R2** (Cloudflare) for images and blog content JSON (server-side upload)
 - **Nodemailer** (own SMTP) for contact form
 - **next-themes** (dark/light toggle)
@@ -25,6 +35,7 @@ A single-page business website for **Taia Tiniyara, LLC** — a software enginee
 - **Geist Sans + Geist Mono** fonts
 
 ## Commands
+
 ```bash
 npm run dev      # Start dev server (Turbopack)
 npm run build    # Production build
@@ -35,6 +46,7 @@ npx drizzle-kit generate # Generate migrations
 ```
 
 ## File Structure
+
 ```
 app/
   page.tsx              # Home (single page with sections)
@@ -112,49 +124,73 @@ docs/
 ## Coding Conventions
 
 ### Architecture
-- **Server-first**: All data fetching happens in Server Components or server actions. No `"use client"` data fetching.
-- **Server Components** render static content. **Client Components** (`"use client"`) only for interactivity (forms, toggles, animations).
-- **Server Actions** (`"use server"` in `lib/actions/`) handle all mutations (create, update, delete).
-- Admin auth guard lives in `app/admin/layout.tsx` — validates session cookie before rendering.
+
+- **Server-first**: All data fetching happens in Server Components or server
+  actions. No `"use client"` data fetching.
+- **Server Components** render static content. **Client Components**
+  (`"use client"`) only for interactivity (forms, toggles, animations).
+- **Server Actions** (`"use server"` in `lib/actions/`) handle all mutations
+  (create, update, delete).
+- Admin auth guard lives in `app/admin/layout.tsx` — validates session cookie
+  before rendering.
+- **Reusable logic** (DB queries, auth, R2, email) lives in `lib/` and is
+  imported into Server Components and actions.
+- **Refactor shared UI** into components in `components/` (e.g. form inputs,
+  buttons, blog content renderer).
 
 ### Components
-- **Always use shadcn/ui components** (Button, Input, etc.) — never raw HTML inputs/buttons.
+
+- **Always use shadcn/ui components** (Button, Input, etc.) — never raw HTML
+  inputs/buttons.
 - Shared/repeated code goes in `components/shared/` or `lib/utils.ts`.
-- One component per file. Named exports (not default) for all components except Next.js pages.
+- One component per file. Named exports (not default) for all components except
+  Next.js pages.
 - Use `interface` (not `type`) for component props.
 
 ### Database
-- All DB queries via Drizzle ORM in `lib/data.ts` (reads) and `lib/actions/*.ts` (writes).
+
+- All DB queries via Drizzle ORM in `lib/data.ts` (reads) and `lib/actions/*.ts`
+  (writes).
 - Use `InferSelectModel` for type inference from schema.
 - Schema in `lib/schema.ts` — run `npx drizzle-kit push` after schema changes.
 
 ### Styling
+
 - Tailwind CSS v4 with `@theme inline` for shadcn design tokens.
-- Purple primary theme (`oklch(0.491 0.27 292.581)`), dark mode via `next-themes`.
+- Purple primary theme (`oklch(0.491 0.27 292.581)`), dark mode via
+  `next-themes`.
 - Use `cn()` from `lib/utils.ts` for conditional class merging.
 - Blog content styled with `.prose-custom` utility (defined in `globals.css`).
 
 ### SEO
+
 - Every page MUST export `metadata` (or `generateMetadata` for dynamic routes).
 - Include `openGraph` and `twitter` metadata on all public pages.
 - Use `alternates.canonical` on every page.
 - JSON-LD structured data: Organization on layout, BlogPosting on posts.
 - `robots.ts` and `sitemap.ts` auto-generated at root.
 - All images must have descriptive `alt` text.
-- Use semantic HTML: `<nav>`, `<article>`, `<section>`, `<time>`, `<header>`, `<footer>`.
+- Use semantic HTML: `<nav>`, `<article>`, `<section>`, `<time>`, `<header>`,
+  `<footer>`.
 
 ### Imports
+
 - Always use `@/` path alias for internal imports (no relative `../../` chains).
 - Import order: external libraries → internal modules → local components.
 - Only import what you need — tree-shaking.
 
 ### Error Handling
-- Use shared `ErrorDisplay` component from `components/shared/error-display.tsx` for all error boundaries.
-- Use shared `Loading` component from `components/shared/loading.tsx` for all loading states.
-- API routes return `NextResponse.json({ error: "message" }, { status: 4xx/5xx })`.
+
+- Use shared `ErrorDisplay` component from `components/shared/error-display.tsx`
+  for all error boundaries.
+- Use shared `Loading` component from `components/shared/loading.tsx` for all
+  loading states.
+- API routes return
+  `NextResponse.json({ error: "message" }, { status: 4xx/5xx })`.
 - Server actions use try/catch, rethrow for form state handling.
 
 ### Environment Variables
+
 ```
 ADMIN_PASSWORD=...          # Admin login password
 SESSION_SECRET=...          # HMAC signing secret for session cookies (default: "change-me-in-production")
@@ -172,13 +208,17 @@ SMTP_FROM=...               # From address for emails
 ```
 
 ### Documentation
+
 - **Update docs whenever code changes.** This is non-negotiable.
 - `AGENTS.md` is the primary source of truth for AI agents and developers.
-- `docs/SPECS.md` documents the data models, architecture decisions, and tech choices.
+- `docs/SPECS.md` documents the data models, architecture decisions, and tech
+  choices.
 - `docs/ROADMAP.md` tracks implementation progress.
-- Always consult Next.js 16 docs in `node_modules/next/dist/docs/` before using Next.js APIs — this version has breaking changes.
+- Always consult Next.js 16 docs in `node_modules/next/dist/docs/` before using
+  Next.js APIs — this version has breaking changes.
 
 ### Git
+
 - Never commit secrets, `.env` files, or `data/*.db*` files.
 - Never commit `node_modules/` or `.next/`.
 - Commit messages should be concise and descriptive.

@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server"
 import { verifyPassword, createSessionToken, COOKIE_NAME } from "@/lib/auth"
+import { checkRateLimit, getClientIp } from "@/lib/rate-limiter"
 
 const SESSION_TTL = 60 * 60 * 24
+const LOGIN_RATE_LIMIT = 5
+const LOGIN_RATE_WINDOW_MS = 15 * 60 * 1000
 
 export async function POST(request: NextRequest) {
   const contentType = request.headers.get("content-type") || ""
@@ -20,6 +23,16 @@ export async function POST(request: NextRequest) {
   const action = body.action as string | undefined
 
   if (action === "login") {
+    const ip = getClientIp(request)
+    const { allowed, retryAfter } = checkRateLimit(ip, LOGIN_RATE_LIMIT, LOGIN_RATE_WINDOW_MS)
+
+    if (!allowed) {
+      return NextResponse.json(
+        { error: "Too many login attempts. Please try again later." },
+        { status: 429, headers: { "retry-after": String(retryAfter) } }
+      )
+    }
+
     const password = body.password
     if (!password || typeof password !== "string") {
       return NextResponse.json({ error: "Password required" }, { status: 400 })

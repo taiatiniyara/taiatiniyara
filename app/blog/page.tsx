@@ -1,9 +1,9 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { getPublishedPosts } from "@/lib/data"
+import { getPublishedPosts, getAllPublishedTags } from "@/lib/data"
 import { Button } from "@/components/ui/button"
-import { Clock, FileText } from "lucide-react"
-import { parseTags } from "@/lib/utils"
+import { Clock, FileText, BookOpen, X, Search } from "lucide-react"
+import { getReadingTime, parseTags } from "@/lib/utils"
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://taiatiniyara.com"
 
@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   description: "Engineering thoughts, tutorials, and insights from Taia Tiniyara.",
   alternates: {
     canonical: `${siteUrl}/blog`,
+    types: {
+      "application/rss+xml": `${siteUrl}/feed.xml`,
+    },
   },
   openGraph: {
     title: "Blog — Taia Tiniyara",
@@ -20,12 +23,28 @@ export const metadata: Metadata = {
   },
 }
 
+function buildHref(page: number, tag?: string, search?: string): string {
+  const params = new URLSearchParams()
+  if (page > 1) params.set("page", String(page))
+  if (tag) params.set("tag", tag)
+  if (search) params.set("search", search)
+  const qs = params.toString()
+  return qs ? `/blog?${qs}` : "/blog"
+}
+
 export default async function BlogPage(props: {
-  searchParams: Promise<{ page?: string }>
+  searchParams: Promise<{ page?: string; tag?: string; search?: string }>
 }) {
   const params = await props.searchParams
   const pageNum = Math.max(1, parseInt(params.page || "1") || 1)
-  const { posts, page, totalPages } = await getPublishedPosts(pageNum)
+  const activeTag = params.tag
+  const activeSearch = params.search
+  const [{ posts, page, totalPages }, allTags] = await Promise.all([
+    getPublishedPosts(pageNum, 9, activeTag, activeSearch),
+    getAllPublishedTags(),
+  ])
+
+  const hasFilter = !!activeTag || !!activeSearch
 
   return (
     <section className="py-24">
@@ -37,13 +56,100 @@ export default async function BlogPage(props: {
           </p>
         </div>
 
+        <form
+          action="/blog"
+          method="get"
+          className="mt-8 mx-auto max-w-md"
+        >
+          {activeTag && <input type="hidden" name="tag" value={activeTag} />}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
+            <input
+              type="search"
+              name="search"
+              defaultValue={activeSearch}
+              placeholder="Search posts..."
+              className="w-full rounded-lg border bg-background py-2 pl-10 pr-10 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+            />
+            {activeSearch && (
+              <Link
+                href={buildHref(1, activeTag)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-0.5 text-muted-foreground hover:text-foreground transition-colors"
+                aria-label="Clear search"
+              >
+                <X className="size-4" />
+              </Link>
+            )}
+          </div>
+        </form>
+
+        {allTags.length > 0 && (
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+            <Link
+              href="/blog"
+              className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium transition-colors ${
+                !activeTag
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted text-muted-foreground hover:bg-muted/80"
+              }`}
+            >
+              All
+            </Link>
+            {allTags.map((tag) => {
+              const isActive = activeTag === tag
+              return (
+                <Link
+                  key={tag}
+                  href={isActive ? "/blog" : buildHref(1, tag, activeSearch)}
+                  className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium transition-colors ${
+                    isActive
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground hover:bg-muted/80"
+                  }`}
+                >
+                  {tag}
+                  {isActive && <X className="ml-1 size-3" />}
+                </Link>
+              )
+            })}
+          </div>
+        )}
+
+        {hasFilter && (
+          <p className="mt-4 text-center text-sm text-muted-foreground">
+            {posts.length === 0
+              ? "No posts found"
+              : `Showing ${posts.length} post${posts.length !== 1 ? "s" : ""}`}
+            {activeSearch && (
+              <>
+                {" for "}
+                <span className="font-medium text-foreground">&quot;{activeSearch}&quot;</span>
+              </>
+            )}
+            {activeTag && (
+              <>
+                {" tagged "}
+                <span className="font-medium text-foreground">&quot;{activeTag}&quot;</span>
+              </>
+            )}
+            {" · "}
+            <Link href="/blog" className="text-primary hover:underline">
+              Clear all
+            </Link>
+          </p>
+        )}
+
         {posts.length === 0 ? (
           <div className="mt-16 flex flex-col items-center gap-3 text-center">
             <FileText className="size-12 text-muted-foreground/40" />
-            <p className="text-muted-foreground">No posts yet. Check back soon.</p>
+            <p className="text-muted-foreground">
+              {hasFilter
+                ? "No posts match your search. Try a different query."
+                : "No posts yet. Check back soon."}
+            </p>
           </div>
         ) : (
-          <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {posts.map((post) => {
               const tags = parseTags(post.tags)
               return (
@@ -87,15 +193,21 @@ export default async function BlogPage(props: {
                       ) : (
                         <div />
                       )}
-                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                        <Clock className="size-3" />
-                        {post.publishedAt
-                          ? new Date(post.publishedAt).toLocaleDateString("en-US", {
-                              month: "short",
-                              day: "numeric",
-                              year: "numeric",
-                            })
-                          : "—"}
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <span className="flex items-center gap-1">
+                          <BookOpen className="size-3" />
+                          {getReadingTime(post.excerpt || "")}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Clock className="size-3" />
+                          {post.publishedAt
+                            ? new Date(post.publishedAt).toLocaleDateString("en-US", {
+                                month: "short",
+                                day: "numeric",
+                                year: "numeric",
+                              })
+                            : "—"}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -109,7 +221,7 @@ export default async function BlogPage(props: {
           <nav className="mt-12 flex items-center justify-center gap-4" aria-label="Pagination">
             {page > 1 && (
               <Button variant="outline" asChild>
-                <Link href={`/blog?page=${page - 1}`}>Previous</Link>
+                <Link href={buildHref(page - 1, activeTag, activeSearch)}>Previous</Link>
               </Button>
             )}
             <span className="text-sm text-muted-foreground">
@@ -117,7 +229,7 @@ export default async function BlogPage(props: {
             </span>
             {page < totalPages && (
               <Button variant="outline" asChild>
-                <Link href={`/blog?page=${page + 1}`}>Next</Link>
+                <Link href={buildHref(page + 1, activeTag, activeSearch)}>Next</Link>
               </Button>
             )}
           </nav>
