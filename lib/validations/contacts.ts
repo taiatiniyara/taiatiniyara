@@ -10,3 +10,8 @@ export const ContactSchema = z.object({
 })
 
 export type Contact = z.infer<typeof ContactSchema>
+
+export const ReplySchema = z.object({
+  id: z.number(),
+  message: z.string().min(1, "Reply cannot be empty").max(5000),
+})

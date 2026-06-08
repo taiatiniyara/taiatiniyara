@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { getPostBySlug } from "@/lib/data"
+import { getFromR2 } from "@/lib/r2"
 import { safeJsonParse } from "@/lib/utils"
 import { TipTapContent } from "@/app/(public)/blog/_components/tip-tap-content"
 import { Badge } from "@/components/ui/badge"
@@ -47,6 +48,9 @@ export default async function BlogPostPage({ params }: Props) {
   if (!post) notFound()
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? ""
+  const contentJson = post.contentR2Key
+    ? (await getFromR2(post.contentR2Key)) ?? ""
+    : ""
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -114,7 +118,7 @@ export default async function BlogPostPage({ params }: Props) {
       )}
 
       <div className="mt-8 font-serif text-lg leading-relaxed">
-        <TipTapContent content={post.contentR2Key} />
+        <TipTapContent content={contentJson} />
       </div>
     </article>
   )

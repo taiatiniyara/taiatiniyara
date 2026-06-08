@@ -1,37 +1,42 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import Image from "next/image"
-import { ThemeToggle } from "@/components/layout/theme-toggle"
-import { Menu, X, ArrowRight } from "lucide-react"
-import { useState } from "react"
+import Link from "next/link";
+import Image from "next/image";
+import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { Menu, X, ArrowRight } from "lucide-react";
+import { useState } from "react";
 
 type Props = {
-  showProducts?: boolean
-}
+  showProducts?: boolean;
+};
 
 export function Navbar({ showProducts = true }: Props) {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   const mainLinks = [
     { href: "/", label: "Home" },
     { href: "/#services", label: "Services" },
+    { href: "/#process", label: "How We Work" },
     { href: "/#portfolio", label: "Portfolio" },
+    { href: "/#team", label: "Team" },
     ...(showProducts ? [{ href: "/#products", label: "Products" }] : []),
     { href: "/blog", label: "Blog" },
-  ]
+  ];
 
   return (
-    <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
-        <Link href="/" className="flex items-center">
+        <Link
+          href="/"
+          className="flex items-center"
+        >
           <Image
             src="/logo.svg"
             alt="Taia Tiniyara"
-            width={140}
-            height={32}
+            width={0}
+            height={0}
             className="h-8 w-auto"
-            style={{ width: "auto", height: "auto" }}
+            unoptimized
             priority
           />
         </Link>
@@ -97,5 +102,5 @@ export function Navbar({ showProducts = true }: Props) {
         </nav>
       )}
     </header>
-  )
+  );
 }

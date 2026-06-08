@@ -18,10 +18,10 @@ export async function Portfolio() {
         <ScrollReveal>
           <div className="mb-12 text-center">
             <h2 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl">
-              Our Work
+              Client Success Stories
             </h2>
             <p className="mt-3 text-muted-foreground">
-              Projects we&apos;ve delivered for our clients.
+              Real results we&apos;ve delivered for businesses like yours.
             </p>
           </div>
         </ScrollReveal>
@@ -29,7 +29,7 @@ export async function Portfolio() {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {projects.map((project) => (
             <ScrollReveal key={project.id}>
-              <Card className="overflow-hidden flex flex-col hover:border-primary/40 hover:shadow-sm transition-all duration-200">
+              <Card className="overflow-hidden flex flex-col pt-0 hover:border-primary/40 hover:shadow-sm transition-all duration-200">
                 {project.imageUrl ? (
                   <div className="relative h-48 bg-muted">
                     <Image

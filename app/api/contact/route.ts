@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { contacts } from "@/lib/schema"
 import { ContactSchema } from "@/lib/validations/contacts"
-import { sendContactNotification } from "@/lib/email"
+import { sendContactNotification, sendContactAcknowledgement } from "@/lib/email"
 import { rateLimit } from "@/lib/rate-limiter"
 
 export async function POST(req: NextRequest) {
@@ -39,10 +39,15 @@ export async function POST(req: NextRequest) {
     updatedAt: now,
   })
 
-  // Send notification email (fire and forget)
-  sendContactNotification(parsed.data).catch(() => {
+  // Send notification email to owner + acknowledgement to submitter
+  try {
+    await Promise.all([
+      sendContactNotification(parsed.data),
+      sendContactAcknowledgement(parsed.data),
+    ])
+  } catch {
     // Email failure is non-critical
-  })
+  }
 
   return NextResponse.json({ success: true })
 }

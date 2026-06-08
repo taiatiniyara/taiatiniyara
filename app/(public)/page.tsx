@@ -2,6 +2,7 @@ import { Hero } from "@/components/sections/hero"
 import { Stats } from "@/components/sections/stats"
 import { Services } from "@/components/sections/services"
 import { Process } from "@/components/sections/process"
+import { Team } from "@/components/sections/team"
 import { Portfolio } from "@/components/sections/portfolio"
 import { Testimonials } from "@/components/sections/testimonials"
 import { Products } from "@/components/sections/products"
@@ -12,18 +13,18 @@ import type { Metadata } from "next"
 export const metadata: Metadata = {
   title: "Taia Tiniyara — Software Engineering Studio",
   description:
-    "Custom web apps, mobile apps, and API development. We build software that moves your business forward.",
+    "Custom web apps, mobile apps, and API development built around your goals. Turn your idea into software that grows your business.",
   openGraph: {
     title: "Taia Tiniyara — Software Engineering Studio",
     description:
-      "Custom web apps, mobile apps, and API development. We build software that moves your business forward.",
+      "Custom web apps, mobile apps, and API development built around your goals. Turn your idea into software that grows your business.",
     type: "website",
   },
-  twitter: {
+    twitter: {
     card: "summary_large_image",
     title: "Taia Tiniyara — Software Engineering Studio",
     description:
-      "Custom web apps, mobile apps, and API development. We build software that moves your business forward.",
+      "Custom web apps, mobile apps, and API development built around your goals. Turn your idea into software that grows your business.",
   },
 }
 
@@ -34,6 +35,7 @@ export default async function HomePage() {
       <Stats />
       <Services />
       <Process />
+      <Team />
       <Portfolio />
       <Testimonials />
       <Products />

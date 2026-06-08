@@ -3,7 +3,7 @@ import { getStats } from "@/lib/data"
 import { Briefcase, Wrench, Building2 } from "lucide-react"
 
 export async function Stats() {
-  const { projectCount, serviceCount } = await getStats()
+  const { projectCount, serviceCount, clientCount } = await getStats()
 
   const stats = [
     {
@@ -17,7 +17,7 @@ export async function Stats() {
       icon: Briefcase,
     },
     {
-      value: projectCount > 0 ? projectCount : 1,
+      value: clientCount,
       label: "Happy Clients",
       icon: Building2,
     },

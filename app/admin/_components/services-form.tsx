@@ -21,7 +21,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { Pencil, Trash2, GripVertical } from "lucide-react"
+import { Pencil, Trash2, GripVertical, Layers } from "lucide-react"
 import { toast } from "sonner"
 import {
   createService,
@@ -40,13 +40,51 @@ type ServiceRow = {
   updatedAt: string
 }
 
-export function ServiceForm({
+export function AddServiceButton() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <Button onClick={() => setOpen(true)} size="sm">
+        Add Service
+      </Button>
+      <ServiceFormDialog
+        onSuccess={() => setOpen(false)}
+      />
+    </Dialog>
+  )
+}
+
+function EditServiceDialog({
+  row,
+  onClose,
+}: {
+  row: ServiceRow
+  onClose: () => void
+}) {
+  const [open, setOpen] = useState(true)
+
+  return (
+    <Dialog open={open} onOpenChange={(v) => { if (!v) onClose(); setOpen(v); }}>
+      <ServiceFormDialog
+        edit={row}
+        onSuccess={() => {
+          setOpen(false)
+          onClose()
+        }}
+      />
+    </Dialog>
+  )
+}
+
+function ServiceFormDialog({
   edit,
+  onSuccess,
 }: {
   edit?: ServiceRow
+  onSuccess: () => void
 }) {
   const router = useRouter()
-  const [open, setOpen] = useState(false)
 
   async function handleSubmit(formData: FormData) {
     const result = edit
@@ -59,60 +97,37 @@ export function ServiceForm({
     }
 
     toast.success(edit ? "Service updated" : "Service created")
-    setOpen(false)
+    onSuccess()
     router.refresh()
   }
 
   return (
-    <Dialog open={open || !!edit} onOpenChange={edit ? undefined : setOpen}>
-      <Button onClick={() => setOpen(true)} variant="outline" size="sm">
-        Add Service
-      </Button>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{edit ? "Edit Service" : "New Service"}</DialogTitle>
-        </DialogHeader>
-        <form action={handleSubmit} className="space-y-4">
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium">Title *</label>
-            <Input
-              name="title"
-              defaultValue={edit?.title}
-              required
-            />
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium">Description *</label>
-            <Textarea
-              name="description"
-              defaultValue={edit?.description}
-              required
-              rows={3}
-            />
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium">Icon (Lucide name) *</label>
-            <Input
-              name="icon"
-              defaultValue={edit?.icon}
-              required
-              placeholder="e.g. Code, Server, Globe"
-            />
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium">Sort Order</label>
-            <Input
-              name="sortOrder"
-              type="number"
-              defaultValue={edit?.sortOrder ?? 0}
-            />
-          </div>
-          <Button type="submit" className="w-full">
-            {edit ? "Save Changes" : "Create Service"}
-          </Button>
-        </form>
-      </DialogContent>
-    </Dialog>
+    <DialogContent>
+      <DialogHeader>
+        <DialogTitle>{edit ? "Edit Service" : "New Service"}</DialogTitle>
+      </DialogHeader>
+      <form action={handleSubmit} className="space-y-4">
+        <div className="space-y-1.5">
+          <label className="text-sm font-medium">Title *</label>
+          <Input name="title" defaultValue={edit?.title} required />
+        </div>
+        <div className="space-y-1.5">
+          <label className="text-sm font-medium">Description *</label>
+          <Textarea name="description" defaultValue={edit?.description} required rows={3} />
+        </div>
+        <div className="space-y-1.5">
+          <label className="text-sm font-medium">Icon (Lucide name) *</label>
+          <Input name="icon" defaultValue={edit?.icon} required placeholder="e.g. Code, Server, Globe" />
+        </div>
+        <div className="space-y-1.5">
+          <label className="text-sm font-medium">Sort Order</label>
+          <Input name="sortOrder" type="number" defaultValue={edit?.sortOrder ?? 0} />
+        </div>
+        <Button type="submit" className="w-full">
+          {edit ? "Save Changes" : "Create Service"}
+        </Button>
+      </form>
+    </DialogContent>
   )
 }
 
@@ -130,49 +145,69 @@ export function ServiceList({ rows }: { rows: ServiceRow[] }) {
   }
 
   if (rows.length === 0) {
-    return <p className="text-sm text-muted-foreground">No services yet.</p>
+    return (
+      <Card className="flex flex-col items-center justify-center py-12 text-center">
+        <Layers className="size-10 text-muted-foreground/30 mb-3" />
+        <p className="text-sm font-medium text-muted-foreground">No services yet</p>
+        <p className="text-xs text-muted-foreground/70 mt-1 max-w-xs">
+          Add services to display on your homepage.
+        </p>
+      </Card>
+    )
   }
 
   return (
     <>
-      <div className="space-y-2">
+      <div className="space-y-1">
         {rows.map((row) => (
-          <Card key={row.id} className="flex items-center gap-3 p-3">
-            <GripVertical className="size-4 text-muted-foreground shrink-0" />
+          <div
+            key={row.id}
+            className="flex items-center gap-2.5 px-3 py-2 bg-muted/40 rounded-md group hover:bg-muted/70 transition-colors"
+          >
+            <GripVertical className="size-3.5 text-muted-foreground/30 shrink-0" />
+            <span className="text-[10px] text-muted-foreground/50 font-mono w-4 text-center shrink-0">
+              {row.sortOrder}
+            </span>
+            <span className="text-[10px] text-muted-foreground/60 shrink-0 w-12 truncate hidden sm:inline">
+              {row.icon}
+            </span>
             <div className="flex-1 min-w-0">
-              <p className="font-medium truncate">{row.title}</p>
-              <p className="text-xs text-muted-foreground truncate">
+              <p className="text-xs font-medium truncate">{row.title}</p>
+              <p className="text-[11px] text-muted-foreground/50 truncate">
                 {row.description}
               </p>
             </div>
-            <div className="flex items-center gap-1 shrink-0">
+            <div className="items-center gap-0.5 hidden group-hover:flex">
               <Button
                 variant="ghost"
                 size="icon-xs"
+                className="size-6"
                 onClick={() => setEditRow(row)}
               >
-                <Pencil className="size-3.5" />
+                <Pencil className="size-3" />
               </Button>
               <Button
                 variant="ghost"
                 size="icon-xs"
+                className="size-6"
                 onClick={() => setDeleteId(row.id)}
               >
-                <Trash2 className="size-3.5 text-destructive" />
+                <Trash2 className="size-3 text-destructive" />
               </Button>
             </div>
-          </Card>
+          </div>
         ))}
       </div>
 
       {editRow && (
-        <ServiceFormWrapper edit={editRow} onClose={() => setEditRow(null)} />
+        <EditServiceDialog row={editRow} onClose={() => setEditRow(null)} />
       )}
 
-      <AlertDialog
-        open={deleteId !== null}
-        onOpenChange={() => setDeleteId(null)}
-      >
+      <p className="text-[11px] text-muted-foreground/50 mt-2">
+        {rows.length} service{rows.length !== 1 ? "s" : ""}
+      </p>
+
+      <AlertDialog open={deleteId !== null} onOpenChange={() => setDeleteId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Service?</AlertDialogTitle>
@@ -187,57 +222,5 @@ export function ServiceList({ rows }: { rows: ServiceRow[] }) {
         </AlertDialogContent>
       </AlertDialog>
     </>
-  )
-}
-
-function ServiceFormWrapper({
-  edit,
-  onClose,
-}: {
-  edit: ServiceRow
-  onClose: () => void
-}) {
-  const router = useRouter()
-  const [open, setOpen] = useState(true)
-
-  async function handleSubmit(formData: FormData) {
-    const result = await updateService(edit.id, formData)
-    if (result.error) {
-      toast.error("Validation failed")
-      return
-    }
-    toast.success("Service updated")
-    onClose()
-    setOpen(false)
-    router.refresh()
-  }
-
-  return (
-    <Dialog open={open} onOpenChange={(v) => { if (!v) onClose(); setOpen(v); }}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Edit Service</DialogTitle>
-        </DialogHeader>
-        <form action={handleSubmit} className="space-y-4">
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium">Title *</label>
-            <Input name="title" defaultValue={edit.title} required />
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium">Description *</label>
-            <Textarea name="description" defaultValue={edit.description} required rows={3} />
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium">Icon (Lucide name) *</label>
-            <Input name="icon" defaultValue={edit.icon} required placeholder="e.g. Code, Server" />
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium">Sort Order</label>
-            <Input name="sortOrder" type="number" defaultValue={edit.sortOrder} />
-          </div>
-          <Button type="submit" className="w-full">Save Changes</Button>
-        </form>
-      </DialogContent>
-    </Dialog>
   )
 }

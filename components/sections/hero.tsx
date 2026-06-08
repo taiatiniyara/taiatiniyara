@@ -32,7 +32,7 @@ export async function Hero() {
                   </Link>
                 </Button>
                 <Button variant="outline" size="lg" asChild>
-                  <Link href="#services">Our Services</Link>
+                  <Link href="#services">What You Get</Link>
                 </Button>
               </div>
               {projectCount > 0 && (

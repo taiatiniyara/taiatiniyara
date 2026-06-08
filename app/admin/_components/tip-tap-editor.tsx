@@ -8,6 +8,7 @@ import LinkExtension from "@tiptap/extension-link"
 import Placeholder from "@tiptap/extension-placeholder"
 import { Button } from "@/components/ui/button"
 import { safeJsonParse } from "@/lib/utils"
+import { toast } from "sonner"
 import {
   Bold,
   Italic,
@@ -66,6 +67,46 @@ export function TipTapEditor({
     if (url && editor) {
       editor.chain().focus().setLink({ href: url }).run()
     }
+  }, [editor])
+
+  useEffect(() => {
+    if (!editor) return
+    const ed = editor
+
+    function handlePaste(event: ClipboardEvent) {
+      const items = event.clipboardData?.items
+      if (!items) return
+
+      const files: File[] = []
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.startsWith("image/")) {
+          const file = items[i].getAsFile()
+          if (file) files.push(file)
+        }
+      }
+
+      if (files.length === 0) return
+
+      event.preventDefault()
+
+      for (const file of files) {
+        const formData = new FormData()
+        formData.append("file", file)
+
+        fetch("/api/upload", { method: "POST", body: formData })
+          .then((res) => (res.ok ? res.json() : Promise.reject()))
+          .then((data: { url: string }) => {
+            ed.chain().focus().setImage({ src: data.url }).run()
+          })
+          .catch(() => {
+            toast.error("Image upload failed")
+          })
+      }
+    }
+
+    const dom = ed.view.dom
+    dom.addEventListener("paste", handlePaste as EventListener)
+    return () => dom.removeEventListener("paste", handlePaste as EventListener)
   }, [editor])
 
   // Sync external value changes

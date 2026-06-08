@@ -17,7 +17,7 @@ export async function Testimonials() {
               What Our Clients Say
             </h2>
             <p className="mt-3 text-muted-foreground">
-              Don&apos;t take our word for it.
+              Hear directly from the people we&apos;ve helped.
             </p>
           </div>
         </ScrollReveal>

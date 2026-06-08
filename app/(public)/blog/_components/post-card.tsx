@@ -17,7 +17,7 @@ type Post = {
 export function PostCard({ post }: { post: Post }) {
   return (
     <Link href={`/blog/${post.slug}`}>
-      <Card className="overflow-hidden h-full hover:border-primary/50 transition-colors">
+      <Card className="overflow-hidden h-full pt-0 hover:border-primary/50 transition-colors">
         {post.coverUrl ? (
           <div className="relative h-44 bg-muted">
             <Image

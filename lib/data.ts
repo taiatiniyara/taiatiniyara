@@ -105,13 +105,18 @@ export async function getRecentPosts(limit = 3) {
 }
 
 export async function getStats() {
-  const [projectCount, serviceCount] = await Promise.all([
+  const [projectCount, serviceCount, clientCountResult] = await Promise.all([
     db.select({ count: sql<number>`count(*)` }).from(projects),
     db.select({ count: sql<number>`count(*)` }).from(services),
+    db
+      .select({ count: sql<number>`count(distinct client_name)` })
+      .from(projects)
+      .where(ne(projects.clientName, "")),
   ])
 
   return {
     projectCount: projectCount[0]?.count ?? 0,
     serviceCount: serviceCount[0]?.count ?? 0,
+    clientCount: clientCountResult[0]?.count ?? 0,
   }
 }

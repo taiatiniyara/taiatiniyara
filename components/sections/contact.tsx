@@ -18,6 +18,7 @@ import { Send, Loader2 } from "lucide-react"
 
 export function Contact() {
   const [sending, setSending] = useState(false)
+  const [formKey, setFormKey] = useState(0)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -35,7 +36,7 @@ export function Contact() {
 
       if (res.ok) {
         toast.success("Message sent! We'll get back to you soon.")
-        e.currentTarget.reset()
+        setFormKey((k) => k + 1)
       } else {
         toast.error(data.error || "Failed to send message")
       }
@@ -62,7 +63,7 @@ export function Contact() {
 
         <ScrollReveal>
           <Card className="mx-auto max-w-lg p-6">
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form key={formKey} onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-1.5">
                 <label htmlFor="name" className="text-sm font-medium">
                   Name <span className="text-destructive">*</span>

@@ -18,10 +18,10 @@ export async function Products() {
         <ScrollReveal>
           <div className="mb-12 text-center">
             <h2 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl">
-              Our Products
+              Tools to Accelerate Your Growth
             </h2>
             <p className="mt-3 text-muted-foreground">
-              SaaS products built and maintained by our team.
+              Ready‑to‑use SaaS tools that help you move faster.
             </p>
           </div>
         </ScrollReveal>
@@ -29,7 +29,7 @@ export async function Products() {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {products.map((product) => (
             <ScrollReveal key={product.id}>
-              <Card className="overflow-hidden flex flex-col hover:border-primary/40 hover:shadow-sm transition-all duration-200">
+              <Card className="overflow-hidden flex flex-col pt-0 hover:border-primary/40 hover:shadow-sm transition-all duration-200">
                 {product.imageUrl ? (
                   <div className="relative h-48 bg-muted">
                     <Image

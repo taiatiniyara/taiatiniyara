@@ -1,29 +1,34 @@
-import type { Metadata } from "next"
-import { Geist, JetBrains_Mono, Roboto_Slab, Source_Serif_4 } from "next/font/google"
-import "./globals.css"
-import { cn } from "@/lib/utils"
-import { Toaster } from "sonner"
-import { ThemeProvider } from "@/components/layout/theme-provider"
+import type { Metadata } from "next";
+import {
+  Geist,
+  JetBrains_Mono,
+  Roboto_Slab,
+  Source_Serif_4,
+} from "next/font/google";
+import "./globals.css";
+import { cn } from "@/lib/utils";
+import { Toaster } from "sonner";
+import { ThemeProvider } from "@/components/layout/theme-provider";
 
 const geist = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
-})
+});
 
 const robotoSlab = Roboto_Slab({
   variable: "--font-heading",
   subsets: ["latin"],
-})
+});
 
 const sourceSerif = Source_Serif_4({
   variable: "--font-serif",
   subsets: ["latin"],
-})
+});
 
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
-})
+});
 
 export const metadata: Metadata = {
   title: {
@@ -48,7 +53,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: process.env.NEXT_PUBLIC_SITE_URL,
   },
-}
+};
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -57,13 +62,12 @@ const jsonLd = {
   description:
     "Custom web apps, mobile apps, and API development. We build software that moves your business forward.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "",
-  sameAs: [],
-}
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <html
@@ -92,9 +96,22 @@ export default function RootLayout({
         />
         <ThemeProvider>
           {children}
-          <Toaster richColors />
+          <Toaster
+            toastOptions={{
+              unstyled: true,
+              className:
+                "rounded-none bg-background flex gap-4 items-center text-white shadow-lg p-4 font-medium",
+              classNames: {
+                success: "bg-green-500",
+                error: "bg-red-500",
+                info: "bg-blue-500",
+                warning: "bg-amber-500",
+              },
+            }}
+            duration={7000}
+          />
         </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }

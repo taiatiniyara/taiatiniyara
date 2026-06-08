@@ -25,34 +25,61 @@ Before writing any code, read these files in this order:
 
 ```
 lib/           → Infrastructure ONLY. No React, no JSX, no UI. Pure server-side.
-  utils.ts         cn() utility (clsx + tailwind-merge)
+  utils.ts         cn() + safeJsonParse() utilities
   db.ts            Drizzle + better-sqlite3 connection
-  schema.ts        Drizzle table definitions (source of truth for DB shape)
-  auth.ts          Cookie session auth (HMAC-signed)
-  r2.ts            Cloudflare R2 S3 client
-  email.ts         Nodemailer transport
-  rate-limiter.ts  In-memory rate limiter
-  validations/     Zod schemas (shared by server actions and forms)
-  data.ts          Public data-fetching helpers
+  schema.ts        Drizzle table definitions (5 tables — source of truth for DB shape)
+  auth.ts          Cookie session auth (HMAC-signed, startup warning if default secret)
+  r2.ts            Cloudflare R2 S3 client (uploadToR2 + getFromR2)
+  email.ts         Nodemailer transport + branded HTML email templates
+  rate-limiter.ts  Fixed-window in-memory rate limiter
+  validations/     Zod v4 schemas (shared by server actions and forms)
+  data.ts          Public data-fetching helpers (9 functions)
 
 proxy.ts       → Auth gate for admin routes. Next.js 16 replaces middleware.ts with proxy.ts.
                   Named export: `export function proxy(request: NextRequest)`.
+                  Config: `matcher: ["/admin/:path*"]`.
 
 app/           → Routes, server actions, and feature-specific components colocated.
   (public)/        Route group for public pages
+    layout.tsx        Public layout (navbar + footer)
+    page.tsx          Homepage (10 sections with IDs for smooth scroll)
+    loading.tsx       Public loading skeleton
+    error.tsx         Public error boundary
     blog/
-      _components/   Blog-specific components (post-card, tip-tap-content, pagination)
-      _actions/      Server actions for blog data
+      page.tsx          Blog listing (9 posts/page, paginated)
+      loading.tsx       Blog listing loading skeleton
+      error.tsx         Blog error boundary
+      [slug]/
+        page.tsx          Blog post detail (fetches JSON from R2, JSON-LD, metadata)
+        loading.tsx       Blog post loading skeleton
+      _components/     Blog-specific components (post-card, tip-tap-content, pagination)
+    privacy/
+      page.tsx          Privacy policy page
+    robots.ts         Auto-generated robots.txt
+    sitemap.ts        Auto-generated sitemap.xml
   admin/
     login/           Standalone login page (no admin layout wrapping)
     (dashboard)/     Protected admin pages (gate via proxy.ts + layout with sidebar)
-    _components/     Admin-specific components (sidebar, forms, tiptap-editor, upload-button)
-    _actions/        Server actions for admin CRUD
+      layout.tsx       Admin sidebar layout
+      page.tsx         Dashboard (stats: services, projects, products, posts, unread)
+      loading.tsx      Admin loading skeleton
+      error.tsx        Admin error boundary
+      services/page.tsx
+      projects/page.tsx
+      products/page.tsx
+      posts/
+        page.tsx         Posts CRUD list
+        new/page.tsx     New post form
+        [id]/edit/page.tsx  Edit post form (fetches JSON from R2)
+      messages/page.tsx
+    _components/     Admin-specific components (sidebar, forms, tip-tap-editor, upload-button, input-field, messages-list)
+    _actions/        Server actions for admin CRUD (services, projects, products, posts, contacts)
 
 components/    → SHARED components only.
-  ui/               shadcn/ui primitives (button, card, input, dialog, etc.)
+  ui/               shadcn/ui v4 (radix-sera) primitives: accordion, alert, alert-dialog, badge, breadcrumb, button, card, checkbox, dialog, input, label, select, separator, sheet, sidebar, skeleton, textarea, tooltip
   layout/           Shared layout (navbar, footer, theme-provider, theme-toggle)
-  sections/         Homepage sections (hero, services, portfolio, products, contact)
+  sections/         Homepage sections (hero, hero-code-window, stats, services, process, team, team-ai-grid, portfolio, testimonials, products, blog-preview, contact)
+  shared/           Shared utilities (scroll-reveal)
 ```
 
 **Rules:**
@@ -61,6 +88,7 @@ components/    → SHARED components only.
 - If a component is used by more than one route group, it belongs in `components/`.
 - Zod schemas live in `lib/validations/` because both server actions and client forms import them.
 - `lib/schema.ts` is the single source of truth for the database shape. No other file defines table structures.
+- Blog data fetching uses `lib/data.ts` (public helpers), not a separate `_actions/` folder.
 
 ## Tech Stack
 
@@ -74,16 +102,33 @@ components/    → SHARED components only.
 | Primitives | radix-ui | ^1.5.0 | Headless UI primitives |
 | Icons | lucide-react | ^1.17.0 | Icon library |
 | Class merging | clsx + tailwind-merge + cva | latest | `cn()` utility, component variants |
+| Class variance | class-variance-authority | ^0.7.1 | `cva()` for component variants |
 | Toasts | sonner | ^2.0.7 | Toast notifications |
 | Animation | tw-animate-css | ^1.4.0 | CSS animation utilities |
-| Database | better-sqlite3 + drizzle-orm | TBD | SQLite with type-safe queries |
-| Storage | @aws-sdk/client-s3 | TBD | Cloudflare R2 (S3-compatible) |
-| Validation | zod | TBD | Schema validation |
-| Email | nodemailer | TBD | Contact form notifications |
-| Theme | next-themes | TBD | Dark/light mode toggle |
-| Editor | @tiptap/react + extensions | TBD | Rich text editor for blog posts |
+| Database | better-sqlite3 + drizzle-orm | ^12.10.0 / ^0.45.2 | SQLite with type-safe queries |
+| DB kit | drizzle-kit | ^0.31.10 | Schema generation and migrations |
+| Storage | @aws-sdk/client-s3 | ^3.1063.0 | Cloudflare R2 (S3-compatible) |
+| Validation | zod | ^4.4.3 | Schema validation |
+| Email | nodemailer | ^8.0.10 | Contact form notifications (branded HTML) |
+| Types (email) | @types/nodemailer | ^8.0.0 | Nodemailer type definitions |
+| Theme | next-themes | ^0.4.6 | Dark/light mode toggle |
+| Editor | @tiptap/react + extensions | ^3.26.0 | Rich text editor for blog posts (paste-to-upload) |
+| Deployment | PM2 | — | Process manager via `ecosystem.config.js` |
 
 **Do NOT add new dependencies without updating this file and SPECS.md.**
+
+## NPM Scripts
+
+| Script | Command | Purpose |
+|---|---|---|
+| `dev` | `next dev` | Development server |
+| `build` | `next build` | Production build |
+| `start` | `next start` | Start production server |
+| `lint` | `eslint` | Lint check |
+| `db:push` | `drizzle-kit push` | Push schema to SQLite |
+| `db:generate` | `drizzle-kit generate` | Generate migration files |
+| `db:migrate` | `drizzle-kit migrate` | Run migrations |
+| `git:push` | `git add . && git commit -m 'Update' && git push` | Quick commit+push |
 
 ## Code Conventions
 
@@ -97,8 +142,8 @@ components/    → SHARED components only.
 - **Files**: kebab-case (`post-card.tsx`, `rate-limiter.ts`, `theme-toggle.tsx`).
 - **Components**: PascalCase, named export preferred over default. Exception: Next.js page/layout files use `export default`.
 - **Functions**: camelCase (`getPublishedPosts`, `createService`).
-- **Database columns**: camelCase in Drizzle schema (`sortOrder`, `createdAt`, `isRead`).
-- **Database tables**: plural, camelCase in code (`services`, `posts`). Let Drizzle map to snake_case SQLite if desired — otherwise store as camelCase.
+- **Database columns**: camelCase in Drizzle schema (`sortOrder`, `createdAt`, `isRead`). Drizzle maps to snake_case SQLite.
+- **Database tables**: plural, camelCase in code (`services`, `posts`).
 - **Zod schemas**: PascalCase ending in `Schema` (`ServiceSchema`, `PostSchema`). Export inferred types (`export type Service = z.infer<typeof ServiceSchema>`).
 
 ### Imports
@@ -109,7 +154,7 @@ components/    → SHARED components only.
 ### Server vs Client Components
 - All components are Server Components by default. Only add `"use client"` when needed.
 - Client boundaries: interactive state (`useState`, `useEffect`), event handlers (`onClick`, `onSubmit`), browser APIs, custom hooks.
-- **Tip**: shadcn/ui components that wrap Radix primitives (Dialog, AlertDialog, Accordion, Checkbox) are already client components — importing them does NOT make your component a client component. Only add `"use client"` if your own file uses hooks.
+- **Tip**: shadcn/ui components that wrap Radix primitives (Dialog, AlertDialog, Accordion, Checkbox, Select) are already client components — importing them does NOT make your component a client component. Only add `"use client"` if your own file uses hooks.
 - Keep client components as leaf nodes. Push state up only when multiple children need it.
 
 ### shadcn/ui v4 (radix-sera)
@@ -119,24 +164,26 @@ components/    → SHARED components only.
 - To add a new shadcn component: `npx shadcn@latest add <component-name>`. Do NOT hand-write shadcn components.
 
 ### Forms & Validation
-- All form submissions go through server actions (not API routes, except for uploads).
+- All form submissions go through server actions (not API routes, except for uploads and contact form).
 - Use `useActionState` + Zod on the server. Client receives field errors back via action return value.
 - Validation schemas in `lib/validations/` are the single source of truth — imported by both server actions and client forms.
 - Sanitize inputs before DB insertion. Never trust client data.
+- Contact form uses `key`-based remount to properly reset Radix Select components on success.
 
 ### Database
 - ALWAYS use Drizzle's typed query builder. Never write raw SQL.
 - All DB operations must be wrapped in try/catch with meaningful error returns.
 - Use Drizzle transactions when mutating multiple tables atomically.
-- Run `npm run db:push` (TBD) after schema changes. Never manually alter the SQLite file.
+- Run `npm run db:push` after schema changes. Never manually alter the SQLite file.
 
 ### Styling
 - Tailwind v4 uses `@import "tailwindcss"` in CSS (no `tailwind.config.ts`).
 - Theme tokens in globals.css via `@theme inline` + `:root` / `.dark`.
 - Use semantic tokens: `bg-background`, `text-foreground`, `bg-primary`, `text-muted-foreground`, `border-border`.
-- For one-off values, use Tailwind arbitrary values: `bg-[oklch(0.5_0.2_290)]`. Prefer theme tokens when possible.
+- For one-off values, use Tailwind arbitrary values. Prefer theme tokens when possible.
 - Responsive: mobile-first (`md:`, `lg:`, `xl:` breakpoints). Test at 375px, 768px, 1024px, 1440px.
 - Dark mode: use `dark:` prefix. All pages must work in both modes.
+- `html { scroll-behavior: smooth; }` is set for hash-link smooth scrolling.
 
 ### Loading & Error States
 - Every async page gets a `loading.tsx` sibling with skeleton UI.
@@ -147,14 +194,33 @@ components/    → SHARED components only.
 ### Metadata & SEO
 - Every public page exports a `metadata` object (or `generateMetadata` for dynamic routes).
 - Include: `title`, `description`, `openGraph` (title, description, siteName, images), `alternates.canonical`.
-- Blog posts use `generateMetadata` based on slug, pulling from the DB.
+- Blog posts use `generateMetadata` based on slug, pulling from the DB (fetches content from R2).
 - JSON-LD via `<script type="application/ld+json">` in layout (Organization) and blog post pages (BlogPosting).
+
+### Security
+- `proxy.ts` guards all `/admin/*` routes except `/admin/login`.
+- Rate limiting on `/api/auth` (5 req/60s) and `/api/contact` (3 req/60s).
+- Security headers applied via `next.config.ts`: CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy (CSP and HSTS only in production).
+- `SESSION_SECRET` and `NEXT_PUBLIC_SITE_URL` have startup warnings if using defaults/unset.
+- Never store secrets in client code. Only server-side environment variables (no `NEXT_PUBLIC_` prefix for secrets).
+
+### Email
+- `lib/email.ts` contains branded HTML email templates (rose/pink palette matching app theme).
+- `sendContactNotification` sends HTML email with all contact form fields, human-readable labels, and a reply-to button.
+- Plain-text fallback included for email clients that block HTML.
+- `NOTIFICATION_EMAIL` env var controls where notifications go (default: `taiatiniyara@gmail.com`).
+
+### R2 Storage
+- Images uploaded via `/api/upload` (auth-gated) to `uploads/{uuid}.{ext}`.
+- Blog TipTap JSON uploaded via server actions to `posts/{slug}/content.json`.
+- `getFromR2()` fetches objects back — used by blog post page and edit page.
+- `uploadToR2()` returns the public URL for images, or just uploads for content JSON.
 
 ## Phase Status
 
 Track progress in `docs/ROADMAP.md`. Mark tasks `[x]` when complete. Work in phase order — don't skip ahead unless a dependency is already satisfied.
 
-**Current phase:** Phase 1 (Foundation)
+**Current phase:** Phase 4 (Polish) — all implementation tasks complete. Remaining: QA (mobile testing, Lighthouse audit, cross-browser smoke test, dark mode visual pass).
 
 ## Common Pitfalls
 
@@ -163,9 +229,11 @@ Track progress in `docs/ROADMAP.md`. Mark tasks `[x]` when complete. Work in pha
 3. **Don't import server code into client components.** Server actions, DB queries, and filesystem access are server-only. Use `"server-only"` import if needed.
 4. **Don't forget `loading.tsx` and `error.tsx`.** Every async route needs them.
 5. **Don't hardcode colors.** Use theme tokens (`text-primary`, `bg-secondary`, etc.).
-6. **Don't let the TipTap JSON content renderer execute arbitrary HTML.** Parse and sanitize the JSON nodes into React elements.
+6. **Don't let the TipTap JSON content renderer execute arbitrary HTML.** Parse and sanitize the JSON nodes into React elements (done via `tip-tap-content.tsx`).
 7. **Don't store secrets in client code.** Only server-side environment variables (no `NEXT_PUBLIC_` prefix for secrets).
 8. **Don't add new dependencies without updating AGENTS.md and SPECS.md.**
+9. **Blog content JSON is stored in R2, NOT in SQLite.** The `contentR2Key` column stores the R2 object key (e.g. `posts/{slug}/content.json`). Use `getFromR2()` to fetch content.
+10. **When resetting forms with Radix Select components**, use `key`-based remount (increment a counter on success). `form.reset()` does not clear Radix internal state.
 
 ## Quality Bar
 

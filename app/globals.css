@@ -71,7 +71,7 @@
   --chart-3: oklch(0.592 0.249 0.584);
   --chart-4: oklch(0.525 0.223 3.958);
   --chart-5: oklch(0.459 0.187 3.815);
-  --radius: 0.625rem;
+  --radius: 0;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.592 0.249 0.584);
@@ -127,10 +127,21 @@
   }
   html {
     @apply font-sans;
+    scroll-behavior: smooth;
   }
 
   @keyframes terminal-cursor {
     0%, 100% { opacity: 0; }
     50% { opacity: 1; }
+  }
+
+  @keyframes agent-enter {
+    0% { opacity: 0; transform: scale(0.8) translateY(8px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  @keyframes agent-active {
+    0%, 100% { opacity: 0.4; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
   }
 }

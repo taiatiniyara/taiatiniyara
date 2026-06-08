@@ -93,7 +93,7 @@ function renderNodes(nodes: TipTapNode[]): ReactNode {
             key={i}
             src={node.attrs?.src ?? ""}
             alt={node.attrs?.alt ?? ""}
-            className="rounded-none my-6 max-w-full"
+            className="my-6 max-w-full"
           />
         )
 

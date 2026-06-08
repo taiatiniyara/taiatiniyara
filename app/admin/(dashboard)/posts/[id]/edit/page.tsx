@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation"
 import { getPost } from "@/app/admin/_actions/posts"
+import { getFromR2 } from "@/lib/r2"
 import { PostForm } from "@/app/admin/_components/posts-form"
 
 type Props = {
@@ -12,5 +13,9 @@ export default async function EditPostPage({ params }: Props) {
 
   if (!post) notFound()
 
-  return <PostForm edit={post} />
+  const contentJson = post.contentR2Key
+    ? (await getFromR2(post.contentR2Key)) ?? ""
+    : ""
+
+  return <PostForm edit={{ ...post, contentR2Key: contentJson }} />
 }

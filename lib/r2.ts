@@ -1,4 +1,4 @@
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3"
+import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3"
 
 const r2Client = new S3Client({
   region: "auto",
@@ -27,6 +27,21 @@ export async function uploadToR2(
   )
 
   return `${PUBLIC_URL}/${key}`
+}
+
+export async function getFromR2(key: string): Promise<string | null> {
+  try {
+    const response = await r2Client.send(
+      new GetObjectCommand({
+        Bucket: BUCKET,
+        Key: key,
+      }),
+    )
+    const body = await response.Body?.transformToString()
+    return body ?? null
+  } catch {
+    return null
+  }
 }
 
 export { r2Client, BUCKET, PUBLIC_URL }

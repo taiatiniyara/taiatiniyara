@@ -19,7 +19,7 @@ export async function BlogPreview() {
               From the Blog
             </h2>
             <p className="mt-3 text-muted-foreground">
-              Insights, tutorials, and updates from our team.
+              Insights and tutorials to help you build better software.
             </p>
           </div>
         </ScrollReveal>
