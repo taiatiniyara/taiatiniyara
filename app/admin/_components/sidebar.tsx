@@ -58,6 +58,7 @@ function SidebarNav({
             width={120}
             height={28}
             className="h-7 w-auto"
+            style={{ width: "auto", height: "auto" }}
           />
         </Link>
       </div>
@@ -137,6 +138,7 @@ export function AdminSidebar() {
           width={100}
           height={24}
           className="h-6 w-auto"
+          style={{ width: "auto", height: "auto" }}
         />
       </div>
 

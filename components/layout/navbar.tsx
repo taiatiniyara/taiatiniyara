@@ -31,6 +31,7 @@ export function Navbar({ showProducts = true }: Props) {
             width={140}
             height={32}
             className="h-8 w-auto"
+            style={{ width: "auto", height: "auto" }}
             priority
           />
         </Link>
