@@ -36,11 +36,11 @@ const nextConfig: NextConfig = {
         "max-age=63072000; includeSubDomains; preload"
       securityHeaders["Content-Security-Policy"] = [
         "default-src 'self'",
-        "script-src 'self' 'unsafe-inline'",
+        "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com",
         "style-src 'self' 'unsafe-inline'",
         "img-src 'self' https: data:",
         "font-src 'self'",
-        "connect-src 'self'",
+        "connect-src 'self' https://static.cloudflareinsights.com",
         "frame-ancestors 'none'",
         "base-uri 'self'",
         "form-action 'self'",
