@@ -9,9 +9,8 @@ const MAX_DIMENSION = 1920
 
 let sharpReady: boolean | null = null
 
-async function trySharp(): Promise<typeof import("sharp").default> {
-  const sharp = (await import("sharp")).default
-  // Quick smoke test — process a tiny image to verify bindings work
+async function trySharp() {
+  const sharp = (await import("sharp")).default as typeof import("sharp")
   await sharp(Buffer.from("R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7", "base64"))
     .webp()
     .toBuffer()
