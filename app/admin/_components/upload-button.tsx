@@ -26,15 +26,20 @@ export function UploadButton({ onUpload, currentUrl }: Props) {
 
     try {
       const res = await fetch("/api/upload", { method: "POST", body: formData })
-      const json = await res.json()
-      if (!res.ok) {
-        toast.error(json.error || "Upload failed")
-        return
+      const text = await res.text()
+      try {
+        const json = JSON.parse(text)
+        if (!res.ok) {
+          toast.error(json.error || "Upload failed")
+          return
+        }
+        setUrl(json.url)
+        onUpload(json.url)
+      } catch {
+        toast.error(`Unexpected response (${res.status}): ${text.slice(0, 200)}`)
       }
-      setUrl(json.url)
-      onUpload(json.url)
-    } catch {
-      toast.error("Upload failed — check server connection")
+    } catch (err) {
+      toast.error(`Upload failed — ${err instanceof Error ? err.message : "network error"}`)
     } finally {
       setUploading(false)
     }
