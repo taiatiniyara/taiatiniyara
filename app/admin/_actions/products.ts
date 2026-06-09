@@ -30,6 +30,8 @@ export async function createProduct(formData: FormData) {
   })
 
   revalidatePath("/admin/products")
+  revalidatePath("/admin")
+  revalidatePath("/")
   return { success: true }
 }
 
@@ -47,11 +49,15 @@ export async function updateProduct(id: number, formData: FormData) {
     .where(eq(products.id, id))
 
   revalidatePath("/admin/products")
+  revalidatePath("/admin")
+  revalidatePath("/")
   return { success: true }
 }
 
 export async function deleteProduct(id: number) {
   await db.delete(products).where(eq(products.id, id))
   revalidatePath("/admin/products")
+  revalidatePath("/admin")
+  revalidatePath("/")
   return { success: true }
 }

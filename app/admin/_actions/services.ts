@@ -30,6 +30,8 @@ export async function createService(formData: FormData) {
   })
 
   revalidatePath("/admin/services")
+  revalidatePath("/admin")
+  revalidatePath("/")
   return { success: true }
 }
 
@@ -47,11 +49,15 @@ export async function updateService(id: number, formData: FormData) {
     .where(eq(services.id, id))
 
   revalidatePath("/admin/services")
+  revalidatePath("/admin")
+  revalidatePath("/")
   return { success: true }
 }
 
 export async function deleteService(id: number) {
   await db.delete(services).where(eq(services.id, id))
   revalidatePath("/admin/services")
+  revalidatePath("/admin")
+  revalidatePath("/")
   return { success: true }
 }

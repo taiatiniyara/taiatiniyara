@@ -19,18 +19,21 @@ export async function getUnreadCount() {
 export async function markAsRead(id: number) {
   await db.update(contacts).set({ isRead: 1 }).where(eq(contacts.id, id))
   revalidatePath("/admin/messages")
+  revalidatePath("/admin")
   return { success: true }
 }
 
 export async function markAsUnread(id: number) {
   await db.update(contacts).set({ isRead: 0 }).where(eq(contacts.id, id))
   revalidatePath("/admin/messages")
+  revalidatePath("/admin")
   return { success: true }
 }
 
 export async function deleteContact(id: number) {
   await db.delete(contacts).where(eq(contacts.id, id))
   revalidatePath("/admin/messages")
+  revalidatePath("/admin")
   return { success: true }
 }
 

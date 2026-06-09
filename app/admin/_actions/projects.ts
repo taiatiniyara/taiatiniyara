@@ -30,6 +30,8 @@ export async function createProject(formData: FormData) {
   })
 
   revalidatePath("/admin/projects")
+  revalidatePath("/admin")
+  revalidatePath("/")
   return { success: true }
 }
 
@@ -47,11 +49,15 @@ export async function updateProject(id: number, formData: FormData) {
     .where(eq(projects.id, id))
 
   revalidatePath("/admin/projects")
+  revalidatePath("/admin")
+  revalidatePath("/")
   return { success: true }
 }
 
 export async function deleteProject(id: number) {
   await db.delete(projects).where(eq(projects.id, id))
   revalidatePath("/admin/projects")
+  revalidatePath("/admin")
+  revalidatePath("/")
   return { success: true }
 }
