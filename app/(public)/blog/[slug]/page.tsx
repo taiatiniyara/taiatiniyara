@@ -14,21 +14,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import { db } from "@/lib/db"
-import { posts } from "@/lib/schema"
-import { eq } from "drizzle-orm"
 import Image from "next/image"
-
-export const revalidate = 3600
-
-export async function generateStaticParams() {
-  const publishedPosts = await db
-    .select({ slug: posts.slug })
-    .from(posts)
-    .where(eq(posts.status, "published"))
-
-  return publishedPosts.map((post) => ({ slug: post.slug }))
-}
 
 type Props = {
   params: Promise<{ slug: string }>

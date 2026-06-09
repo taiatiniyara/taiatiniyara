@@ -4,8 +4,6 @@ import { getPublishedPosts } from "@/lib/data"
 import { PostCard } from "@/app/(public)/blog/_components/post-card"
 import { Pagination } from "@/app/(public)/blog/_components/pagination"
 
-export const revalidate = 3600
-
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? ""
 
 type Props = {
