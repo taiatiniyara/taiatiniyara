@@ -50,7 +50,7 @@ app/           → Routes, server actions, and feature-specific components coloc
       loading.tsx       Blog listing loading skeleton
       error.tsx         Blog error boundary
       [slug]/
-        page.tsx          Blog post detail (fetches JSON from R2, JSON-LD, metadata)
+        page.tsx          Blog post detail (fetches JSON from R2, JSON-LD BlogPosting + BreadcrumbList, breadcrumb UI, metadata)
         loading.tsx       Blog post loading skeleton
       _components/     Blog-specific components (post-card, tip-tap-content, pagination)
     privacy/
@@ -193,9 +193,16 @@ components/    → SHARED components only.
 
 ### Metadata & SEO
 - Every public page exports a `metadata` object (or `generateMetadata` for dynamic routes).
-- Include: `title`, `description`, `openGraph` (title, description, siteName, images), `alternates.canonical`.
+- Root layout exports `metadataBase`, `viewport`, `robots`, `icons` (favicon), and default OG images.
+- Include: `title`, `description`, `openGraph` (title, description, siteName, images, publishedTime/modifiedTime for articles), `alternates.canonical`.
 - Blog posts use `generateMetadata` based on slug, pulling from the DB (fetches content from R2).
-- JSON-LD via `<script type="application/ld+json">` in layout (Organization) and blog post pages (BlogPosting).
+- Blog listing uses `generateMetadata` for dynamic pagination titles/descriptions/canonical URLs.
+- JSON-LD via `<script type="application/ld+json">`: `Organization` + `WebSite` (SearchAction) in root layout, `BlogPosting` + `BreadcrumbList` on blog post pages.
+- TipTap renderer remaps heading level 1 → `<h2>` to avoid duplicate h1 on blog posts (the page already has an `<h1>` for the post title).
+- External links on portfolio, products, and blog content use `rel="nofollow"` (client projects, SaaS tools, user-generated content).
+- TipTap editor prompts for alt text when inserting images (both URL prompt and paste-to-upload).
+- Blog pages use `revalidate = 3600` (ISR hourly) and `generateStaticParams` for published posts.
+- Sitemap includes images for blog post entries via `coverUrl`.
 
 ### Security
 - `proxy.ts` guards all `/admin/*` routes except `/admin/login`.

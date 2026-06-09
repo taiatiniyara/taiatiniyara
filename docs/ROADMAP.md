@@ -161,16 +161,24 @@
 
 ### SEO Metadata
 
-- [x] `app/layout.tsx` — Metadata export (site name, description, openGraph defaults, canonical)
-- [x] `app/(public)/page.tsx` — Metadata export (homepage-specific title/description)
-- [x] `app/(public)/blog/page.tsx` — Metadata export (blog listing)
-- [x] `app/(public)/blog/[slug]/page.tsx` — Metadata export (per-post title, description, openGraph image = coverUrl)
-- [x] `app/(public)/privacy/page.tsx` — Metadata export
+- [x] `app/layout.tsx` — `metadataBase`, `viewport`, `robots`, `icons` (favicon), OG/twitter images, WebSite JSON-LD with SearchAction
+- [x] `app/(public)/page.tsx` — Metadata export (homepage-specific title/description, OG images, canonical)
+- [x] `app/(public)/blog/page.tsx` — `generateMetadata` for paginated titles/descriptions/canonicals, OG images, `revalidate = 3600`
+- [x] `app/(public)/blog/[slug]/page.tsx` — `generateMetadata` (per-post title/description, OG image = coverUrl or fallback, article meta tags, `generateStaticParams`, `revalidate = 3600`)
+- [x] `app/(public)/privacy/page.tsx` — Metadata export (OG images, twitter card fix)
+- [x] SEO auto-generation in admin post editor (SEO title + description auto-fill from post content)
+- [x] OG images on all public pages (uses `/taia.jpg` as fallback)
+- [x] `rel="nofollow"` on external links (portfolio, products, blog content)
+- [x] Image alt text prompt in TipTap editor (URL prompt + paste-to-upload)
+- [x] TipTap h1 remapped to h2 in renderer (no duplicate h1 on blog posts)
+- [x] Sitemap includes images for blog post entries via `coverUrl`
 
 ### Structured Data (JSON-LD)
 
-- [x] `app/layout.tsx` — `Organization` schema in `<script type="application/ld+json">`
-- [x] `app/(public)/blog/[slug]/page.tsx` — `BlogPosting` schema per post (author, datePublished, image, etc.)
+- [x] `app/layout.tsx` — `Organization` + `WebSite` (SearchAction) schemas
+- [x] `app/(public)/blog/[slug]/page.tsx` — `BlogPosting` + `BreadcrumbList` schemas per post
+- [x] Breadcrumb UI on blog post pages (Home > Blog > Post)
+- [x] Publisher logo in BlogPosting JSON-LD
 
 ### Scroll Animations
 

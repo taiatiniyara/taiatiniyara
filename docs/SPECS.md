@@ -49,7 +49,7 @@ Target clients: businesses and individuals needing software built.
 
 ```
 app/
-├── layout.tsx                      # Root layout (fonts, Toaster, JSON-LD, metadata)
+├── layout.tsx                      # Root layout (fonts, metadata, viewport, Toaster, JSON-LD: Organization + WebSite)
 ├── globals.css                     # Tailwind + shadcn theme + dark mode + custom animations
 ├── loading.tsx                     # Root loading skeleton
 ├── error.tsx                       # Root error boundary
@@ -284,11 +284,18 @@ lib/
 ## SEO Implementation
 
 - `metadata` export on every public page (title, description, openGraph, twitter).
-- `alternates.canonical` on every page.
-- JSON-LD: `Organization` on root layout, `BlogPosting` on post pages.
+- Root layout exports `metadataBase`, `viewport`, `robots`, `icons` (favicon via `/logo.svg`), and default OG/twitter images.
+- All pages have `alternates.canonical` — relative paths via `metadataBase` for root, absolute for children.
+- JSON-LD: `Organization` + `WebSite` (SearchAction) on root layout, `BlogPosting` + `BreadcrumbList` on post pages.
+- Blog posts use `generateMetadata` (dynamic per-post: title, description, cover image, article meta tags).
+- Blog listing uses `generateMetadata` (dynamic paginated: page-specific title, description, canonical).
+- Blog pages use `revalidate = 3600` (ISR hourly) and `generateStaticParams` for published posts.
+- Breadcrumb UI on blog post pages (Home > Blog > Post) with matching BreadcrumbList JSON-LD.
+- TipTap renderer remaps heading level 1 → `<h2>` to avoid duplicate h1.
+- External links use `rel="nofollow"` (portfolio, products, blog content links as `ugc`).
+- TipTap editor prompts for alt text on image insertion (URL prompt + paste-to-upload).
 - Auto-generated `robots.txt` via `app/(public)/robots.ts` (disallows `/admin/`).
-- Auto-generated `sitemap.xml` via `app/(public)/sitemap.ts` (includes blog post slugs).
-- Semantic HTML throughout.
+- Auto-generated `sitemap.xml` via `app/(public)/sitemap.ts` (includes blog post slugs + images).
 
 ## Feature Flags / Conditional Rendering
 
