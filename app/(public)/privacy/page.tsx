@@ -9,11 +9,13 @@ export const metadata: Metadata = {
     title: "Privacy Policy | Taia Tiniyara",
     description: "Privacy policy for Taia Tiniyara, LLC.",
     type: "website",
+    images: [{ url: "/taia.jpg", width: 1200, height: 630 }],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Privacy Policy | Taia Tiniyara",
     description: "Privacy policy for Taia Tiniyara, LLC.",
+    images: ["/taia.jpg"],
   },
   alternates: {
     canonical: `${siteUrl}/privacy`,

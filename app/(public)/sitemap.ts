@@ -7,15 +7,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
 
   const publishedPosts = await db
-    .select({ slug: posts.slug, updatedAt: posts.updatedAt, publishedAt: posts.publishedAt })
+    .select({
+      slug: posts.slug,
+      updatedAt: posts.updatedAt,
+      publishedAt: posts.publishedAt,
+      coverUrl: posts.coverUrl,
+    })
     .from(posts)
     .where(eq(posts.status, "published"))
 
   const postEntries: MetadataRoute.Sitemap = publishedPosts.map((post) => ({
     url: `${siteUrl}/blog/${post.slug}`,
     lastModified: post.updatedAt || post.publishedAt || new Date().toISOString(),
-    changeFrequency: "monthly",
+    changeFrequency: "monthly" as const,
     priority: 0.7,
+    ...(post.coverUrl
+      ? { images: [post.coverUrl] }
+      : {}),
   }))
 
   return [

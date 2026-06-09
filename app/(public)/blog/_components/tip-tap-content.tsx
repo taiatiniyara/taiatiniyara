@@ -32,16 +32,16 @@ function renderNodes(nodes: TipTapNode[]): ReactNode {
         )
 
       case "heading": {
-        const level = node.attrs?.level ?? 1
+        const rawLevel = Number(node.attrs?.level) || 1
+        const level = Math.min(rawLevel + 1, 3) as 2 | 3
         const Tag = `h${level}` as keyof JSX.IntrinsicElements
         const sizeClasses = {
-          1: "text-3xl font-bold mt-12 mb-5",
-          2: "text-2xl font-semibold mt-10 mb-4",
+          2: "text-3xl font-bold mt-12 mb-5",
           3: "text-xl font-semibold mt-8 mb-3",
         }
         return createElement(
           Tag,
-          { key: i, className: sizeClasses[level as keyof typeof sizeClasses] || sizeClasses[2] },
+          { key: i, className: sizeClasses[level] || sizeClasses[2] },
           node.content ? renderNodes(node.content) : null,
         )
       }
@@ -131,7 +131,7 @@ function renderNodes(nodes: TipTapNode[]): ReactNode {
                     key="link"
                     href={mark.attrs?.href ?? "#"}
                     target={mark.attrs?.target ?? "_blank"}
-                    rel="noopener noreferrer"
+                    rel="noopener noreferrer nofollow ugc"
                     className="text-primary underline underline-offset-4 hover:no-underline"
                   >
                     {content}

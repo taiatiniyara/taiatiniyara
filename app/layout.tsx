@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import {
   Geist,
   JetBrains_Mono,
@@ -30,7 +30,19 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+};
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Taia Tiniyara — Software Engineering Studio",
     template: "%s | Taia Tiniyara",
@@ -43,25 +55,59 @@ export const metadata: Metadata = {
       "Custom web apps, mobile apps, and API development. We build software that moves your business forward.",
     siteName: "Taia Tiniyara",
     type: "website",
+    images: [{ url: "/taia.jpg", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Taia Tiniyara — Software Engineering Studio",
     description:
       "Custom web apps, mobile apps, and API development. We build software that moves your business forward.",
+    images: ["/taia.jpg"],
   },
   alternates: {
-    canonical: process.env.NEXT_PUBLIC_SITE_URL,
+    canonical: "/",
+  },
+  icons: {
+    icon: "/logo.svg",
+    shortcut: "/logo.svg",
+    apple: "/logo.svg",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
 
-const jsonLd = {
+const orgJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "Taia Tiniyara",
   description:
     "Custom web apps, mobile apps, and API development. We build software that moves your business forward.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "",
+  url: SITE_URL,
+  logo: `${SITE_URL}/logo.svg`,
+};
+
+const webSiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Taia Tiniyara",
+  url: SITE_URL,
+  potentialAction: {
+    "@type": "SearchAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: `${SITE_URL}/blog?search={search_term_string}`,
+    },
+    "query-input": "required name=search_term_string",
+  },
 };
 
 export default function RootLayout({
@@ -92,7 +138,11 @@ export default function RootLayout({
         </a>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteJsonLd) }}
         />
         <ThemeProvider>
           {children}

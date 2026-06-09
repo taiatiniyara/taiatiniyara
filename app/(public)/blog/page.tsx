@@ -4,28 +4,43 @@ import { getPublishedPosts } from "@/lib/data"
 import { PostCard } from "@/app/(public)/blog/_components/post-card"
 import { Pagination } from "@/app/(public)/blog/_components/pagination"
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? ""
+export const revalidate = 3600
 
-export const metadata: Metadata = {
-  title: "Blog",
-  description: "Articles and insights on software engineering from Taia Tiniyara.",
-  openGraph: {
-    title: "Blog | Taia Tiniyara",
-    description: "Articles and insights on software engineering from Taia Tiniyara.",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Blog | Taia Tiniyara",
-    description: "Articles and insights on software engineering from Taia Tiniyara.",
-  },
-  alternates: {
-    canonical: `${siteUrl}/blog`,
-  },
-}
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? ""
 
 type Props = {
   searchParams: Promise<{ page?: string }>
+}
+
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  const params = await searchParams
+  const page = Math.max(1, Number(params.page) || 1)
+
+  const pageTitle = page > 1 ? `Blog — Page ${page}` : "Blog"
+  const pageDesc =
+    page > 1
+      ? `Page ${page} of articles and insights on software engineering from Taia Tiniyara.`
+      : "Articles and insights on software engineering from Taia Tiniyara."
+
+    return {
+      title: pageTitle,
+      description: pageDesc,
+      openGraph: {
+        title: `${pageTitle} | Taia Tiniyara`,
+        description: pageDesc,
+        type: "website",
+        images: [{ url: "/taia.jpg", width: 1200, height: 630 }],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: `${pageTitle} | Taia Tiniyara`,
+        description: pageDesc,
+        images: ["/taia.jpg"],
+      },
+      alternates: {
+        canonical: page > 1 ? `${siteUrl}/blog?page=${page}` : `${siteUrl}/blog`,
+      },
+    }
 }
 
 export default async function BlogPage({ searchParams }: Props) {

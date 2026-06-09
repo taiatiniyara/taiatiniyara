@@ -58,7 +58,8 @@ export function TipTapEditor({
   const addImage = useCallback(() => {
     const url = window.prompt("Image URL")
     if (url && editor) {
-      editor.chain().focus().setImage({ src: url }).run()
+      const alt = window.prompt("Image description (alt text)", "") || ""
+      editor.chain().focus().setImage({ src: url, alt }).run()
     }
   }, [editor])
 
@@ -96,7 +97,8 @@ export function TipTapEditor({
         fetch("/api/upload", { method: "POST", body: formData })
           .then((res) => (res.ok ? res.json() : Promise.reject()))
           .then((data: { url: string }) => {
-            ed.chain().focus().setImage({ src: data.url }).run()
+            const alt = window.prompt("Image description (alt text)", "") || ""
+            ed.chain().focus().setImage({ src: data.url, alt }).run()
           })
           .catch(() => {
             toast.error("Image upload failed")

@@ -75,7 +75,7 @@ export async function Portfolio() {
 
                   {project.link && (
                     <Button variant="ghost" size="sm" className="mt-3 w-full" asChild>
-                      <Link href={project.link} target="_blank" rel="noopener noreferrer">
+                      <Link href={project.link} target="_blank" rel="noopener noreferrer nofollow">
                         <ExternalLink className="size-3.5 mr-1" />
                         View Project
                       </Link>
