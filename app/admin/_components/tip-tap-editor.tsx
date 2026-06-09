@@ -49,7 +49,7 @@ export function TipTapEditor({
     editorProps: {
       attributes: {
         class:
-          "prose prose-sm dark:prose-invert max-w-none min-h-[200px] p-3 border rounded-none focus:outline-none focus:ring-2 focus:ring-ring",
+          "prose prose-sm dark:prose-invert max-w-none min-h-[200px] p-3 focus:outline-none",
       },
     },
     immediatelyRender: false,
@@ -128,8 +128,8 @@ export function TipTapEditor({
   if (!editor) return null
 
   return (
-    <div className="space-y-2">
-      <div className="flex flex-wrap gap-0.5 border-b pb-2">
+    <div className="space-y-0 rounded-none border border-input">
+      <div className="flex flex-wrap items-center gap-0.5 border-b px-2 py-1.5">
         <Button
           type="button"
           variant="ghost"
@@ -248,7 +248,9 @@ export function TipTapEditor({
         </Button>
       </div>
 
-      <EditorContent editor={editor} />
+      <div className="focus-within:ring-2 focus-within:ring-ring">
+        <EditorContent editor={editor} />
+      </div>
     </div>
   )
 }

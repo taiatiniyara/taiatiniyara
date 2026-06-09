@@ -2,9 +2,12 @@ import { NextRequest, NextResponse } from "next/server"
 import { uploadToR2 } from "@/lib/r2"
 import { verifySessionCookie } from "@/lib/auth"
 import { randomUUID } from "node:crypto"
+import sharp from "sharp"
+
+const WEBP_QUALITY = 80
+const MAX_DIMENSION = 1920
 
 export async function POST(req: NextRequest) {
-  // Auth check
   const session = req.cookies.get("session")?.value
   if (!session || !(await verifySessionCookie(session))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
@@ -17,10 +20,15 @@ export async function POST(req: NextRequest) {
 
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
-    const ext = file.name.split(".").pop() || "png"
-    const key = `uploads/${randomUUID()}.${ext}`
+    const key = `uploads/${randomUUID()}.webp`
 
-    const url = await uploadToR2(key, buffer, file.type)
+    const webpBuffer = await sharp(buffer)
+      .rotate()
+      .resize(MAX_DIMENSION, MAX_DIMENSION, { fit: "inside", withoutEnlargement: true })
+      .webp({ quality: WEBP_QUALITY })
+      .toBuffer()
+
+    const url = await uploadToR2(key, webpBuffer, "image/webp")
     return NextResponse.json({ url })
   } catch {
     return NextResponse.json({ error: "Upload failed" }, { status: 500 })

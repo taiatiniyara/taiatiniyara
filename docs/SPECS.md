@@ -31,6 +31,7 @@ Target clients: businesses and individuals needing software built.
 | UI | React 19, Tailwind CSS v4, shadcn/ui v4 (radix-sera) |
 | Icons | lucide-react |
 | Notifications | sonner (toast library) |
+| Typography | @tailwindcss/typography (prose styling for TipTap editor + blog renderer) |
 | Theme | `oklch` CSS custom properties, dark mode via `.dark` class |
 | Fonts | Geist (body + code), Roboto Slab (headings), Source Serif 4 (blog posts) |
 | Database | SQLite via better-sqlite3 + Drizzle ORM |
@@ -40,6 +41,7 @@ Target clients: businesses and individuals needing software built.
 | Auth | Single password via `ADMIN_PASSWORD` env var, HMAC-signed cookie session (7-day expiry) |
 | Validation | Zod v4 (server actions + forms) |
 | Image | Next.js `<Image>` with R2 domain configured in `next.config.ts` |
+| Image Processing | sharp (WebP conversion, compression, resize on upload) |
 | Animation | Custom Intersection Observer-based scroll reveal |
 | Rate Limiting | Custom fixed-window rate limiter on contact form and login endpoints |
 | Security | CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy (production only) |
@@ -333,6 +335,9 @@ lib/
 ## Image Handling
 
 - Upload via admin panel → R2 via `/api/upload`.
+- All uploads auto-converted to WebP (80% quality) with sharp.
+- Images resized to max 1920px on longest edge, never upscaled.
+- Auto-rotate based on EXIF orientation.
 - Paste-to-upload in TipTap editor: pasting an image uploads to R2 and inserts the URL.
 - Display via `next/image` with R2 domain in `next.config.ts` `images.remotePatterns`.
 - Responsive sizes and srcset handled by Next.js image optimization.

@@ -105,6 +105,8 @@ components/    → SHARED components only.
 | Class variance | class-variance-authority | ^0.7.1 | `cva()` for component variants |
 | Toasts | sonner | ^2.0.7 | Toast notifications |
 | Animation | tw-animate-css | ^1.4.0 | CSS animation utilities |
+| Typography | @tailwindcss/typography | ^0.5.19 | Prose styling for TipTap editor |
+| Image processing | sharp | ^0.34.5 | WebP conversion + compression + resize on upload |
 | Database | better-sqlite3 + drizzle-orm | ^12.10.0 / ^0.45.2 | SQLite with type-safe queries |
 | DB kit | drizzle-kit | ^0.31.10 | Schema generation and migrations |
 | Storage | @aws-sdk/client-s3 | ^3.1063.0 | Cloudflare R2 (S3-compatible) |

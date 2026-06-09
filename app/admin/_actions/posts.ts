@@ -50,6 +50,9 @@ export async function createPost(formData: FormData) {
   })
 
   revalidatePath("/admin/posts")
+  revalidatePath("/")
+  revalidatePath("/blog", "layout")
+  revalidatePath("/sitemap.xml")
   return { success: true }
 }
 
@@ -87,11 +90,17 @@ export async function updatePost(id: number, formData: FormData) {
     .where(eq(posts.id, id))
 
   revalidatePath("/admin/posts")
+  revalidatePath("/")
+  revalidatePath("/blog", "layout")
+  revalidatePath("/sitemap.xml")
   return { success: true }
 }
 
 export async function deletePost(id: number) {
   await db.delete(posts).where(eq(posts.id, id))
   revalidatePath("/admin/posts")
+  revalidatePath("/")
+  revalidatePath("/blog", "layout")
+  revalidatePath("/sitemap.xml")
   return { success: true }
 }
