@@ -3,6 +3,7 @@
 import { useState, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Upload, X, Loader2 } from "lucide-react"
+import { toast } from "sonner"
 import Image from "next/image"
 
 type Props = {
@@ -25,12 +26,15 @@ export function UploadButton({ onUpload, currentUrl }: Props) {
 
     try {
       const res = await fetch("/api/upload", { method: "POST", body: formData })
-      if (!res.ok) throw new Error("Upload failed")
-      const data = await res.json()
-      setUrl(data.url)
-      onUpload(data.url)
+      const json = await res.json()
+      if (!res.ok) {
+        toast.error(json.error || "Upload failed")
+        return
+      }
+      setUrl(json.url)
+      onUpload(json.url)
     } catch {
-      // toast handled by caller
+      toast.error("Upload failed — check server connection")
     } finally {
       setUploading(false)
     }

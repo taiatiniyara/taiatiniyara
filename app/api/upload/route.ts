@@ -30,7 +30,8 @@ export async function POST(req: NextRequest) {
 
     const url = await uploadToR2(key, webpBuffer, "image/webp")
     return NextResponse.json({ url })
-  } catch {
+  } catch (err) {
+    console.error("Upload error:", err)
     return NextResponse.json({ error: "Upload failed" }, { status: 500 })
   }
 }
