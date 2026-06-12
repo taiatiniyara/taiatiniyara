@@ -22,7 +22,6 @@ export async function getPublishedProducts() {
   return db
     .select()
     .from(products)
-    .where(eq(products.status, "launched"))
     .orderBy(products.sortOrder)
 }
 
@@ -30,7 +29,6 @@ export async function getProductCount() {
   const result = await db
     .select({ count: sql<number>`count(*)` })
     .from(products)
-    .where(eq(products.status, "launched"))
 
   return result[0]?.count ?? 0
 }
