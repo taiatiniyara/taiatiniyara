@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ScrollReveal } from "@/components/shared/scroll-reveal"
 import { getPublishedProducts } from "@/lib/data"
+import { safeJsonParse } from "@/lib/utils"
 import { ExternalLink, Star, Rocket } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
@@ -63,7 +64,7 @@ export async function Products() {
 
                   {product.techStack && product.techStack !== "[]" && (
                     <div className="flex flex-wrap gap-1 mt-3">
-                      {JSON.parse(product.techStack).map((tech: string) => (
+                      {safeJsonParse<string[]>(product.techStack, []).map((tech: string) => (
                         <Badge key={tech} variant="secondary" className="text-xs">
                           {tech}
                         </Badge>
