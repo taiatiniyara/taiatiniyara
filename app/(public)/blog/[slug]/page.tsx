@@ -1,10 +1,11 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import Link from "next/link"
-import { getPostBySlug } from "@/lib/data"
+import { getPostBySlug, getRandomPosts } from "@/lib/data"
 import { getFromR2 } from "@/lib/r2"
 import { safeJsonParse } from "@/lib/utils"
 import { TipTapContent } from "@/app/(public)/blog/_components/tip-tap-content"
+import { BlogSidebar } from "@/app/(public)/blog/_components/blog-sidebar"
 import { Badge } from "@/components/ui/badge"
 import {
   Breadcrumb,
@@ -61,6 +62,8 @@ export default async function BlogPostPage({ params }: Props) {
 
   if (!post) notFound()
 
+  const randomPosts = await getRandomPosts(3, [post.id])
+
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? ""
   const contentJson = post.contentR2Key
     ? (await getFromR2(post.contentR2Key)) ?? ""
@@ -114,7 +117,7 @@ export default async function BlogPostPage({ params }: Props) {
   }
 
   return (
-    <article className="mx-auto max-w-3xl px-4 py-16">
+    <div className="mx-auto max-w-6xl px-4 py-16">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -124,69 +127,75 @@ export default async function BlogPostPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
-      <Breadcrumb className="mb-6">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href="/">Home</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href="/blog">Blog</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>{post.title}</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+      <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
+        <article>
+          <Breadcrumb className="mb-6">
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link href="/">Home</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link href="/blog">Blog</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>{post.title}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
 
-      {post.coverUrl && (
-        <div className="relative h-64 sm:h-80 mb-8 bg-muted overflow-hidden">
-          <Image
-            src={post.coverUrl}
-            alt={post.title}
-            fill
-            sizes="(max-width: 768px) 100vw, 768px"
-            className="object-cover"
-            priority
-          />
-        </div>
-      )}
+          {post.coverUrl && (
+            <div className="relative h-64 sm:h-80 mb-8 bg-muted overflow-hidden">
+              <Image
+                src={post.coverUrl}
+                alt={post.title}
+                fill
+                sizes="(max-width: 768px) 100vw, 768px"
+                className="object-cover"
+                priority
+              />
+            </div>
+          )}
 
-      {post.tags && post.tags !== "[]" && (
-        <div className="flex flex-wrap gap-1.5 mb-4">
-          {safeJsonParse<string[]>(post.tags, []).map((tag) => (
-            <Badge key={tag} variant="secondary">
-              {tag}
-            </Badge>
-          ))}
-        </div>
-      )}
+          {post.tags && post.tags !== "[]" && (
+            <div className="flex flex-wrap gap-1.5 mb-4">
+              {safeJsonParse<string[]>(post.tags, []).map((tag) => (
+                <Badge key={tag} variant="secondary">
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          )}
 
-      <h1 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl">
-        {post.title}
-      </h1>
+          <h1 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl">
+            {post.title}
+          </h1>
 
-      {post.publishedAt && (
-        <time
-          dateTime={post.publishedAt}
-          className="mt-3 block text-sm text-muted-foreground"
-        >
-          {new Date(post.publishedAt).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
-        </time>
-      )}
+          {post.publishedAt && (
+            <time
+              dateTime={post.publishedAt}
+              className="mt-3 block text-sm text-muted-foreground"
+            >
+              {new Date(post.publishedAt).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </time>
+          )}
 
-      <div className="mt-8 font-serif text-lg leading-relaxed">
-        <TipTapContent content={contentJson} />
+          <div className="mt-8 font-serif text-lg leading-relaxed">
+            <TipTapContent content={contentJson} />
+          </div>
+        </article>
+
+        <BlogSidebar randomPosts={randomPosts} />
       </div>
-    </article>
+    </div>
   )
 }

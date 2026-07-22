@@ -1,3 +1,4 @@
+import Image from "next/image"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ScrollReveal } from "@/components/shared/scroll-reveal"
@@ -28,29 +29,42 @@ export async function BlogPreview() {
           {posts.map((post) => (
             <ScrollReveal key={post.id}>
               <Link href={`/blog/${post.slug}`}>
-                <Card className="group flex h-full flex-col p-6 hover:border-primary/40 hover:shadow-sm transition-all duration-200">
-                  <h3 className="font-semibold group-hover:text-primary transition-colors">
-                    {post.title}
-                  </h3>
-                  {post.excerpt && (
-                    <p className="mt-2 flex-1 text-sm text-muted-foreground line-clamp-2">
-                      {post.excerpt}
-                    </p>
+                <Card className="group flex h-full flex-col overflow-hidden hover:border-primary/40 hover:shadow-sm transition-all duration-200">
+                  {post.coverUrl && (
+                    <div className="relative h-44 w-full bg-muted">
+                      <Image
+                        src={post.coverUrl}
+                        alt={post.title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      />
+                    </div>
                   )}
-                  <div className="mt-4 flex items-center justify-between">
-                    {post.publishedAt && (
-                      <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                        <Calendar className="size-3" />
-                        {new Date(post.publishedAt).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        })}
-                      </span>
+                  <div className="flex flex-1 flex-col p-5">
+                    <h3 className="font-semibold group-hover:text-primary transition-colors">
+                      {post.title}
+                    </h3>
+                    {post.excerpt && (
+                      <p className="mt-2 flex-1 text-sm text-muted-foreground line-clamp-2">
+                        {post.excerpt}
+                      </p>
                     )}
-                    <span className="flex items-center gap-1 text-xs font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                      Read more <ArrowRight className="size-3" />
-                    </span>
+                    <div className="mt-4 flex items-center justify-between">
+                      {post.publishedAt && (
+                        <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <Calendar className="size-3" />
+                          {new Date(post.publishedAt).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                        </span>
+                      )}
+                      <span className="flex items-center gap-1 text-xs font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                        Read more <ArrowRight className="size-3" />
+                      </span>
+                    </div>
                   </div>
                 </Card>
               </Link>

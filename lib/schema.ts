@@ -53,6 +53,13 @@ export const contacts = sqliteTable("contacts", {
   updatedAt: text("updated_at").notNull(),
 })
 
+export const subscribers = sqliteTable("subscribers", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  email: text("email").notNull().unique(),
+  active: integer("active").notNull().default(1),
+  createdAt: text("created_at").notNull(),
+})
+
 export const posts = sqliteTable("posts", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   title: text("title").notNull(),

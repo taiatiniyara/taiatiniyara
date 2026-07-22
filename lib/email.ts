@@ -245,6 +245,57 @@ export async function sendContactAcknowledgement(data: {
   })
 }
 
+// ── New post notification ──────────────────────────────────────────────────
+
+export async function sendNewPostNotification(data: {
+  email: string
+  title: string
+  excerpt: string
+  slug: string
+}) {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? ""
+  const postUrl = `${siteUrl}/blog/${data.slug}`
+
+  const body = `
+    ${h2("New Blog Post")}
+    <p style="font-size:14px;color:${BRAND.gray};margin:0 0 20px 0;line-height:1.6;">
+      A new post was just published on the Taia Tiniyara blog.
+    </p>
+
+    <h3 style="font-size:16px;font-weight:600;color:${BRAND.black};margin:0 0 8px 0;">
+      ${escapeHtml(data.title)}
+    </h3>
+
+    ${data.excerpt ? `<p style="font-size:14px;color:${BRAND.gray};margin:0 0 20px 0;line-height:1.6;">${escapeHtml(data.excerpt)}</p>` : ""}
+
+    ${button("Read the post", postUrl)}
+
+    <p style="font-size:12px;color:${BRAND.gray};margin:24px 0 0 0;line-height:1.5;">
+      You received this email because you subscribed to blog updates from Taia Tiniyara.
+    </p>
+  `
+
+  const textFallback = [
+    "New Blog Post",
+    "",
+    `${data.title}`,
+    data.excerpt ? `\n${data.excerpt}\n` : "",
+    `Read the post: ${postUrl}`,
+    "",
+    "You received this email because you subscribed to blog updates from Taia Tiniyara.",
+  ]
+    .filter(Boolean)
+    .join("\n")
+
+  await transport.sendMail({
+    from: FROM,
+    to: data.email,
+    subject: `New post: ${data.title}`,
+    html: emailShell(body),
+    text: textFallback,
+  })
+}
+
 // ── Admin reply ────────────────────────────────────────────────────────
 
 export async function sendReply(data: {

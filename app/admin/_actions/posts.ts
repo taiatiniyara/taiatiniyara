@@ -5,7 +5,22 @@ import { db } from "@/lib/db"
 import { posts } from "@/lib/schema"
 import { PostSchema } from "@/lib/validations/posts"
 import { uploadToR2 } from "@/lib/r2"
+import { getActiveSubscribers } from "@/lib/data"
+import { sendNewPostNotification } from "@/lib/email"
 import { eq } from "drizzle-orm"
+
+async function notifySubscribers(title: string, excerpt: string, slug: string) {
+  try {
+    const subs = await getActiveSubscribers()
+    await Promise.allSettled(
+      subs.map((s) =>
+        sendNewPostNotification({ email: s.email, title, excerpt, slug })
+      )
+    )
+  } catch {
+    // Don't block post creation if email fails
+  }
+}
 
 export async function getPosts() {
   return db.select().from(posts).orderBy(posts.createdAt)
@@ -49,6 +64,10 @@ export async function createPost(formData: FormData) {
     updatedAt: now,
   })
 
+  if (parsed.data.status === "published") {
+    notifySubscribers(parsed.data.title, parsed.data.excerpt, parsed.data.slug)
+  }
+
   revalidatePath("/admin/posts")
   revalidatePath("/admin")
   revalidatePath("/")
@@ -89,6 +108,10 @@ export async function updatePost(id: number, formData: FormData) {
     .update(posts)
     .set({ ...parsed.data, contentR2Key: r2Key, publishedAt, updatedAt: now })
     .where(eq(posts.id, id))
+
+  if (parsed.data.status === "published" && existing.status !== "published") {
+    notifySubscribers(parsed.data.title, parsed.data.excerpt, parsed.data.slug)
+  }
 
   revalidatePath("/admin/posts")
   revalidatePath("/admin")

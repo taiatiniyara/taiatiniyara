@@ -1,6 +1,6 @@
 import { db } from "@/lib/db"
-import { eq, and, desc, ne, sql } from "drizzle-orm"
-import { services, projects, products, posts } from "@/lib/schema"
+import { eq, and, desc, ne, sql, notInArray } from "drizzle-orm"
+import { services, projects, products, posts, subscribers } from "@/lib/schema"
 
 export async function getActiveServices() {
   return db.select().from(services).orderBy(services.sortOrder)
@@ -94,12 +94,63 @@ export async function getRecentPosts(limit = 3) {
       title: posts.title,
       slug: posts.slug,
       excerpt: posts.excerpt,
+      coverUrl: posts.coverUrl,
       publishedAt: posts.publishedAt,
     })
     .from(posts)
     .where(eq(posts.status, "published"))
     .orderBy(desc(posts.publishedAt))
     .limit(limit)
+}
+
+export async function getRandomPosts(count = 3, excludeIds: number[] = []) {
+  const conditions = [eq(posts.status, "published")]
+  if (excludeIds.length > 0) {
+    conditions.push(notInArray(posts.id, excludeIds))
+  }
+
+  return db
+    .select({
+      id: posts.id,
+      title: posts.title,
+      slug: posts.slug,
+      publishedAt: posts.publishedAt,
+    })
+    .from(posts)
+    .where(and(...conditions))
+    .orderBy(sql`RANDOM()`)
+    .limit(count)
+}
+
+export async function subscribeEmail(email: string) {
+  const existing = await db
+    .select()
+    .from(subscribers)
+    .where(eq(subscribers.email, email))
+    .limit(1)
+
+  if (existing.length > 0) {
+    if (existing[0].active) return { success: false, message: "You are already subscribed." }
+    await db
+      .update(subscribers)
+      .set({ active: 1 })
+      .where(eq(subscribers.id, existing[0].id))
+    return { success: true, message: "You have been re-subscribed!" }
+  }
+
+  await db.insert(subscribers).values({
+    email,
+    createdAt: new Date().toISOString(),
+  })
+
+  return { success: true, message: "You have been subscribed!" }
+}
+
+export async function getActiveSubscribers() {
+  return db
+    .select()
+    .from(subscribers)
+    .where(eq(subscribers.active, 1))
 }
 
 export async function getStats() {
