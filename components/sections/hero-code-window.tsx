@@ -8,36 +8,25 @@ type Line = {
 }
 
 const lines: Line[] = [
-  { prefix: "$ ", text: "taia deploy --crew" },
+  { prefix: "$ ", text: "taia build --stack nextjs" },
   { prefix: "  ", text: "" },
-  { prefix: "  ", text: "\u250C\u2500\u2500 spawning AI agents" },
-  { prefix: "  ", text: "\u251C \u25CF Architect   \u2192 scaffolding project" },
-  { prefix: "  ", text: "\u251C \u25CF Builder     \u2192 generating components" },
-  { prefix: "  ", text: "\u2502  \u25CF Reviewer    \u2192 code review pass" },
-  { prefix: "  ", text: "\u2502  \u25CF Designer    \u2192 styling interface" },
-  { prefix: "  ", text: "\u251C \u25CF Tester      \u2192 47/47 tests passing" },
-  { prefix: "  ", text: "\u251C \u25CF Scribe      \u2192 docs generated" },
-  { prefix: "  ", text: "\u2514 \u25CF DevOps      \u2192 deploying \u2026" },
+  { prefix: "  ", text: "\u25C9 analyzing requirements \u2026" },
+  { prefix: "  ", text: "\u25C9 designing data model \u2026" },
+  { prefix: "  ", text: "\u25C9 scaffolding project \u2026" },
+  { prefix: "  ", text: "\u25C9 building auth \u00B7 payments \u00B7 dashboard" },
+  { prefix: "  ", text: "\u25C9 integrating APIs & services" },
+  { prefix: "  ", text: "\u25C9 writing tests \u2026" },
+  { prefix: "  ", text: "\u2713 214/214 tests passing" },
+  { prefix: "  ", text: "\u25C9 running CI checks \u2026" },
+  { prefix: "  ", text: "\u2713 lint \u00B7 typecheck \u00B7 build \u00B7 all green" },
   { prefix: "  ", text: "" },
-  { prefix: "  ", text: "\u2713 Deployment complete" },
-  { prefix: "  ", text: "\u2713 All agents done. Ship it." },
+  { prefix: "  ", text: "\u2713 Build complete. Ready for review." },
   { prefix: "$ ", text: "" },
 ]
 
-const agentColors: Record<string, string> = {
-  "Architect": "text-purple-400",
-  "Builder": "text-blue-400",
-  "Reviewer": "text-emerald-400",
-  "Designer": "text-pink-400",
-  "Tester": "text-amber-400",
-  "Scribe": "text-indigo-400",
-  "DevOps": "text-red-400",
-}
-
-function getAgentColor(line: string): string {
-  for (const [agent, color] of Object.entries(agentColors)) {
-    if (line.includes(agent)) return color
-  }
+function getLineColor(text: string): string {
+  if (text.includes("\u2713")) return "text-emerald-400"
+  if (text.includes("\u25C9")) return "text-muted-foreground"
   return ""
 }
 
@@ -111,7 +100,7 @@ export function CodeWindow() {
           <span className="size-2.5 rounded-full bg-amber-400" />
           <span className="size-2.5 rounded-full bg-emerald-400" />
           <span className="ml-3 text-xs text-muted-foreground">
-            crew terminal
+            build terminal
           </span>
         </div>
         <div className="p-4 font-mono text-xs leading-relaxed sm:text-sm">
@@ -124,14 +113,14 @@ export function CodeWindow() {
 
               const fullLength = (line.prefix + line.text).length
               const currentlyTyping = !done && display.length < fullLength
-              const agentColor = getAgentColor(line.text)
+              const lineColor = getLineColor(line.text)
 
               return (
-                <div key={i} className={agentColor}>
+                <div key={i} className={lineColor}>
                   <span className="text-muted-foreground">
                     {display.slice(0, line.prefix.length)}
                   </span>
-                  <span className={agentColor || "text-muted-foreground"}>
+                  <span className={lineColor || "text-muted-foreground"}>
                     {display.slice(line.prefix.length)}
                   </span>
                   {currentlyTyping && (

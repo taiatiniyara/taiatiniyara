@@ -13,11 +13,11 @@ const transport = createTransport({
 const FROM = process.env.SMTP_FROM ?? ""
 const TO = process.env.NOTIFICATION_EMAIL ?? "taiatiniyara@gmail.com"
 
-// ── Brand tokens (pink/rose palette matching the app theme) ───────────
+// ── Brand tokens (blue palette matching the app theme) ───────────
 const BRAND = {
-  primary: "#e11d48",
-  primaryLight: "#fda4af",
-  primaryDark: "#9f1239",
+  primary: "#2563eb",
+  primaryLight: "#93c5fd",
+  primaryDark: "#1e3a8a",
   white: "#ffffff",
   black: "#171717",
   gray: "#525252",

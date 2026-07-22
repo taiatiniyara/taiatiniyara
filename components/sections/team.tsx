@@ -14,7 +14,7 @@ export function Team() {
               Your Engineering Team
             </h2>
             <p className="mt-3 text-muted-foreground">
-              A senior engineer backed by a fleet of AI agents — all focused on delivering your project.
+              A senior engineer who uses AI as a tool — not a replacement — to ship faster without cutting corners.
             </p>
           </div>
         </ScrollReveal>
@@ -41,7 +41,7 @@ export function Team() {
               <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
                 Your project is led by a senior full‑stack engineer who
                 architects the solution, writes the critical code, and
-                orchestrates a fleet of AI agents — so you get
+                uses AI to automate the routine — so you get
                 enterprise‑quality software at startup speed.
               </p>
             </Card>
@@ -51,10 +51,10 @@ export function Team() {
             <Card className="flex h-full flex-col p-8">
               <div className="mb-5 text-center">
                 <h3 className="font-heading text-xl font-bold">
-                  Your AI Augmentation
+                  Tools That Accelerate
                 </h3>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  8 specialized agents working in parallel on your project.
+                  AI-assisted workflows that speed up development without sacrificing quality.
                 </p>
               </div>
               <AiTeamGrid />
