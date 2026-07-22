@@ -17,7 +17,6 @@ export function Navbar({ showProducts = true }: Props) {
     { href: "/", label: "Home" },
     { href: "/#services", label: "Services" },
     { href: "/#process", label: "How We Work" },
-    { href: "/#portfolio", label: "Portfolio" },
     { href: "/#team", label: "Team" },
     ...(showProducts ? [{ href: "/#products", label: "Products" }] : []),
     { href: "/blog", label: "Blog" },
