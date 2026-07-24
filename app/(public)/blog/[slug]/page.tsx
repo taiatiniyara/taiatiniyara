@@ -127,7 +127,8 @@ export default async function BlogPostPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
-      <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_280px]">
+        <div className="min-w-0 overflow-x-hidden">
         <article>
           <Breadcrumb className="mb-6">
             <BreadcrumbList>
@@ -172,7 +173,7 @@ export default async function BlogPostPage({ params }: Props) {
             </div>
           )}
 
-          <h1 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl">
+          <h1 className="font-heading text-3xl font-bold tracking-tight break-words sm:text-4xl">
             {post.title}
           </h1>
 
@@ -193,8 +194,11 @@ export default async function BlogPostPage({ params }: Props) {
             <TipTapContent content={contentJson} />
           </div>
         </article>
+        </div>
 
+        <div className="min-w-0">
         <BlogSidebar randomPosts={randomPosts} />
+        </div>
       </div>
     </div>
   )
