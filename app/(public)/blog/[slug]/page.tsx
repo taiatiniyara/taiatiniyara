@@ -189,7 +189,7 @@ export default async function BlogPostPage({ params }: Props) {
             </time>
           )}
 
-          <div className="mt-8 font-serif text-lg leading-relaxed">
+          <div className="mt-8 font-serif text-base leading-relaxed sm:text-lg">
             <TipTapContent content={contentJson} />
           </div>
         </article>

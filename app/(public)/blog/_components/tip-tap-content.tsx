@@ -26,7 +26,7 @@ function renderNodes(nodes: TipTapNode[]): ReactNode {
 
       case "paragraph":
         return (
-          <p key={i} className="mb-6 leading-relaxed">
+          <p key={i} className="mb-4 leading-relaxed sm:mb-6">
             {node.content ? renderNodes(node.content) : <br />}
           </p>
         )
@@ -36,8 +36,8 @@ function renderNodes(nodes: TipTapNode[]): ReactNode {
         const level = Math.min(rawLevel + 1, 3) as 2 | 3
         const Tag = `h${level}` as keyof JSX.IntrinsicElements
         const sizeClasses = {
-          2: "text-3xl font-bold mt-12 mb-5",
-          3: "text-xl font-semibold mt-8 mb-3",
+          2: "text-2xl font-bold mt-8 mb-4 sm:text-3xl sm:mt-12 sm:mb-5",
+          3: "text-lg font-semibold mt-6 mb-3 sm:text-xl sm:mt-8",
         }
         return createElement(
           Tag,
@@ -71,7 +71,7 @@ function renderNodes(nodes: TipTapNode[]): ReactNode {
         return (
           <blockquote
             key={i}
-            className="border-l-4 border-primary pl-6 italic text-muted-foreground my-8"
+            className="border-l-4 border-primary pl-4 italic text-muted-foreground my-6 sm:pl-6 sm:my-8"
           >
             {node.content ? renderNodes(node.content) : null}
           </blockquote>
@@ -98,7 +98,7 @@ function renderNodes(nodes: TipTapNode[]): ReactNode {
         )
 
       case "horizontalRule":
-        return <hr key={i} className="my-10 border-border" />
+        return <hr key={i} className="my-8 border-border sm:my-10" />
 
       case "text": {
         let content: ReactNode = node.text ?? ""
