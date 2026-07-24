@@ -81,6 +81,7 @@ export function BlogSidebar({ randomPosts }: { randomPosts: RandomPost[] }) {
                   <time
                     dateTime={post.publishedAt}
                     className="text-xs text-muted-foreground"
+                    suppressHydrationWarning
                   >
                     {new Date(post.publishedAt).toLocaleDateString("en-US", {
                       month: "short",
