@@ -31,15 +31,16 @@
   --accent: var(--dark-blue); --on-accent: var(--mist); --hl: var(--violet); --on-hl: var(--mist); --focus: var(--violet);
   color-scheme: light;
 }
-/* One spectrum colour per page. In the light theme the highlight is always Violet. */
-.hl-lagoon { --hl: var(--lagoon); --hl-loud: var(--lagoon); }
-.hl-sun { --hl: var(--sun); --hl-loud: var(--sun); }
-.hl-hibiscus { --hl: var(--hibiscus); --hl-loud: var(--hibiscus); }
-.hl-flame { --hl: var(--flame); --hl-loud: var(--flame); }
+/* One spectrum colour per page or section: put an .hl-* class on the body or on a band. In the light theme the highlight is always Violet,
+   except inside a .block, where the colour is safe on Dark Blue. Each class sets both colours so a section can differ from its page. */
+.hl-lagoon { --hl: var(--lagoon); --hl-loud: var(--lagoon); --on-hl: var(--ink); --on-hl-loud: var(--ink); }
+.hl-sun { --hl: var(--sun); --hl-loud: var(--sun); --on-hl: var(--ink); --on-hl-loud: var(--ink); }
+.hl-hibiscus { --hl: var(--hibiscus); --hl-loud: var(--hibiscus); --on-hl: var(--ink); --on-hl-loud: var(--ink); }
+.hl-flame { --hl: var(--flame); --hl-loud: var(--flame); --on-hl: var(--ink); --on-hl-loud: var(--ink); }
 .hl-violet { --hl: var(--violet); --hl-loud: var(--violet); --on-hl: var(--mist); --on-hl-loud: var(--mist); }
-:root[data-theme="light"] [class*="hl-"] { --hl: var(--violet); --on-hl: var(--mist); }
+:root[data-theme="light"] [class*="hl-"]:not(.block) { --hl: var(--violet); --on-hl: var(--mist); }
 @media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) [class*="hl-"] { --hl: var(--violet); --on-hl: var(--mist); }
+  :root:not([data-theme="dark"]) [class*="hl-"]:not(.block) { --hl: var(--violet); --on-hl: var(--mist); }
 }
 
 *, *::before, *::after { box-sizing: border-box; border-radius: 0; }
@@ -213,7 +214,7 @@ img { max-width: 100%; height: auto; display: block; }
 @media (min-width: 40rem) { .ledger li { grid-template-columns: 1fr 1fr; } }
 .ledger h3 { margin: 0 0 8px; font-size: 1.5rem; }
 .ledger p { margin: 0; }
-.stat { display: block; font-size: clamp(2rem, 4vw + 1rem, 3rem); font-weight: 800; line-height: 1.05; margin-bottom: 8px; }
+.stat { display: block; color: var(--hl); font-size: clamp(2rem, 4vw + 1rem, 3rem); font-weight: 800; line-height: 1.05; margin-bottom: 8px; }
 .ledger .note { font-size: 0.875rem; }
 .fineprint { font-size: 0.875rem; margin: 0; }
 
@@ -225,7 +226,7 @@ img { max-width: 100%; height: auto; display: block; }
 .offers p { margin: 0 0 8px; }
 .offers .note { font-size: 0.875rem; }
 .offers .includes { padding-left: 24px; margin: 0 0 16px; }
-.offers .price { font-size: 1.5rem; font-weight: 800; line-height: 1.3; margin: 16px 0 8px; }
+.offers .price { display: inline-block; background: var(--hl); color: var(--on-hl); padding: 4px 16px; font-size: 1.5rem; font-weight: 800; line-height: 1.3; margin: 16px 0 8px; }
 .offers .price.quote { font-size: 1rem; font-weight: 600; }
 .channels { margin-bottom: 0; }
 

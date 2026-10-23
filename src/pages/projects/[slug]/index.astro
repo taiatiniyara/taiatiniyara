@@ -12,6 +12,6 @@ const [doc, posts] = await Promise.all([getBody(env.BUCKET, "projects", project.
 const image = project.cover_key ? `/${project.cover_key}` : firstImage(doc);
 const jsonLd = [breadcrumbLd([["Work", "/projects"], [project.title, `/projects/${project.slug}`]])];
 ---
-<Layout title={project.title} description={project.summary || undefined} image={image} hl="lagoon" jsonLd={jsonLd}>
+<Layout title={project.title} description={project.summary || undefined} image={image} hl="flame" jsonLd={jsonLd}>
   <ProjectView project={project} html={renderBody(doc)} posts={posts} />
 </Layout>

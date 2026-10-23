@@ -9,6 +9,6 @@ const project = await getProject(env.DB, Number(Astro.params.id));
 if (!project) return Astro.rewrite("/404");
 const [doc, posts] = await Promise.all([getBody(env.BUCKET, "projects", project.id), listPosts(env.DB, { projectId: project.id })]);
 ---
-<Layout title={`Preview: ${project.title}`} noindex hl="lagoon">
+<Layout title={`Preview: ${project.title}`} noindex hl="flame">
   <ProjectView project={project} html={renderBody(doc)} posts={posts} />
 </Layout>

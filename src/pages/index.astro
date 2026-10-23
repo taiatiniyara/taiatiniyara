@@ -16,7 +16,7 @@ const posts = await listPosts(env.DB, { limit: 4 });
 const measured = new Date(proof.measuredOn + "T00:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
 ---
 <Layout title="Web apps, mobile apps and APIs from Fiji" wide jsonLd={[websiteLd()]}>
-  <section class="band block hero">
+  <section class="band block hero hl-lagoon">
     <div class="wrap">
       <h1>You've got something to <span class="pop">ship.</span></h1>
       <div>
@@ -30,7 +30,7 @@ const measured = new Date(proof.measuredOn + "T00:00:00Z").toLocaleDateString("e
     </div>
   </section>
 
-  <section class="band" id="work" aria-labelledby="work-h">
+  <section class="band hl-flame" id="work" aria-labelledby="work-h">
     <div class="wrap">
       <h2 id="work-h">Look at the work</h2>
       {!feature ? <p class="empty">Nothing here yet. The first project is coming.</p> : (
@@ -47,7 +47,7 @@ const measured = new Date(proof.measuredOn + "T00:00:00Z").toLocaleDateString("e
     </div>
   </section>
 
-  <section class="band" id="pricing" aria-labelledby="pricing-h">
+  <section class="band hl-sun" id="pricing" aria-labelledby="pricing-h">
     <div class="wrap split">
       <div class="head">
         <h2 id="pricing-h">What it costs</h2>
@@ -57,7 +57,7 @@ const measured = new Date(proof.measuredOn + "T00:00:00Z").toLocaleDateString("e
     </div>
   </section>
 
-  <section class="band sunk" aria-labelledby="proof-h">
+  <section class="band sunk hl-hibiscus" aria-labelledby="proof-h">
     <div class="wrap split">
       <div class="head">
         <h2 id="proof-h">Measured on this site</h2>
