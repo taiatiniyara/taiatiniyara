@@ -16,7 +16,6 @@ const posts = await listPosts(env.DB, { limit: 4 });
   </div>
 
   <h2>What you get</h2>
-  {/* TODO: add a third point, "Something you can keep", once it's clear what that means for clients. */}
   <ul class="grid">
     <li class="card">
       <h3>Speed</h3>
@@ -25,6 +24,10 @@ const posts = await listPosts(env.DB, { limit: 4 });
     <li class="card">
       <h3>Access for everyone</h3>
       <p>It works with a keyboard and a screen reader.</p>
+    </li>
+    <li class="card">
+      <h3>Something you keep</h3>
+      <p>The code, the docs and the accounts are yours. Plain tools, so anyone can pick it up.</p>
     </li>
   </ul>
 
