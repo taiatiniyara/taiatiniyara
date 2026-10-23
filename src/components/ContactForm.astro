@@ -1,17 +1,19 @@
 ---
 import TileMark from "./TileMark.astro";
-import { TIMELINES, MESSAGE_MAX, type EnquiryErrors, type EnquiryFields } from "../lib/enquiry.ts";
+import { TIMELINES, MESSAGE_MAX, type EnquiryErrors, type EnquiryFields, type FieldName } from "../lib/enquiry.ts";
 
 interface Props {
   /** Prefix so the form can appear twice on a page without clashing ids. */
   id?: string;
   values?: Partial<EnquiryFields>;
+  /** Page or button that led here; a value posted back with the form wins. */
+  source?: string;
   errors?: EnquiryErrors;
   formError?: string;
 }
-const { id = "contact", values = {}, errors = {}, formError = "" } = Astro.props;
+const { id = "contact", values = {}, source = "", errors = {}, formError = "" } = Astro.props;
 const count = Object.keys(errors).length;
-const field = (n: keyof EnquiryFields) => ({
+const field = (n: FieldName) => ({
   "aria-invalid": errors[n] ? ("true" as const) : undefined,
   "aria-describedby": `${id}-${n}-error${n === "message" ? ` ${id}-message-hint` : ""}`,
 });
@@ -41,6 +43,9 @@ const field = (n: keyof EnquiryFields) => ({
     </select>
     <p class="field-error" id={`${id}-timeline-error`} data-error-for="timeline" role="alert">{errors.timeline}</p>
   </div>
+
+  <input type="hidden" name="source" value={values.source || source} />
+  <input type="hidden" name="referrer" value={values.referrer ?? ""} />
 
   <div class="hp" aria-hidden="true">
     <label>Leave this field empty <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>

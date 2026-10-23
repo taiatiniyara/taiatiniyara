@@ -1,0 +1,10 @@
+---
+import { channels } from "../lib/site.ts";
+
+const list = channels();
+---
+{list.length > 0 && (
+  <div class="actions channels">
+    {list.map((c) => <a class="btn" href={c.href} target="_blank" rel="noopener">{c.label}</a>)}
+  </div>
+)}

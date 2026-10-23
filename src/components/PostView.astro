@@ -1,6 +1,7 @@
 ---
 import type { JSONContent } from "@tiptap/core";
 import PostList from "./PostList.astro";
+import CtaCard from "./CtaCard.astro";
 import { fmtDate } from "../lib/format.ts";
 import { headings, readingMinutes, renderBody } from "../lib/content.ts";
 import type { PostRow } from "../lib/db.ts";
@@ -38,15 +39,10 @@ const showToc = toc.filter((h) => h.level === 2).length >= 3;
 </article>
 
 <div class="end">
-  <section class="card cta" aria-labelledby="cta-h">
-    <h2 id="cta-h">Building something like this?</h2>
-    <p>Tell me what you need and when. I'll write back.</p>
-    <div class="actions">
-      <a class="btn primary" href="/contact">Tell me what you need</a>
-      <a class="btn" href="/rss.xml">Follow by RSS</a>
-    </div>
-    <p class="fineprint">RSS lets a feed reader show you new posts. No account, no email.</p>
-  </section>
+  <CtaCard source={`post:${post.slug}`}>
+    <a class="btn" href="/rss.xml">Follow by RSS</a>
+    <p slot="note" class="fineprint">RSS lets a feed reader show you new posts. No account, no email.</p>
+  </CtaCard>
 
   {trail && trail.related.length > 0 && (
     <section class="related" aria-labelledby="related-h">

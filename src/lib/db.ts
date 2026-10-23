@@ -216,11 +216,16 @@ export interface Enquiry {
   email: string;
   message: string;
   timeline: string;
+  source: string;
+  referrer: string;
   created_at: number;
 }
 
-export const saveEnquiry = (db: D1Database, e: Pick<Enquiry, "email" | "message" | "timeline">) =>
-  db.prepare("INSERT INTO enquiries (email, message, timeline, created_at) VALUES (?1,?2,?3,?4)").bind(e.email, e.message, e.timeline, now()).run();
+export const saveEnquiry = (db: D1Database, e: Pick<Enquiry, "email" | "message" | "timeline" | "source" | "referrer">) =>
+  db
+    .prepare("INSERT INTO enquiries (email, message, timeline, source, referrer, created_at) VALUES (?1,?2,?3,?4,?5,?6)")
+    .bind(e.email, e.message, e.timeline, e.source, e.referrer, now())
+    .run();
 
 export async function listEnquiries(db: D1Database) {
   const { results } = await db.prepare("SELECT * FROM enquiries ORDER BY created_at DESC, id DESC LIMIT 200").all<Enquiry>();

@@ -1,13 +1,13 @@
 // Inline hints on the contact form. The server checks everything again, so the form works without this.
-import { checkField, type EnquiryFields } from "../lib/enquiry.ts";
+import { checkField, type FieldName } from "../lib/enquiry.ts";
 
 const NAMES = ["email", "message", "timeline"] as const;
 
 document.querySelectorAll<HTMLFormElement>("form[data-enquiry]").forEach((form) => {
-  const input = (n: keyof EnquiryFields) => form.elements.namedItem(n) as HTMLInputElement;
-  const error = (n: keyof EnquiryFields) => form.querySelector<HTMLElement>(`[data-error-for="${n}"]`)!;
+  const input = (n: FieldName) => form.elements.namedItem(n) as HTMLInputElement;
+  const error = (n: FieldName) => form.querySelector<HTMLElement>(`[data-error-for="${n}"]`)!;
 
-  function validate(n: keyof EnquiryFields) {
+  function validate(n: FieldName) {
     const msg = checkField(n, input(n).value);
     error(n).textContent = msg ?? "";
     if (msg) input(n).setAttribute("aria-invalid", "true");
@@ -19,6 +19,12 @@ document.querySelectorAll<HTMLFormElement>("form[data-enquiry]").forEach((form) 
     input(n).addEventListener("blur", () => validate(n));
     // Once a field has been flagged, clear the message as soon as it is fixed.
     input(n).addEventListener("input", () => input(n).hasAttribute("aria-invalid") && validate(n));
+  }
+
+  // How the visitor found the site, noted by the layout for this tab only (see referrer.ts). Sent with the message.
+  const referrer = form.elements.namedItem("referrer") as HTMLInputElement | null;
+  if (referrer && !referrer.value) {
+    try { referrer.value = sessionStorage.getItem("ref") ?? ""; } catch {}
   }
 
   const send = form.querySelector<HTMLButtonElement>("button[type=submit]")!;

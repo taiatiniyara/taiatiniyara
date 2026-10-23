@@ -2,7 +2,8 @@
 import { env } from "cloudflare:workers";
 import Layout from "../layouts/Layout.astro";
 import ContactForm from "../components/ContactForm.astro";
-import { parseEnquiry, type EnquiryErrors, type EnquiryFields } from "../lib/enquiry.ts";
+import ContactChannels from "../components/ContactChannels.astro";
+import { cleanSource, parseEnquiry, type EnquiryErrors, type EnquiryFields } from "../lib/enquiry.ts";
 import { countEnquiriesSince, saveEnquiry } from "../lib/db.ts";
 import { notifyEnquiry } from "../lib/notify.ts";
 import { sameOrigin } from "../lib/url.ts";
@@ -12,6 +13,7 @@ const MAX_PER_HOUR = 20; // across all visitors; a flood stops here instead of f
 let values: Partial<EnquiryFields> = {};
 let errors: EnquiryErrors = {};
 let formError = "";
+const from = cleanSource(Astro.url.searchParams.get("from")) || "contact";
 
 if (Astro.request.method === "POST") {
   if (!sameOrigin(Astro.request, Astro.url.origin)) return new Response("Bad origin", { status: 403, headers: { "Cache-Control": "no-store" } });
@@ -38,11 +40,12 @@ if (Astro.request.method === "POST") {
 <Layout title="Contact" description="Tell me what you're building, who it's for and when you need it." hl="lagoon">
   <h1>Tell me what you need</h1>
   <p class="lede">What you're building, who it's for and when you need it. I'll write back.</p>
-  <ContactForm values={values} errors={errors} formError={formError} />
+  <ContactForm values={values} source={from} errors={errors} formError={formError} />
+  <ContactChannels />
   <div class="direct">
     <p>Prefer email? <a href="mailto:mail@taiatiniyara.com">mail@taiatiniyara.com</a></p>
     <button class="btn" type="button" data-copy="mail@taiatiniyara.com">Copy email</button>
   </div>
   <p class="copy-status" role="status" data-copy-status></p>
-  <p class="fineprint">I keep your message only to reply to it. You'll get a confirmation by email.</p>
+  <p class="fineprint">I keep your message, and which page and site you came from, only to reply and to learn which pages bring enquiries. You'll get a confirmation by email.</p>
 </Layout>

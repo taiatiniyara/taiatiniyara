@@ -5,7 +5,7 @@ import { COLOUR, escapeHtml, mailto } from "./email.ts";
 import { enquiryAcknowledgement, enquiryNotification } from "./enquiry-email.ts";
 
 const at = new Date("2026-10-23T03:04:00Z");
-const enquiry = { email: "a@b.co", message: "A booking app for a small dive shop in Suva.", timeline: "Later this year" };
+const enquiry = { email: "a@b.co", message: "A booking app for a small dive shop in Suva.", timeline: "Later this year", source: "offer-launch", referrer: "google.com" };
 
 test("email colours are the brand colours", () => {
   const css = readFileSync(new URL("../../brand/colors.css", import.meta.url), "utf8").toUpperCase();
@@ -46,4 +46,17 @@ test("the HTML names the brand fonts and has a text twin", () => {
 
 test("mailto keeps the @ and encodes the subject", () => {
   assert.equal(mailto("a@b.co", "Re: hi there"), "mailto:a@b.co?subject=Re%3A%20hi%20there");
+});
+
+test("the notification says where the enquiry came from", () => {
+  const m = enquiryNotification(enquiry, at);
+  assert.ok(m.html.includes("offer-launch, from google.com") && m.text.includes("Came from: offer-launch, from google.com"));
+  assert.ok(enquiryNotification({ ...enquiry, source: "", referrer: "" }, at).text.includes("Came from: Not known"));
+});
+
+test("the acknowledgement offers a call only when a booking link is set", () => {
+  assert.ok(!enquiryAcknowledgement(enquiry, at, "mail@taiatiniyara.com", undefined).html.includes("15-minute call"));
+  const m = enquiryAcknowledgement(enquiry, at, "mail@taiatiniyara.com", "https://cal.com/taia/intro");
+  assert.ok(m.html.includes("https://cal.com/taia/intro") && m.text.includes("Book a 15-minute call"));
+  assert.ok(!m.html.includes("offer-launch") && !m.html.includes("google.com"), "the visitor's email does not echo tracking data");
 });

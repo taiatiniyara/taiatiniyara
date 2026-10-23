@@ -1,0 +1,20 @@
+---
+import { OFFERS, contactHref, priceLabel } from "../lib/site.ts";
+---
+<ul class="offers">
+  {OFFERS.map((o) => (
+    <li>
+      <div>
+        <h3>{o.name}</h3>
+        <p>{o.summary}</p>
+        <p class="note">{o.forWhom}</p>
+      </div>
+      <div>
+        <ul class="includes">{o.includes.map((i) => <li>{i}</li>)}</ul>
+        <p class="note">{o.timing}</p>
+        <p class:list={["price", !o.from && "quote"]}>{priceLabel(o)}</p>
+        <p class="note"><a href={contactHref(`offer-${o.id}`)}>Ask about {o.name}</a></p>
+      </div>
+    </li>
+  ))}
+</ul>
