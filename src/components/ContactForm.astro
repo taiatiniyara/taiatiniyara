@@ -1,4 +1,5 @@
 ---
+import TileMark from "./TileMark.astro";
 import { TIMELINES, MESSAGE_MAX, type EnquiryErrors, type EnquiryFields } from "../lib/enquiry.ts";
 
 interface Props {
@@ -47,6 +48,7 @@ const field = (n: keyof EnquiryFields) => ({
 
   <div class="actions">
     <button class="btn primary" type="submit" data-label="Send message">Send message</button>
+    <TileMark class="loader" />
   </div>
 </form>
 

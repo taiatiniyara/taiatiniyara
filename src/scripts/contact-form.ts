@@ -30,6 +30,7 @@ document.querySelectorAll<HTMLFormElement>("form[data-enquiry]").forEach((form) 
       return;
     }
     send.textContent = "Sending…";
+    form.dataset.sending = ""; // shows the tile loader
     send.setAttribute("aria-disabled", "true"); // stays focusable and blocks a second click below
     form.addEventListener("submit", (again) => again.preventDefault(), { once: true });
   });
@@ -37,5 +38,6 @@ document.querySelectorAll<HTMLFormElement>("form[data-enquiry]").forEach((form) 
   addEventListener("pageshow", () => {
     send.textContent = send.dataset.label ?? "Send";
     send.removeAttribute("aria-disabled");
+    delete form.dataset.sending;
   });
 });

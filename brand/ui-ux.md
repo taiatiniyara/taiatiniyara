@@ -58,6 +58,12 @@ Draft. Tokens live in `colors.css`; the mark and type are defined in `index.html
 ## Motion
 - 150–200 ms, `transform` and `opacity` only, `steps()` or ease-out. Nothing loops except loaders.
 - Respect `prefers-reduced-motion`: no movement, only instant state changes.
+- **Signature motion** is the mark's ten tiles moving on the grid, always with `steps()`. Each tile or block moves for 150–200 ms; a sequence staggers them by 30–60 ms and never runs past about 1 s.
+  - **Home intro:** the tiles drop in, then the highlight word is stamped on (a block wipes in behind it). Once per session.
+  - **Page curtain:** five columns lift off the new page when you follow a link on the site. Not on a first visit, reload or Back.
+  - **Loader and confirmation:** the tiles light up in turn while the contact form sends (the one allowed loop); on the "message sent" page they drop in and stay.
+  - **Ledger:** proof rows step in as they scroll into view.
+- Flat colour only: Dark Blue, the accent and the page's spectrum colour. In the light theme the curtain uses Dark Blue and Violet, never Neon.
 
 ## UX
 - Mobile first. Tap targets 44 × 44 px minimum.

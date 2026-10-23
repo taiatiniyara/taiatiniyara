@@ -3,6 +3,7 @@ import { env } from "cloudflare:workers";
 import Layout from "../layouts/Layout.astro";
 import PostList from "../components/PostList.astro";
 import ProjectCard from "../components/ProjectCard.astro";
+import TileMark from "../components/TileMark.astro";
 import ContactForm from "../components/ContactForm.astro";
 import { listPosts, listProjects } from "../lib/db.ts";
 import { proof } from "../lib/proof.ts";
@@ -17,6 +18,7 @@ const measured = new Date(proof.measuredOn + "T00:00:00Z").toLocaleDateString("e
     <div class="wrap">
       <h1>You've got something to <span class="pop">ship.</span></h1>
       <div>
+        <TileMark class="hero-mark" />
         <p class="lede">I'm Taia, a software engineer in Fiji. Web app, mobile app or API: I'll help you get it live, fast, and usable by everyone who needs it.</p>
         <div class="actions">
           <a class="btn primary" href="#contact">Tell me what you need</a>

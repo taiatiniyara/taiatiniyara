@@ -1,6 +1,7 @@
 @import "../../brand/colors.css";
 @import "@fontsource/dela-gothic-one/latin-400.css";
 @import "@fontsource-variable/martian-mono/wght.css";
+@import "./motion.css";
 
 /* Colour roles (brand/ui-ux.md). Dark is the default; light applies for the system setting or the toggle. */
 :root {

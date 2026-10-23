@@ -1,0 +1,10 @@
+---
+// The mark (brand/mark.svg) as its ten 1 x 1 tiles, so motion can move them one at a time.
+// Decorative: the linked mark in the header is the logo. Listed in the order they land.
+interface Props { class?: string }
+const { class: cls = "" } = Astro.props;
+const tiles = [[0, 0], [1, 0], [2, 0], [1, 1], [1, 2], [3, 2], [4, 2], [5, 2], [4, 1], [4, 0]];
+---
+<svg class={`tiles ${cls}`} viewBox="0 0 6 3" aria-hidden="true" focusable="false" shape-rendering="crispEdges">
+  {tiles.map(([x, y]) => <rect x={x} y={y} width="1" height="1" />)}
+</svg>
