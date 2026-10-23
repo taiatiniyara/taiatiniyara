@@ -17,9 +17,10 @@
     },
   ],
   "r2_buckets": [{ "binding": "BUCKET", "bucket_name": "taiatiniyara" }],
-  // To get each contact-form message by email as well as in /admin/enquiries: turn on Email Routing (or Email Service)
-  // for taiatiniyara.com, verify ADMIN_EMAIL, then add:
-  //   "send_email": [{ "name": "EMAIL", "destination_address": "mail@taiatiniyara.com" }],
+  // Contact-form emails (src/lib/notify.ts): each enquiry goes from contact@ to ADMIN_EMAIL, and an acknowledgement goes
+  // back to the visitor. Needs Cloudflare Email Service sending turned on for taiatiniyara.com. Don't add
+  // "destination_address" or "allowed_destination_addresses": the visitor's own address must be allowed as a recipient.
+  "send_email": [{ "name": "EMAIL", "allowed_sender_addresses": ["contact@taiatiniyara.com"] }],
   "vars": {
     "ADMIN_EMAIL": "mail@taiatiniyara.com",
     "ACCESS_TEAM_DOMAIN": "old-glade-70f6.cloudflareaccess.com",
