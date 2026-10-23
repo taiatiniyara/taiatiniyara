@@ -1,0 +1,14 @@
+:root {
+  /* core */
+  --neon-green: #05FF00;
+  --dark-blue:  #003F57;
+  /* spectrum */
+  --lagoon:   #00D4FF;
+  --sun:      #FFE500;
+  --hibiscus: #FF2D87;
+  --flame:    #FF5A1F;
+  --violet:   #8A3DFF;
+  /* neutrals */
+  --ink:  #00212E;
+  --mist: #F2F7F5;
+}

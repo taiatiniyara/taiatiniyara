@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Taia Tiniyara — Identity</title>
+<link rel="icon" href="avatar.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Martian+Mono:wdth,wght@75..112,300..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="colors.css">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--ink); color: var(--mist); font: 400 .875rem/1.75 "Martian Mono", ui-monospace, monospace; }
+  h1, h2, h3 { font: 400 1rem/1.05 "Dela Gothic One", system-ui, sans-serif; letter-spacing: -.01em; }
+  main { max-width: 64rem; margin: auto; padding: clamp(1rem, 4vw, 3rem); display: grid; gap: 4rem; }
+  section { display: grid; gap: 1.5rem; }
+  h2 { font-size: 1.75rem; color: var(--neon-green); }
+  p, li { max-width: 40rem; opacity: .85; }
+  ul { padding-left: 1.2rem; }
+  svg.mark { display: block; width: 100%; height: auto; }
+  .hero { display: grid; gap: 2rem; padding-top: 2rem; }
+  .hero svg { max-width: 36rem; }
+  .hero h1 { font-size: clamp(2rem, 6vw, 3.5rem); }
+  .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); }
+  .tile { display: grid; gap: .5rem; font-size: .8rem; }
+  .tile .box { aspect-ratio: 2; display: grid; place-items: center; padding: 1.1rem; border-radius: .25rem; }
+  .swatch { border-radius: .25rem; overflow: hidden; background: #fff1; font-size: .8rem; }
+  .swatch div { height: 5.5rem; }
+  .swatch span { display: block; padding: .5rem .7rem; }
+  .swatch b { display: block; font-weight: 700; }
+  .clear { display: inline-grid; padding: 1.5rem; outline: 1px dashed #fff6; max-width: 22rem; }
+  .row { display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center; }
+  .avatar { width: 8rem; height: 8rem; border-radius: 50%; }
+  .small svg { height: 1rem; width: 2rem; }
+  .type-h { font: 400 clamp(1.75rem, 6vw, 3rem)/1.05 "Dela Gothic One", sans-serif; opacity: 1; }
+
+  /* UI preview: themes are just variable sets (see ui-ux.md) */
+  .ui { --t: var(--accent); background: var(--bg); color: var(--fg); border: 1px solid #fff3; display: grid; gap: 3rem; padding: clamp(1rem, 4vw, 2.5rem); }
+  .ui.dark  { --bg: var(--ink);  --surface: var(--dark-blue); --fg: var(--mist);      --accent: var(--neon-green); --on-accent: var(--ink);  --hl: var(--sun);    --f: var(--dark-blue); }
+  .ui.light { --bg: var(--mist); --surface: #fff;             --fg: var(--dark-blue); --accent: var(--dark-blue);  --on-accent: var(--mist); --hl: var(--violet); --f: transparent; --line: var(--dark-blue); }
+  .ui p, .ui li { opacity: 1; }
+  .ui h2, .ui h3 { color: inherit; }
+  .ui a { color: var(--accent); text-decoration: underline; text-underline-offset: .25em; }
+  .ui-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem; }
+  .ui-nav .mark { width: 3rem; }
+  .ui-nav .sp { flex: 1; }
+  .ui-btn { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 1.5rem; font: 700 .875rem "Martian Mono", monospace; background: var(--accent); color: var(--on-accent); border: 2px solid var(--accent); border-radius: 0; cursor: pointer; text-decoration: none !important; }
+  .ui-btn:hover, .ui-btn.hover { background: transparent; color: var(--accent); }
+  .ui-btn.ghost { background: transparent; color: var(--fg); border-color: var(--fg); }
+  .ui-btn.ghost:hover { background: var(--fg); color: var(--bg); }
+  .ui-btn:focus-visible, .ui-btn.focus, .ui-in:focus-visible, .ui-in.focus { outline: 2px solid var(--lagoon); outline-offset: 2px; }
+  .ui.light .ui-btn:focus-visible, .ui.light .ui-btn.focus { outline-color: var(--violet); }
+  .ui-btn[disabled] { opacity: .4; cursor: not-allowed; }
+  .ui-hero { display: grid; gap: 1.5rem; max-width: 40rem; }
+  .ui-hero h3 { font-size: clamp(2rem, 6vw, 3.5rem); }
+  .ui-hero h3 em { font-style: normal; color: var(--hl); }
+  .ui-row { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+  .ui-cards { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
+  .ui-card { display: grid; gap: .75rem; align-content: start; padding: 1.25rem; background: var(--surface); border: 1px solid var(--line, #fff3); }
+  .ui-card .bar { height: .5rem; width: 3rem; background: var(--c, var(--hl)); }
+  .ui-card h3 { font-size: 1.25rem; }
+  .ui-card small { opacity: .7; font-size: .75rem; }
+  .ui-field { display: grid; gap: .5rem; max-width: 22rem; font-size: .8rem; }
+  .ui-in { min-height: 2.75rem; padding: 0 .75rem; font: inherit; color: var(--fg); background: var(--bg); border: 2px solid var(--fg); border-radius: 0; }
+  .ui-in.err { border-color: var(--hibiscus); }
+  .ui-err { display: flex; gap: .5rem; align-items: baseline; color: var(--hibiscus); font-weight: 700; }
+  .ui-err i { font-style: normal; background: var(--hibiscus); color: var(--ink); padding: 0 .4rem; }
+  .ui-skel { height: 1rem; background: var(--surface); }
+  .ui-foot { display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: space-between; font-size: .75rem; border-top: 1px solid #fff3; padding-top: 1rem; }
+  .ui.light .ui-foot { border-color: var(--line); }
+  .ui-label { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; opacity: .6; }
+  .ui-states { display: grid; gap: 1.5rem; }
+  @media (prefers-reduced-motion: no-preference) { .ui-btn { transition: background-color .15s, color .15s; } }
+</style>
+</head>
+<body>
+<!-- one shape, recoloured with --t (the T's) and --f / --f1..3 (the field) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="tt" viewBox="0 0 6 3">
+    <path d="M0 1H1V3H0Z" fill="var(--f1, var(--f))"/>
+    <path d="M3 0H4V2H3V3H2V1H3Z" fill="var(--f2, var(--f))"/>
+    <path d="M5 0H6V2H5Z" fill="var(--f3, var(--f))"/>
+    <path d="M1 1H0V0H3V1H2V3H1ZM6 3H3V2H4V0H5V2H6Z" fill="var(--t)"/>
+  </symbol>
+  <symbol id="tt-field" viewBox="0 0 6 3">
+    <rect width="6" height="3" fill="var(--f)"/>
+    <use href="#tt"/>
+  </symbol>
+</svg>
+
+<main>
+  <header class="hero">
+    <svg class="mark" viewBox="0 0 6 3" style="--t:var(--neon-green);--f:var(--dark-blue)"><use href="#tt-field"/></svg>
+    <h1>Two T's.<br>One block at a time.</h1>
+    <p>The mark is a 6 × 3 grid of square tiles. Green tiles spell a T and its mirror, <em>TT</em>. Everything else is the field around them. No wordmark, ever: the mark is the name.</p>
+  </header>
+
+  <section>
+    <h2>Colour</h2>
+    <p>Neon Green and Dark Blue are the anchors. The spectrum exists to be used loudly: pick one or two per piece, and let the rest breathe.</p>
+    <div class="grid">
+      <div class="swatch"><div style="background:var(--neon-green)"></div><span><b>Neon Green</b>#05FF00</span></div>
+      <div class="swatch"><div style="background:var(--dark-blue)"></div><span><b>Dark Blue</b>#003F57</span></div>
+      <div class="swatch"><div style="background:var(--lagoon)"></div><span><b>Lagoon</b>#00D4FF</span></div>
+      <div class="swatch"><div style="background:var(--sun)"></div><span><b>Sun</b>#FFE500</span></div>
+      <div class="swatch"><div style="background:var(--hibiscus)"></div><span><b>Hibiscus</b>#FF2D87</span></div>
+      <div class="swatch"><div style="background:var(--flame)"></div><span><b>Flame</b>#FF5A1F</span></div>
+      <div class="swatch"><div style="background:var(--violet)"></div><span><b>Violet</b>#8A3DFF</span></div>
+      <div class="swatch"><div style="background:var(--ink)"></div><span><b>Ink</b>#00212E</span></div>
+      <div class="swatch"><div style="background:var(--mist)"></div><span><b>Mist</b>#F2F7F5</span></div>
+    </div>
+    <ul>
+      <li>Bright colours (Green, Lagoon, Sun, Flame, Hibiscus) go on Dark Blue or Ink. Contrast is 3.2–13:1.</li>
+      <li>On Mist, use Dark Blue (10.5:1) or Violet (4.6:1) for text and mark. Never neon on light.</li>
+      <li>Body text: Mist on Ink, or Dark Blue on Mist. Hibiscus and Flame are for large shapes, not small text.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Primary mark</h2>
+    <div class="row">
+      <svg class="mark" viewBox="0 0 6 3" style="width:18rem;--t:var(--neon-green);--f:var(--dark-blue)"><use href="#tt-field"/></svg>
+      <svg class="mark" viewBox="0 0 6 3" style="width:18rem;--t:var(--neon-green);--f1:var(--lagoon);--f2:var(--hibiscus);--f3:var(--sun)"><use href="#tt"/></svg>
+    </div>
+    <p>Left: the primary mark (<code>mark.svg</code>). Right: the prism mark (<code>mark-prism.svg</code>), where each block of the field takes its own spectrum colour. Use the prism where you want energy (social, stickers, merch), the primary everywhere else.</p>
+  </section>
+
+  <section>
+    <h2>Colourways</h2>
+    <p>Swap the T's and the field to any pairing below. Keep the T's lighter or brighter than the field.</p>
+    <div class="grid">
+      <div class="tile"><div class="box" style="background:var(--ink);--t:var(--neon-green);--f:var(--dark-blue)"><svg class="mark" viewBox="0 0 6 3"><use href="#tt-field"/></svg></div>Green on Blue (primary)</div>
+      <div class="tile"><div class="box" style="background:var(--ink);--t:var(--sun);--f:var(--dark-blue)"><svg class="mark" viewBox="0 0 6 3"><use href="#tt-field"/></svg></div>Sun on Blue</div>
+      <div class="tile"><div class="box" style="background:var(--ink);--t:var(--lagoon);--f:var(--dark-blue)"><svg class="mark" viewBox="0 0 6 3"><use href="#tt-field"/></svg></div>Lagoon on Blue</div>
+      <div class="tile"><div class="box" style="background:var(--ink);--t:var(--hibiscus);--f:var(--dark-blue)"><svg class="mark" viewBox="0 0 6 3"><use href="#tt-field"/></svg></div>Hibiscus on Blue</div>
+      <div class="tile"><div class="box" style="background:var(--ink);--t:var(--flame);--f:var(--dark-blue)"><svg class="mark" viewBox="0 0 6 3"><use href="#tt-field"/></svg></div>Flame on Blue</div>
+      <div class="tile"><div class="box" style="background:var(--ink);--t:var(--dark-blue);--f:var(--neon-green)"><svg class="mark" viewBox="0 0 6 3"><use href="#tt-field"/></svg></div>Blue on Green</div>
+      <div class="tile"><div class="box" style="background:var(--ink);--t:var(--dark-blue);--f:var(--sun)"><svg class="mark" viewBox="0 0 6 3"><use href="#tt-field"/></svg></div>Blue on Sun</div>
+      <div class="tile"><div class="box" style="background:var(--ink);--t:var(--dark-blue);--f:var(--lagoon)"><svg class="mark" viewBox="0 0 6 3"><use href="#tt-field"/></svg></div>Blue on Lagoon</div>
+      <div class="tile"><div class="box" style="background:var(--ink);--t:var(--sun);--f:var(--violet)"><svg class="mark" viewBox="0 0 6 3"><use href="#tt-field"/></svg></div>Sun on Violet</div>
+      <div class="tile"><div class="box" style="background:var(--ink);--t:var(--neon-green);--f:var(--violet)"><svg class="mark" viewBox="0 0 6 3"><use href="#tt-field"/></svg></div>Green on Violet</div>
+      <div class="tile"><div class="box" style="background:var(--mist);--t:var(--dark-blue);--f:transparent"><svg class="mark" viewBox="0 0 6 3"><use href="#tt"/></svg></div>Blue, no field (on light)</div>
+      <div class="tile"><div class="box" style="background:var(--neon-green);--t:var(--ink);--f:transparent"><svg class="mark" viewBox="0 0 6 3"><use href="#tt"/></svg></div>Ink, no field (on colour)</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Construction &amp; space</h2>
+    <p>One tile = one unit. The mark is 6 × 3 units. Keep clear space of one tile on every side; minimum width is 24 px (12 px per T). Below that, drop the field and use the T's alone (<code>mark-mono.svg</code>).</p>
+    <div class="row">
+      <div class="clear"><svg class="mark" viewBox="0 0 6 3" style="--t:var(--neon-green);--f:var(--dark-blue)"><use href="#tt-field"/></svg></div>
+      <div class="row small">
+        <svg class="mark" viewBox="0 0 6 3" style="--t:var(--neon-green);--f:var(--dark-blue)"><use href="#tt-field"/></svg>
+        <svg class="mark" viewBox="0 0 6 3" style="--t:var(--neon-green);--f:transparent"><use href="#tt"/></svg>
+      </div>
+      <img class="avatar" src="avatar.svg" alt="Avatar">
+    </div>
+  </section>
+
+  <section>
+    <h2>Type</h2>
+    <p class="type-h">Aa Bb Tt 123</p>
+    <p><b>Dela Gothic One</b> for headlines: one heavy weight, flat and blocky like the tiles. Keep it short and large, sentence case. <b>Martian Mono</b> (300–800) for everything else: body, labels, code, hex values. The mono grid echoes the tile grid. The name appears as text, never as part of the logo.</p>
+  </section>
+
+  <section>
+    <h2>UI preview</h2>
+    <p>The rules from <code>ui-ux.md</code> applied to a page. Square corners, flat colour, one spectrum colour as the highlight, one primary action. Buttons invert on hover; try them.</p>
+
+    <div class="ui dark">
+      <nav class="ui-nav" aria-label="Preview">
+        <svg class="mark" viewBox="0 0 6 3" role="img" aria-label="Home"><use href="#tt-field"/></svg>
+        <span class="sp"></span>
+        <a href="#">Work</a><a href="#">Blog</a><a href="#">About</a><a href="#">Contact</a>
+        <a class="ui-btn ghost" href="#">Light</a>
+      </nav>
+      <div class="ui-hero">
+        <span class="ui-label">Software engineer · Fiji</span>
+        <h3>I build <em>fast</em>, honest software.</h3>
+        <p>Web apps, mobile apps and APIs for people who'd rather ship than meet. Currently taking on two new projects.</p>
+        <div class="ui-row"><a class="ui-btn" href="#">Start a project</a><a class="ui-btn ghost" href="#">See my work</a></div>
+      </div>
+      <div class="ui-cards">
+        <article class="ui-card" style="--c:var(--lagoon)"><span class="bar"></span><h3>Web apps</h3><p>Fast, accessible, built to last.</p><small>12 projects</small></article>
+        <article class="ui-card" style="--c:var(--hibiscus)"><span class="bar"></span><h3>Mobile</h3><p>One codebase, two stores.</p><small>5 projects</small></article>
+        <article class="ui-card" style="--c:var(--flame)"><span class="bar"></span><h3>APIs</h3><p>Boring, documented, reliable.</p><small>9 projects</small></article>
+      </div>
+      <div class="ui-field">
+        <label for="p-email">Email</label>
+        <input class="ui-in err" id="p-email" value="taia@site" aria-describedby="p-err">
+        <span class="ui-err" id="p-err"><i>!</i> Enter an email like name@site.com</span>
+      </div>
+      <footer class="ui-foot"><span>Taia Tiniyara</span><span><a href="#">GitHub</a> · <a href="#">Privacy</a></span></footer>
+    </div>
+
+    <div class="ui light">
+      <nav class="ui-nav" aria-label="Preview">
+        <svg class="mark" viewBox="0 0 6 3" role="img" aria-label="Home" style="--t:var(--dark-blue);--f:var(--dark-blue)"><use href="#tt-field"/></svg>
+        <span class="sp"></span>
+        <a href="#">Work</a><a href="#">Blog</a><a href="#">About</a><a href="#">Contact</a>
+        <a class="ui-btn ghost" href="#">Dark</a>
+      </nav>
+      <div class="ui-hero">
+        <span class="ui-label">Light theme · Blue and Violet only</span>
+        <h3>I build <em>fast</em>, honest software.</h3>
+        <p>Neon never sits on light. Dark Blue carries the text, the buttons and the mark; Violet is the highlight.</p>
+        <div class="ui-row"><a class="ui-btn" href="#">Start a project</a><a class="ui-btn ghost" href="#">See my work</a></div>
+      </div>
+      <div class="ui-cards">
+        <article class="ui-card"><span class="bar"></span><h3>Web apps</h3><p>Fast, accessible, built to last.</p></article>
+        <article class="ui-card"><span class="bar"></span><h3>Mobile</h3><p>One codebase, two stores.</p></article>
+      </div>
+    </div>
+
+    <div class="ui dark ui-states">
+      <span class="ui-label">States</span>
+      <div class="ui-row">
+        <a class="ui-btn" href="#">Default</a>
+        <a class="ui-btn hover" href="#">Hover</a>
+        <a class="ui-btn focus" href="#">Focus</a>
+        <button class="ui-btn" disabled>Disabled</button>
+      </div>
+      <div class="ui-row">
+        <input class="ui-in" value="Default" aria-label="Default">
+        <input class="ui-in focus" value="Focus" aria-label="Focus">
+        <input class="ui-in err" value="Error" aria-label="Error">
+      </div>
+      <div class="ui-field" aria-label="Loading skeleton"><div class="ui-skel" style="width:60%"></div><div class="ui-skel"></div><div class="ui-skel" style="width:80%"></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Don't</h2>
+    <ul>
+      <li>Don't add a wordmark, tagline or outline to the mark.</li>
+      <li>Don't rotate, skew or stretch it. The only mirror is the one already in it.</li>
+      <li>Don't use more than three colours in one mark (prism is the ceiling).</li>
+      <li>Don't put neon colours on light backgrounds.</li>
+    </ul>
+  </section>
+</main>
+</body>
+</html>
