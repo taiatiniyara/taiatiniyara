@@ -1,6 +1,7 @@
 ---
 import type { Project, PostRow } from "../lib/db.ts";
 import PostList from "./PostList.astro";
+import CtaCard from "./CtaCard.astro";
 
 interface Props { project: Project; html: string; posts: PostRow[] }
 const { project, html, posts } = Astro.props;
@@ -16,6 +17,7 @@ const { project, html, posts } = Astro.props;
     </div>
   )}
   <div class="prose" set:html={html} />
+  <CtaCard source={`project:${project.slug}`} heading="Want something like this?" />
   <h2>Posts</h2>
   <PostList posts={posts} showProject={false} />
 </article>

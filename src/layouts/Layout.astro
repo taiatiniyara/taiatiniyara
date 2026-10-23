@@ -69,10 +69,11 @@ const nav = [["/projects", "Work"], ["/blog", "Blog"], ["/about", "About"], ["/c
       <a href="/rss.xml">RSS feed</a>
       <a href="/contact">Contact</a>
       <a href="mailto:mail@taiatiniyara.com">Email me</a>
-      <p class="privacy">No cookies and no analytics. Your theme choice stays in your browser. If you use the contact form, I keep your message only to reply to it.</p>
+      <p class="privacy">No cookies and no analytics. Your theme choice stays in your browser. If you use the contact form, I keep your message, and which page and site you came from, only to reply and to learn which pages bring enquiries.</p>
     </footer>
     <script>
       import "../scripts/copy.ts";
+      import "../scripts/referrer.ts";
       document.getElementById("theme-toggle")?.addEventListener("click", () => {
         const root = document.documentElement;
         const light = root.dataset.theme ? root.dataset.theme === "light" : matchMedia("(prefers-color-scheme: light)").matches;

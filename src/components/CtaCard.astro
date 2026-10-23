@@ -1,0 +1,22 @@
+---
+import { channels, contactHref } from "../lib/site.ts";
+
+interface Props {
+  /** Where the visitor is, e.g. "post:my-slug"; arrives with their message so I can see what works. */
+  source: string;
+  heading?: string;
+  text?: string;
+}
+const { source, heading = "Building something like this?", text = "Tell me what you need and when. I'll write back." } = Astro.props;
+const call = channels().find((c) => c.id === "booking");
+---
+<section class="card cta" aria-labelledby="cta-h">
+  <h2 id="cta-h">{heading}</h2>
+  <p>{text}</p>
+  <div class="actions">
+    <a class="btn primary" href={contactHref(source)}>Tell me what you need</a>
+    {call && <a class="btn" href={call.href} target="_blank" rel="noopener">{call.label}</a>}
+    <slot />
+  </div>
+  <slot name="note" />
+</section>

@@ -1,6 +1,7 @@
 // The two emails a contact-form enquiry sends: one to me, one back to the visitor.
 import { mailto, renderEmail, type RenderedEmail } from "./email.ts";
-import type { EnquiryFields } from "./enquiry.ts";
+import { describeSource, type EnquiryFields } from "./enquiry.ts";
+import { channels } from "./site.ts";
 import { SITE } from "./seo.ts";
 
 export const CONTACT_EMAIL = "contact@taiatiniyara.com";
@@ -22,6 +23,7 @@ export function enquiryNotification(e: EnquiryFields, at: Date): RenderedEmail {
     details: [
       { label: "From", value: e.email, href: mailto(e.email) },
       { label: "Timeline", value: e.timeline || "Not given" },
+      { label: "Came from", value: describeSource(e) },
       { label: "Received", value: when(at) },
     ],
     quote: { label: "Message", text: e.message },
@@ -38,7 +40,7 @@ export function enquiryNotification(e: EnquiryFields, at: Date): RenderedEmail {
  * It does not repeat their message. Anyone can type any address into the form, so echoing free text
  * would let this email carry someone else's words, from my domain, to a stranger.
  */
-export function enquiryAcknowledgement(e: EnquiryFields, at: Date, replyTo: string): RenderedEmail {
+export function enquiryAcknowledgement(e: EnquiryFields, at: Date, replyTo: string, booking = channels().find((c) => c.id === "booking")?.href): RenderedEmail {
   return renderEmail({
     subject: "I've got your message",
     preheader: "I read every message myself and I'll write back to this address.",
@@ -58,12 +60,16 @@ export function enquiryAcknowledgement(e: EnquiryFields, at: Date, replyTo: stri
         "If we're a good fit, we agree the scope, the price and the dates before any work starts.",
       ],
     },
-    actions: [{ label: "Look at the work", href: `${SITE}/projects` }, { label: "How we'd work together", href: `${SITE}/about` }],
+    actions: [
+      ...(booking ? [{ label: "Book a 15-minute call", href: booking }] : []),
+      { label: "Look at the work", href: `${SITE}/projects` },
+      { label: "How we'd work together", href: `${SITE}/about` },
+    ],
     outro: [`Want to add something? Reply to this email, or write to ${replyTo}.`],
     footer: [
       "Taia Tiniyara · taiatiniyara.com",
       "You're getting this because this address was entered on the contact form at taiatiniyara.com. If that wasn't you, ignore it. I won't write to you again.",
-      "I keep your message only to reply to it.",
+      "I keep your message, and which page you came from, only to reply and to learn which pages bring enquiries.",
     ],
   });
 }

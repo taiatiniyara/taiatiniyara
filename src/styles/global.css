@@ -198,6 +198,19 @@ img { max-width: 100%; height: auto; display: block; }
 .ledger .note { font-size: 0.875rem; }
 .fineprint { font-size: 0.875rem; margin: 0; }
 
+/* Offers: ruled like the ledger, with what you get on the right and the price last */
+.offers { list-style: none; padding: 0; margin: 0 0 24px; border-top: 1px solid var(--text); }
+.offers > li { display: grid; gap: 16px 32px; padding: 24px 0; border-bottom: 1px solid var(--text); }
+@media (min-width: 40rem) { .offers > li { grid-template-columns: 1fr 1fr; } }
+.offers h3 { margin: 0 0 8px; font-size: 1.5rem; }
+.offers p { margin: 0 0 8px; }
+.offers .note { font-size: 0.875rem; }
+.offers .includes { padding-left: 24px; margin: 0 0 16px; }
+.offers .price { font-size: 1.5rem; font-weight: 800; line-height: 1.3; margin: 16px 0 8px; }
+.offers .price.quote { font-size: 1rem; font-weight: 600; }
+.offers a { display: inline-block; padding: 8px 0; }
+.channels { margin-bottom: 0; }
+
 /* Contact form */
 .form { max-width: 40rem; }
 .form .hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
@@ -233,9 +246,10 @@ select { appearance: none; background-image: none; }
 .codewrap .copy { min-height: 44px; padding: 0 16px; font: 600 0.875rem/1.5 "Martian Mono Variable", ui-monospace, monospace; background: var(--surface); color: var(--text); border: 1px solid var(--text); border-bottom: 0; cursor: pointer; }
 .codewrap .copy:hover { background: var(--text); color: var(--bg); }
 .end { margin-top: 64px; }
-.end .cta { padding: 32px 24px; margin-bottom: 48px; max-width: 60ch; }
-.end .cta h2 { margin-top: 0; font-size: clamp(1.5rem, 3vw + 1rem, 2rem); }
-.end .cta p:last-child { margin-bottom: 0; }
+.cta { padding: 32px 24px; margin: 48px 0; max-width: 60ch; }
+.end .cta { margin-top: 0; }
+.cta h2 { margin-top: 0; font-size: clamp(1.5rem, 3vw + 1rem, 2rem); }
+.cta p:last-child { margin-bottom: 0; }
 .trail { display: grid; gap: 16px; grid-template-columns: 1fr; list-style: none; padding: 0; margin: 0 0 32px; }
 @media (min-width: 40rem) { .trail { grid-template-columns: 1fr 1fr; } }
 .trail li { margin: 0; display: flex; }

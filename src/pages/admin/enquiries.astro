@@ -2,6 +2,7 @@
 import { env } from "cloudflare:workers";
 import AdminLayout from "../../layouts/AdminLayout.astro";
 import { listEnquiries } from "../../lib/db.ts";
+import { describeSource } from "../../lib/enquiry.ts";
 
 const enquiries = await listEnquiries(env.DB);
 const when = (sec: number) => new Date(sec * 1000).toISOString().replace("T", " ").slice(0, 16) + " UTC";
@@ -13,7 +14,7 @@ const when = (sec: number) => new Date(sec * 1000).toISOString().replace("T", " 
     <ul class="grid">
       {enquiries.map((e) => (
         <li class="card">
-          <p class="meta">{when(e.created_at)} · {e.timeline || "Timing not given"}</p>
+          <p class="meta">{when(e.created_at)} · {e.timeline || "Timing not given"} · Came from: {describeSource(e)}</p>
           <h2><a href={`mailto:${e.email}?subject=${encodeURIComponent("Re: your message to taiatiniyara.com")}`}>{e.email}</a></h2>
           <p class="verbatim">{e.message}</p>
           <div class="actions">
