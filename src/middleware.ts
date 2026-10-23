@@ -2,6 +2,7 @@ import { defineMiddleware } from "astro:middleware";
 import { env } from "cloudflare:workers";
 import { isAdmin } from "./lib/auth.ts";
 import { TTL } from "./lib/cache.ts";
+import { SITE } from "./lib/seo.ts";
 
 const CSP = [
   "default-src 'self'",
@@ -21,6 +22,9 @@ const deny = (status: number, msg: string) => new Response(msg, { status, header
 
 export const onRequest = defineMiddleware(async ({ request, url, locals }, next) => {
   const admin = isAdminPath(url.pathname);
+
+  // One host per page: send www to the apex so search engines don't split the site across two.
+  if (url.hostname === `www.${new URL(SITE).hostname}`) return Response.redirect(`${SITE}${url.pathname}${url.search}`, 301);
 
   // The Access path is "admin/*", which doesn't match a bare "/admin", so send it where Access applies.
   if (url.pathname === "/admin") return Response.redirect(`${url.origin}/admin/`, 302);

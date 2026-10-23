@@ -9,17 +9,3 @@ export function postNeighbours(all: PostRow[], post: Pick<PostRow, "id" | "proje
     related: post.project_id === null ? [] : all.filter((p) => p.project_id === post.project_id && p.id !== post.id).slice(0, relatedMax),
   };
 }
-
-export function articleLd(post: PostRow, canonical: string, image?: string) {
-  const iso = (sec: number) => new Date(sec * 1000).toISOString();
-  return {
-    "@type": "BlogPosting",
-    headline: post.title,
-    ...(post.summary && { description: post.summary }),
-    datePublished: iso(post.published_at ?? post.created_at),
-    dateModified: iso(post.updated_at),
-    author: { "@type": "Person", name: "Taia Tiniyara", url: "https://taiatiniyara.com" },
-    mainEntityOfPage: canonical,
-    ...(image && { image: new URL(image.startsWith("/media/") && !image.endsWith(".gif") ? `${image}?w=1200` : image, canonical).href }),
-  };
-}

@@ -6,20 +6,13 @@ import ProjectCard from "../components/ProjectCard.astro";
 import ContactForm from "../components/ContactForm.astro";
 import { listPosts, listProjects } from "../lib/db.ts";
 import { proof } from "../lib/proof.ts";
+import { websiteLd } from "../lib/seo.ts";
 
 const [feature, ...rest] = (await listProjects(env.DB)).slice(0, 4);
 const posts = await listPosts(env.DB, { limit: 4 });
 const measured = new Date(proof.measuredOn + "T00:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
-const person = {
-  "@type": "Person",
-  name: "Taia Tiniyara",
-  jobTitle: "Software engineer",
-  url: "https://taiatiniyara.com",
-  email: "mail@taiatiniyara.com",
-  address: { "@type": "PostalAddress", addressCountry: "FJ" },
-};
 ---
-<Layout title="Taia Tiniyara" wide jsonld={[person]}>
+<Layout title="Web apps, mobile apps and APIs from Fiji" wide jsonLd={[websiteLd()]}>
   <section class="band block hero">
     <div class="wrap">
       <p class="kicker">Software engineer in Fiji</p>

@@ -2,15 +2,21 @@
 import { env } from "cloudflare:workers";
 import Layout from "../../../layouts/Layout.astro";
 import PostView from "../../../components/PostView.astro";
-import { getBody, getPostBySlug, listPosts } from "../../../lib/db.ts";
+import { getBody, getPostBySlug, listPosts, postPath } from "../../../lib/db.ts";
 import { firstImage } from "../../../lib/content.ts";
-import { articleLd, postNeighbours } from "../../../lib/posts.ts";
+import { articleLd, breadcrumbLd } from "../../../lib/seo.ts";
+import { postNeighbours } from "../../../lib/posts.ts";
 
 const post = await getPostBySlug(env.DB, Astro.params.slug!, Astro.params.post!);
 if (!post) return Astro.rewrite("/404");
 const [doc, all] = await Promise.all([getBody(env.BUCKET, "posts", post.id), listPosts(env.DB)]);
 const image = firstImage(doc);
+const path = postPath(post);
+const trail: [string, string][] = post.project_slug
+  ? [["Work", "/projects"], [post.project_title!, `/projects/${post.project_slug}`], [post.title, path]]
+  : [["Blog", "/blog"], [post.title, path]];
+const jsonLd = [articleLd({ title: post.title, description: post.summary, path, image, published: post.published_at, updated: post.updated_at }), breadcrumbLd(trail)];
 ---
-<Layout title={post.title} description={post.summary || undefined} image={image} jsonld={[articleLd(post, Astro.url.href, image)]} hl="lagoon" article>
+<Layout title={post.title} description={post.summary || undefined} image={image} hl="lagoon" article published={post.published_at} updated={post.updated_at} jsonLd={jsonLd}>
   <PostView post={post} doc={doc} trail={postNeighbours(all, post)} />
 </Layout>
