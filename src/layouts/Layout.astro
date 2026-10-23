@@ -27,7 +27,7 @@ const nav = [["/projects", "Work"], ["/blog", "Blog"], ["/about", "About"], ["/c
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
@@ -60,7 +60,7 @@ const nav = [["/projects", "Work"], ["/blog", "Blog"], ["/about", "About"], ["/c
       <a href="/" aria-label={`${SITE_NAME}, home`}><img src="/mark.svg" width="96" height="48" alt="" /></a>
       <nav aria-label="Main">
         {nav.map(([href, label]) => <a href={href} aria-current={here === href || here.startsWith(href + "/") ? "page" : undefined}>{label}</a>)}
-        <button class="theme-toggle" type="button" id="theme-toggle"><span class="to-light">Light theme</span><span class="to-dark">Dark theme</span></button>
+        <button class="theme-toggle" type="button" id="theme-toggle"><span class="to-light">Light<span class="long"> theme</span></span><span class="to-dark">Dark<span class="long"> theme</span></span></button>
       </nav>
     </header>
     <main id="main" class={wide ? "wide" : undefined}><slot /></main>

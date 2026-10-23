@@ -37,10 +37,12 @@ const field = (n: FieldName) => ({
 
   <div class="field">
     <label for={`${id}-timeline`}>When do you need it? (optional)</label>
-    <select id={`${id}-timeline`} name="timeline" {...field("timeline")}>
-      <option value="" selected={!values.timeline}>Not sure yet</option>
-      {TIMELINES.map((t) => <option value={t} selected={values.timeline === t}>{t}</option>)}
-    </select>
+    <div class="select">
+      <select id={`${id}-timeline`} name="timeline" {...field("timeline")}>
+        <option value="" selected={!values.timeline}>Not sure yet</option>
+        {TIMELINES.map((t) => <option value={t} selected={values.timeline === t}>{t}</option>)}
+      </select>
+    </div>
     <p class="field-error" id={`${id}-timeline-error`} data-error-for="timeline" role="alert">{errors.timeline}</p>
   </div>
 
