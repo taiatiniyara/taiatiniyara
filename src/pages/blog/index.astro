@@ -6,8 +6,10 @@ import { listPosts } from "../../lib/db.ts";
 
 const posts = await listPosts(env.DB);
 ---
-<Layout title="Blog" description="Posts and project notes." hl="sun">
+<Layout title="Blog" description="Plain notes on building web apps, mobile apps and APIs." hl="sun">
   <h1>Blog</h1>
   <div class="rule"></div>
+  <p class="lede">Plain notes on building software, and on the projects behind my work.</p>
+  <p>Posts about a project also appear on its page. To follow along, use <a href="/rss.xml">the RSS feed</a>.</p>
   <PostList posts={posts} />
 </Layout>
