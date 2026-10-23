@@ -42,7 +42,7 @@ Draft. Tokens live in `colors.css`; the mark and type are defined in `index.html
 - **Form:** label above field, inline validation on blur, errors say what to do ("Enter an email like name@site.com").
 - **Focus:** 2 px Lagoon outline, 2 px offset, always visible. Never remove it.
 - **Header:** mark (48 px wide minimum, links home), ≤ 5 nav items, theme toggle. No wordmark next to the mark.
-- **Footer:** name as plain text, social links, privacy.
+- **Footer:** name as plain text, a privacy line, and contact links. Social links are optional.
 - **Empty / error / loading:** skeletons (flat Blue blocks) for loading; short, plain-language messages with one next step.
 
 ## Motion
