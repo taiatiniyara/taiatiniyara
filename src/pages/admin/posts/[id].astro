@@ -1,0 +1,39 @@
+---
+import { env } from "cloudflare:workers";
+import AdminLayout from "../../../layouts/AdminLayout.astro";
+import EditorShell from "../../../components/EditorShell.astro";
+import { getBody, getPost, listProjects } from "../../../lib/db.ts";
+import { emptyDoc } from "../../../lib/content.ts";
+
+const isNew = Astro.params.id === "new";
+const post = isNew ? null : await getPost(env.DB, Number(Astro.params.id));
+if (!isNew && !post) return Astro.rewrite("/404");
+const [body, projects] = await Promise.all([post ? getBody(env.BUCKET, "posts", post.id) : emptyDoc, listProjects(env.DB, true)]);
+const locked = !!post?.published_at; // slug and project are fixed after first publish
+---
+<AdminLayout title={post ? post.title : "New post"}>
+  <h1>{post ? "Edit post" : "New post"}</h1>
+  <EditorShell kind="post" id={post?.id} updated={post?.updated_at} body={body} previewHref={post ? `/admin/preview/posts/${post.id}` : undefined}>
+    <label for="title">Title</label>
+    <input id="title" name="title" type="text" required maxlength="120" value={post?.title ?? ""} />
+
+    <label for="slug">Slug</label>
+    <input id="slug" name="slug" type="text" maxlength="80" value={post?.slug ?? ""} readonly={locked} />
+    <p class="field-note">{locked ? "Locked because this has been published." : "Leave empty to build it from the title. It locks on first publish."}</p>
+
+    <label for="summary">Summary</label>
+    <textarea id="summary" name="summary" maxlength="300">{post?.summary ?? ""}</textarea>
+
+    <label for="project_id">Project</label>
+    <select id="project_id" name="project_id" disabled={locked}>
+      <option value="" selected={!post?.project_id}>None (standalone post)</option>
+      {projects.map((p) => <option value={p.id} selected={post?.project_id === p.id}>{p.title}</option>)}
+    </select>
+
+    <label for="status">Status</label>
+    <select id="status" name="status">
+      <option value="draft" selected={post?.status !== "published"}>Draft</option>
+      <option value="published" selected={post?.status === "published"}>Published</option>
+    </select>
+  </EditorShell>
+</AdminLayout>

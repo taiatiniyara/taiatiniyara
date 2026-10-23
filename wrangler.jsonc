@@ -1,0 +1,25 @@
+{
+  "name": "taiatiniyara",
+  "account_id": "2e2276433c73f18451f3f2fd50adddb7",
+  "compatibility_date": "2026-10-19",
+  "compatibility_flags": ["nodejs_compat"],
+  "routes": [
+    { "pattern": "taiatiniyara.com", "custom_domain": true },
+    { "pattern": "www.taiatiniyara.com", "custom_domain": true },
+  ],
+  "images": { "binding": "IMAGES" },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "taiatiniyara",
+      "database_id": "d8814014-e6f1-4543-9607-010ca7f661e4",
+      "migrations_dir": "migrations",
+    },
+  ],
+  "r2_buckets": [{ "binding": "BUCKET", "bucket_name": "taiatiniyara" }],
+  "vars": {
+    "ADMIN_EMAIL": "mail@taiatiniyara.com",
+    "ACCESS_TEAM_DOMAIN": "old-glade-70f6.cloudflareaccess.com",
+    // Optional extra check: set "ACCESS_AUD" to the Access application's AUD tag to also require it.
+  },
+}

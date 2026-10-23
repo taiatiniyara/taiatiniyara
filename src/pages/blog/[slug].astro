@@ -1,0 +1,14 @@
+---
+import { env } from "cloudflare:workers";
+import Layout from "../../layouts/Layout.astro";
+import PostView from "../../components/PostView.astro";
+import { getBody, getPostBySlug } from "../../lib/db.ts";
+import { firstImage, renderBody } from "../../lib/content.ts";
+
+const post = await getPostBySlug(env.DB, null, Astro.params.slug!);
+if (!post) return Astro.rewrite("/404");
+const doc = await getBody(env.BUCKET, "posts", post.id);
+---
+<Layout title={post.title} description={post.summary || undefined} image={firstImage(doc)} hl="sun" article>
+  <PostView post={post} html={renderBody(doc)} />
+</Layout>

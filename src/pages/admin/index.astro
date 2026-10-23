@@ -1,0 +1,65 @@
+---
+import { env } from "cloudflare:workers";
+import AdminLayout from "../../layouts/AdminLayout.astro";
+import { listPosts, listProjects, postPath } from "../../lib/db.ts";
+import { fmtDate } from "../../lib/format.ts";
+
+const [projects, posts] = await Promise.all([listProjects(env.DB, true), listPosts(env.DB, { drafts: true })]);
+---
+<AdminLayout title="Dashboard">
+  <h1>Admin</h1>
+  <p id="message" role="alert" hidden></p>
+
+  <h2>Projects</h2>
+  {projects.length === 0 ? <p class="empty">No projects yet.</p> : (
+    <table class="admin">
+      <thead><tr><th>Title</th><th>Status</th><th>Order</th><th>Actions</th></tr></thead>
+      <tbody>
+        {projects.map((p, i) => (
+          <tr>
+            <td><a href={`/admin/projects/${p.id}`}>{p.title}</a></td>
+            <td class="status">{p.status}</td>
+            <td>
+              <button class="btn" type="button" data-action="move-up" data-id={p.id} disabled={i === 0} aria-label={`Move ${p.title} up`}>Up</button>
+              <button class="btn" type="button" data-action="move-down" data-id={p.id} disabled={i === projects.length - 1} aria-label={`Move ${p.title} down`}>Down</button>
+            </td>
+            <td><button class="btn danger" type="button" data-action="delete-project" data-id={p.id} data-title={p.title}>Delete</button></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )}
+
+  <h2>Posts</h2>
+  {posts.length === 0 ? <p class="empty">No posts yet.</p> : (
+    <table class="admin">
+      <thead><tr><th>Title</th><th>Project</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+      <tbody>
+        {posts.map((p) => (
+          <tr>
+            <td><a href={`/admin/posts/${p.id}`}>{p.title}</a></td>
+            <td>{p.project_title ?? "None"}</td>
+            <td class="status">{p.status}</td>
+            <td>{fmtDate(p.published_at ?? p.created_at)}</td>
+            <td>
+              {p.status === "published" && <a href={postPath(p)}>View</a>}
+              <button class="btn danger" type="button" data-action="delete-post" data-id={p.id} data-title={p.title}>Delete</button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )}
+
+  <h2>Media</h2>
+  <p>Find images that no saved post or project uses.</p>
+  <div class="actions">
+    <button class="btn" type="button" data-action="media-scan">Scan for unused media</button>
+    <button class="btn danger" type="button" data-action="media-delete" hidden>Delete unused media</button>
+  </div>
+  <p id="media-result" role="status"></p>
+</AdminLayout>
+
+<script>
+  import "../../admin/dashboard.ts";
+</script>

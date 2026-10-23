@@ -1,0 +1,21 @@
+---
+import type { Project, PostRow } from "../lib/db.ts";
+import PostList from "./PostList.astro";
+
+interface Props { project: Project; html: string; posts: PostRow[] }
+const { project, html, posts } = Astro.props;
+---
+<article>
+  <h1>{project.title}</h1>
+  <div class="rule"></div>
+  {project.summary && <p class="lede">{project.summary}</p>}
+  {(project.repo_url || project.live_url) && (
+    <div class="actions">
+      {project.live_url && <a class="btn primary" href={project.live_url} target="_blank" rel="noopener">Live site</a>}
+      {project.repo_url && <a class="btn" href={project.repo_url} target="_blank" rel="noopener">Source</a>}
+    </div>
+  )}
+  <div class="prose" set:html={html} />
+  <h2>Posts</h2>
+  <PostList posts={posts} showProject={false} />
+</article>

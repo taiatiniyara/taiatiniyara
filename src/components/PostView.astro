@@ -1,0 +1,16 @@
+---
+import { fmtDate } from "../lib/format.ts";
+import type { PostRow } from "../lib/db.ts";
+
+interface Props { post: PostRow; html: string }
+const { post, html } = Astro.props;
+---
+<article>
+  {post.project_slug && <p class="meta"><a href={`/projects/${post.project_slug}`}>{post.project_title}</a></p>}
+  <h1>{post.title}</h1>
+  <div class="rule"></div>
+  <p class="meta">
+    {post.published_at ? <time datetime={fmtDate(post.published_at)}>{fmtDate(post.published_at)}</time> : <strong class="status">Draft</strong>}
+  </p>
+  <div class="prose" set:html={html} />
+</article>

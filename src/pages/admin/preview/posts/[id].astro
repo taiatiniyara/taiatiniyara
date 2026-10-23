@@ -1,0 +1,15 @@
+---
+import { env } from "cloudflare:workers";
+import Layout from "../../../../layouts/Layout.astro";
+import PostView from "../../../../components/PostView.astro";
+import { getBody, getPost } from "../../../../lib/db.ts";
+import { renderBody } from "../../../../lib/content.ts";
+
+// Same renderer and layout as the public page, but drafts are allowed (admin-only, never cached).
+const post = await getPost(env.DB, Number(Astro.params.id));
+if (!post) return Astro.rewrite("/404");
+const doc = await getBody(env.BUCKET, "posts", post.id);
+---
+<Layout title={`Preview: ${post.title}`} noindex hl={post.project_id ? "lagoon" : "sun"} article>
+  <PostView post={post} html={renderBody(doc)} />
+</Layout>

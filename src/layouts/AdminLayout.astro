@@ -1,0 +1,14 @@
+---
+import Layout from "./Layout.astro";
+
+interface Props { title: string }
+const { title } = Astro.props;
+---
+<Layout title={`Admin: ${title}`} noindex hl="violet">
+  <nav aria-label="Admin" class="actions">
+    <a href="/admin">Dashboard</a>
+    <a href="/admin/posts/new">New post</a>
+    <a href="/admin/projects/new">New project</a>
+  </nav>
+  <slot />
+</Layout>

@@ -1,0 +1,19 @@
+---
+import { postPath, type PostRow } from "../lib/db.ts";
+import { fmtDate } from "../lib/format.ts";
+
+interface Props { posts: PostRow[]; showProject?: boolean }
+const { posts, showProject = true } = Astro.props;
+---
+{posts.length === 0 ? <p class="empty">Nothing here yet.</p> : (
+  <ul class="grid">
+    {posts.map((p) => (
+      <li class="card">
+        {showProject && p.project_title && <span class="tag">{p.project_title}</span>}
+        <h3><a class="stretch" href={postPath(p)}>{p.title}</a></h3>
+        <p class="meta"><time datetime={fmtDate(p.published_at)}>{fmtDate(p.published_at)}</time></p>
+        {p.summary && <p>{p.summary}</p>}
+      </li>
+    ))}
+  </ul>
+)}

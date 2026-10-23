@@ -1,0 +1,13 @@
+---
+import { env } from "cloudflare:workers";
+import Layout from "../../layouts/Layout.astro";
+import PostList from "../../components/PostList.astro";
+import { listPosts } from "../../lib/db.ts";
+
+const posts = await listPosts(env.DB);
+---
+<Layout title="Blog" description="Posts and project notes." hl="sun">
+  <h1>Blog</h1>
+  <div class="rule"></div>
+  <PostList posts={posts} />
+</Layout>

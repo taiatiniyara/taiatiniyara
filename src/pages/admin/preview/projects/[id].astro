@@ -1,0 +1,14 @@
+---
+import { env } from "cloudflare:workers";
+import Layout from "../../../../layouts/Layout.astro";
+import ProjectView from "../../../../components/ProjectView.astro";
+import { getBody, getProject, listPosts } from "../../../../lib/db.ts";
+import { renderBody } from "../../../../lib/content.ts";
+
+const project = await getProject(env.DB, Number(Astro.params.id));
+if (!project) return Astro.rewrite("/404");
+const [doc, posts] = await Promise.all([getBody(env.BUCKET, "projects", project.id), listPosts(env.DB, { projectId: project.id })]);
+---
+<Layout title={`Preview: ${project.title}`} noindex hl="lagoon">
+  <ProjectView project={project} html={renderBody(doc)} posts={posts} />
+</Layout>

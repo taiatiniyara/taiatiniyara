@@ -1,0 +1,30 @@
+---
+import { env } from "cloudflare:workers";
+import Layout from "../layouts/Layout.astro";
+import PostList from "../components/PostList.astro";
+import { listPosts, listProjects } from "../lib/db.ts";
+
+const projects = (await listProjects(env.DB)).slice(0, 4);
+const posts = await listPosts(env.DB, { limit: 4 });
+---
+<Layout title="Taia Tiniyara">
+  <h1>Fast, accessible, built last.</h1>
+  <p class="lede">Web apps, mobile apps and APIs for people who'd rather ship.</p>
+
+  <h2>Work</h2>
+  {projects.length === 0 ? <p class="empty">Projects are on their way.</p> : (
+    <ul class="grid">
+      {projects.map((p) => (
+        <li class="card">
+          <h3><a class="stretch" href={`/projects/${p.slug}`}>{p.title}</a></h3>
+          {p.summary && <p>{p.summary}</p>}
+        </li>
+      ))}
+    </ul>
+  )}
+  <p><a href="/projects">All work</a></p>
+
+  <h2>Latest posts</h2>
+  <PostList posts={posts} />
+  <p><a href="/blog">All posts</a></p>
+</Layout>

@@ -1,0 +1,15 @@
+---
+import { env } from "cloudflare:workers";
+import Layout from "../../../layouts/Layout.astro";
+import ProjectView from "../../../components/ProjectView.astro";
+import { getBody, getProjectBySlug, listPosts } from "../../../lib/db.ts";
+import { firstImage, renderBody } from "../../../lib/content.ts";
+
+const project = await getProjectBySlug(env.DB, Astro.params.slug!);
+if (!project) return Astro.rewrite("/404");
+const [doc, posts] = await Promise.all([getBody(env.BUCKET, "projects", project.id), listPosts(env.DB, { projectId: project.id })]);
+const image = project.cover_key ? `/${project.cover_key}` : firstImage(doc);
+---
+<Layout title={project.title} description={project.summary || undefined} image={image} hl="lagoon">
+  <ProjectView project={project} html={renderBody(doc)} posts={posts} />
+</Layout>

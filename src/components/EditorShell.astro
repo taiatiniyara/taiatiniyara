@@ -1,0 +1,66 @@
+---
+import type { JSONContent } from "@tiptap/core";
+
+interface Props {
+  kind: "post" | "project";
+  id?: number;
+  updated?: number;
+  body: JSONContent;
+  previewHref?: string;
+}
+const { kind, id, updated, body, previewHref } = Astro.props;
+const initial = JSON.stringify(body).replace(/</g, "\\u003c");
+const tools: [string, string, string][] = [
+  ["bold", "B", "Bold"], ["italic", "I", "Italic"], ["strike", "S", "Strikethrough"], ["code", "<>", "Inline code"],
+  ["h2", "H2", "Heading 2"], ["h3", "H3", "Heading 3"], ["h4", "H4", "Heading 4"],
+  ["bullets", "• List", "Bulleted list"], ["numbers", "1. List", "Numbered list"], ["quote", "Quote", "Quote"],
+  ["codeblock", "Code block", "Code block"], ["rule", "—", "Horizontal rule"],
+  ["link", "Link", "Link"], ["image", "Image", "Insert image"], ["undo", "Undo", "Undo"], ["redo", "Redo", "Redo"],
+];
+---
+<form id="entity-form" data-kind={kind} data-id={id} data-updated={updated}>
+  <p id="message" role="alert" hidden></p>
+  <div id="restore" class="ok" hidden>
+    <p>Unsaved text from an earlier session was found in this browser.</p>
+    <div class="actions">
+      <button class="btn primary" type="button" id="restore-yes">Restore it</button>
+      <button class="btn" type="button" id="restore-no">Discard it</button>
+    </div>
+  </div>
+
+  <slot />
+
+  <label id="body-label" for="editor">Body</label>
+  <div class="toolbar" role="toolbar" aria-label="Formatting" aria-controls="editor">
+    {tools.map(([cmd, text, label]) => <button type="button" data-cmd={cmd} aria-label={label} title={label} aria-pressed="false">{text}</button>)}
+  </div>
+  <input id="image-input" type="file" accept="image/*" hidden />
+
+  <div id="panel-link" class="ok" hidden>
+    <label for="link-url">Link address</label>
+    <input id="link-url" type="url" placeholder="https://example.com" />
+    <div class="actions">
+      <button class="btn primary" type="button" id="link-apply">Apply</button>
+      <button class="btn" type="button" id="link-remove">Remove link</button>
+    </div>
+  </div>
+  <div id="panel-image" class="ok" hidden>
+    <label for="image-alt">Image description (alt text)</label>
+    <input id="image-alt" type="text" />
+    <label for="image-caption">Caption (optional)</label>
+    <input id="image-caption" type="text" />
+  </div>
+
+  <div id="editor" class="editor"></div>
+  <script id="initial-body" type="application/json" set:html={initial}></script>
+
+  <div class="actions">
+    <button class="btn primary" type="submit" id="save">Save</button>
+    {previewHref && <a class="btn" href={previewHref} target="_blank" rel="noopener">Preview saved version</a>}
+    {id && <button class="btn danger" type="button" id="delete">Delete</button>}
+  </div>
+</form>
+
+<script>
+  import "../admin/editor.ts";
+</script>

@@ -1,0 +1,22 @@
+---
+import { env } from "cloudflare:workers";
+import Layout from "../../layouts/Layout.astro";
+import { listProjects } from "../../lib/db.ts";
+
+const projects = await listProjects(env.DB);
+---
+<Layout title="Work" description="Projects I've built." hl="lagoon">
+  <h1>Work</h1>
+  <div class="rule"></div>
+  {projects.length === 0 ? <p class="empty">Projects are on their way.</p> : (
+    <ul class="grid">
+      {projects.map((p) => (
+        <li class="card">
+          {p.cover_key && <img src={`/${p.cover_key}?w=800`} alt="" loading="lazy" width="800" height="400" />}
+          <h2><a class="stretch" href={`/projects/${p.slug}`}>{p.title}</a></h2>
+          {p.summary && <p>{p.summary}</p>}
+        </li>
+      ))}
+    </ul>
+  )}
+</Layout>
