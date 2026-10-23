@@ -44,7 +44,12 @@ Draft. Tokens live in `colors.css`; the mark and type are defined in `index.html
 - **Header:** mark (48 px wide minimum, links home), ≤ 5 nav items, theme toggle. No wordmark next to the mark.
 - **Footer:** name as plain text, a privacy line, and contact links. Social links are optional.
 - **Band:** a full-width section on the page background, with a 64 px top and bottom. At most one Dark Blue band ("block") for every two plain ones. A block looks the same in both themes: Dark Blue ground, Mist text, Neon accent, Ink surfaces, and the page's spectrum colour at full strength (it is safe on Dark Blue even when the page is light). Use it for the hero and the contact section.
-- **Feature card:** the first project, large (image beside text from 64 rem). The rest sit in a 3-up grid. A result line (`Result: …`) gets an 8 px bar in the section colour.
+- **Feature card:** the first project, large (image beside text from 64 rem). The rest are ruled rows (below), not a card grid. A result line (`Result: …`) is a solid block in the section colour, full width of its container (text Ink, or Mist on Violet). No side bars.
+- **Row list:** 1 px rules in the text colour, 24 px padding, title left and summary right from 40 rem. Used for projects and posts. The whole row is one link; hover inverts the block.
+- **Split:** from 64 rem a section is a heading column (18 rem) beside its content, so sections don't all read heading-then-grid. Use it for proof, posts and contact; keep the work list full width.
+- **Highlight word:** the hero headline sets one word on a solid block in the page colour. Once per page.
+- **Proof ledger:** claim on the left, measurement (a Stat) on the right, rows ruled like a receipt. No equal cards, no accent bars.
+- **No decoration for its own sake:** no kicker or eyebrow labels above headings, and no bar under headings. Colour marks something: the highlight word, a result, the current page.
 - **Stat:** a number in Martian Mono 800 (32–48 px, never Dela Gothic), then one plain sentence saying what was measured. Only publish a number you measured; say when.
 - **Field error:** 2 px Hibiscus border, a `!` icon and the message in body text colour (Hibiscus text is too weak on Dark Blue). It says what to do next, appears on blur, and clears once the answer is fixed.
 - **Copy button:** secondary button, confirms with a text message in a live region, never by colour alone.

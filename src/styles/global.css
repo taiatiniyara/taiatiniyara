@@ -12,6 +12,8 @@
   --on-accent: var(--ink);
   --hl: var(--lagoon);
   --hl-loud: var(--lagoon); /* the page colour as it looks on Dark Blue, in either theme */
+  --on-hl: var(--ink); /* text on a solid highlight block: Ink, except on Violet */
+  --on-hl-loud: var(--ink);
   --focus: var(--lagoon);
   --error: var(--hibiscus);
   color-scheme: dark;
@@ -19,13 +21,13 @@
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) {
     --bg: var(--mist); --surface: #fff; --border: var(--dark-blue); --text: var(--dark-blue);
-    --accent: var(--dark-blue); --on-accent: var(--mist); --hl: var(--violet); --focus: var(--violet);
+    --accent: var(--dark-blue); --on-accent: var(--mist); --hl: var(--violet); --on-hl: var(--mist); --focus: var(--violet);
     color-scheme: light;
   }
 }
 :root[data-theme="light"] {
   --bg: var(--mist); --surface: #fff; --border: var(--dark-blue); --text: var(--dark-blue);
-  --accent: var(--dark-blue); --on-accent: var(--mist); --hl: var(--violet); --focus: var(--violet);
+  --accent: var(--dark-blue); --on-accent: var(--mist); --hl: var(--violet); --on-hl: var(--mist); --focus: var(--violet);
   color-scheme: light;
 }
 /* One spectrum colour per page. In the light theme the highlight is always Violet. */
@@ -33,10 +35,10 @@
 .hl-sun { --hl: var(--sun); --hl-loud: var(--sun); }
 .hl-hibiscus { --hl: var(--hibiscus); --hl-loud: var(--hibiscus); }
 .hl-flame { --hl: var(--flame); --hl-loud: var(--flame); }
-.hl-violet { --hl: var(--violet); --hl-loud: var(--violet); }
-:root[data-theme="light"] [class*="hl-"] { --hl: var(--violet); }
+.hl-violet { --hl: var(--violet); --hl-loud: var(--violet); --on-hl: var(--mist); --on-hl-loud: var(--mist); }
+:root[data-theme="light"] [class*="hl-"] { --hl: var(--violet); --on-hl: var(--mist); }
 @media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) [class*="hl-"] { --hl: var(--violet); }
+  :root:not([data-theme="dark"]) [class*="hl-"] { --hl: var(--violet); --on-hl: var(--mist); }
 }
 
 *, *::before, *::after { box-sizing: border-box; border-radius: 0; }
@@ -55,7 +57,7 @@ main.wide { max-width: none; padding: 0; }
 /* Dark Blue band, identical in both themes. Neon and the spectrum colours are allowed here because the ground is dark. */
 .block {
   --bg: var(--dark-blue); --surface: var(--ink); --border: var(--ink); --text: var(--mist);
-  --accent: var(--neon-green); --on-accent: var(--ink); --hl: var(--hl-loud); --focus: var(--lagoon);
+  --accent: var(--neon-green); --on-accent: var(--ink); --hl: var(--hl-loud); --on-hl: var(--on-hl-loud); --focus: var(--lagoon);
   background: var(--bg); color: var(--text);
 }
 .band.sunk { background: var(--surface); }
@@ -89,6 +91,8 @@ img { max-width: 100%; height: auto; display: block; }
   :root:not([data-theme="dark"]) .theme-toggle .to-dark { display: inline; }
 }
 .site-footer { border-top: 1px solid var(--border); padding: 24px; display: flex; gap: 8px 24px; flex-wrap: wrap; max-width: 64rem; width: 100%; margin: 0 auto; font-size: 0.875rem; }
+.site-footer .name { font-weight: 800; }
+.site-footer .privacy { flex-basis: 100%; margin: 0; max-width: 60ch; }
 
 /* Controls */
 .btn {
@@ -103,9 +107,7 @@ img { max-width: 100%; height: auto; display: block; }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .actions { display: flex; gap: 16px; flex-wrap: wrap; margin: 24px 0; }
 
-/* Cards and lists */
-.grid { display: grid; gap: 24px; grid-template-columns: 1fr; list-style: none; padding: 0; margin: 0 0 48px; }
-@media (min-width: 40rem) { .grid { grid-template-columns: repeat(2, 1fr); } }
+/* Cards */
 .card { position: relative; border: 1px solid var(--border); background: var(--surface); padding: 24px; display: flex; flex-direction: column; gap: 8px; }
 .card h2, .card h3 { margin: 0; font-size: 1.5rem; }
 .card p { margin: 0; }
@@ -119,45 +121,80 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .card:focus-within { outline: 2px solid var(--focus); outline-offset: 2px; }
 .card img { aspect-ratio: 2 / 1; object-fit: cover; width: calc(100% + 48px); max-width: none; margin: -24px -24px 8px; }
-.tag { display: inline-block; border: 1px solid var(--hl); padding: 0 8px; font-size: 0.875rem; width: fit-content; }
-.rule { height: 8px; width: 96px; background: var(--hl); margin: 0 0 24px; }
 .empty { border: 1px solid var(--border); padding: 24px; }
 
 
-/* Hero */
-.hero { padding: 96px 0 80px; }
-.hero h1 { max-width: 12ch; }
-.hero .rule { width: 192px; }
-.kicker { font-size: 0.875rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; margin: 0 0 24px; }
-.hero .lede { margin-bottom: 32px; }
-.hero .actions { margin-bottom: 0; }
+/* Highlight: the page colour as a solid block behind a word. Used once per hero. */
+.pop { display: inline-block; line-height: 1; background: var(--hl); color: var(--on-hl); padding: 0 0.12em; }
 
-/* Work: one featured project, the rest smaller */
-.card > .body { display: contents; }
-.feature { display: grid; gap: 0; margin: 0 0 24px; padding: 0; }
+/* Hero */
+.hero { padding: 96px 0 88px; }
+.hero h1 { max-width: 11ch; margin-bottom: 32px; }
+.hero .lede { font-size: 1.25rem; margin-bottom: 32px; max-width: 36ch; }
+.hero .actions { margin: 0; }
+@media (min-width: 64rem) {
+  .hero .wrap { display: grid; grid-template-columns: 7fr 5fr; gap: 48px; align-items: end; }
+  .hero h1 { margin-bottom: 0; }
+}
+
+/* A heading column beside the content, from 64rem. Breaks up the heading-then-grid rhythm. */
+.split { display: grid; gap: 32px; grid-template-columns: 1fr; }
+.split > .head > :first-child { margin-top: 0; }
+.split > .head > :last-child { margin-bottom: 0; }
+@media (min-width: 64rem) {
+  .split { grid-template-columns: 18rem 1fr; gap: 48px; }
+  .split > .head { position: sticky; top: 24px; align-self: start; }
+}
+.split h2 { font-size: clamp(2rem, 3vw + 1rem, 2.5rem); margin-bottom: 16px; }
+.split .lede { font-size: 1rem; line-height: 1.75; }
+
+/* Work: one featured project, the rest as ruled rows */
+.card > .body, .row > .body { display: contents; }
+.feature { display: grid; gap: 0; margin: 0 0 48px; padding: 0; }
 .feature img { aspect-ratio: 2 / 1; object-fit: cover; width: 100%; margin: 0; }
 .feature .body { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
-.feature h3 { margin: 0; font-size: clamp(1.5rem, 3vw + 1rem, 2rem); }
+.feature h2, .feature h3 { margin: 0; font-size: clamp(1.5rem, 3vw + 1rem, 2rem); }
 .feature p { margin: 0; }
 .feature .meta { margin: 0; }
 @media (min-width: 64rem) {
   .feature.has-cover { grid-template-columns: 3fr 2fr; }
   .feature.has-cover img { height: 100%; aspect-ratio: auto; }
   .feature .body { padding: 32px; justify-content: center; }
+  .feature h2, .feature h3 { font-size: 2.5rem; }
 }
-.grid.three { margin-bottom: 24px; }
-@media (min-width: 64rem) { .grid.three { grid-template-columns: repeat(3, 1fr); } }
-.result { border-left: 8px solid var(--hl); padding: 0 0 0 16px; }
+.result { background: var(--hl); color: var(--on-hl); padding: 8px 16px; font-weight: 600; }
 .more { margin: 0; }
 
-/* Proof: a claim, then the evidence */
-.proof { display: grid; gap: 24px; grid-template-columns: 1fr; list-style: none; padding: 0; margin: 0 0 24px; }
-@media (min-width: 64rem) { .proof { grid-template-columns: repeat(3, 1fr); } }
-.proof li { border-top: 8px solid var(--hl); padding-top: 16px; }
-.proof h3 { margin: 0 0 8px; font-size: 1.5rem; }
-.proof p { margin: 0 0 16px; }
+/* Rows: a ruled list. The whole row is one link; hover inverts the block. */
+.rows { list-style: none; padding: 0; margin: 0 0 24px; border-top: 1px solid var(--text); }
+.row { position: relative; display: grid; gap: 8px 24px; padding: 24px 16px; border-bottom: 1px solid var(--text); }
+.row h2, .row h3 { margin: 0; font-size: 1.5rem; }
+.row p { margin: 0; }
+.row .meta { margin: 0; }
+.row a.stretch { color: inherit; text-decoration: none; }
+.row a.stretch:hover { background: none; color: inherit; }
+.row a.stretch::after { content: ""; position: absolute; inset: 0; }
+.row:hover { background: var(--text); color: var(--bg); }
+.row:focus-within { outline: 2px solid var(--focus); outline-offset: 2px; }
+@media (min-width: 40rem) {
+  .row { grid-template-columns: 1fr 1.4fr; align-items: baseline; }
+  .row .result { grid-column: 2; }
+}
+@media (min-width: 40rem) {
+  .row.post { grid-template-columns: 8rem 1fr; }
+  .row.post .meta { grid-column: 1; grid-row: 1 / span 2; }
+  .row.post h2, .row.post h3 { grid-column: 2; }
+  .row.post p:not(.meta) { grid-column: 2; }
+}
+
+/* Proof: a claim on the left, the measurement on the right, like a ledger */
+.ledger { list-style: none; padding: 0; margin: 0 0 24px; border-top: 1px solid var(--text); }
+.ledger li { display: grid; gap: 16px 32px; padding: 24px 0; border-bottom: 1px solid var(--text); }
+@media (min-width: 40rem) { .ledger li { grid-template-columns: 1fr 1fr; } }
+.ledger h3 { margin: 0 0 8px; font-size: 1.5rem; }
+.ledger p { margin: 0; }
 .stat { display: block; font-size: clamp(2rem, 4vw + 1rem, 3rem); font-weight: 800; line-height: 1.05; margin-bottom: 8px; }
-.proof .note { font-size: 0.875rem; margin: 0; }
+.ledger .note { font-size: 0.875rem; }
 .fineprint { font-size: 0.875rem; margin: 0; }
 
 /* Contact form */
