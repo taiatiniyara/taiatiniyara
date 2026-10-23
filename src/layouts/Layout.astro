@@ -9,7 +9,7 @@ interface Props {
   noindex?: boolean;
   article?: boolean;
 }
-const { title, description = "Web apps, mobile apps and APIs for people who'd rather ship.", image, hl = "lagoon", noindex = false, article = false } = Astro.props;
+const { title, description = "Web apps, mobile apps and APIs that load fast and work for everyone. Tell me what you need.", image, hl = "lagoon", noindex = false, article = false } = Astro.props;
 const site = "https://taiatiniyara.com";
 const canonical = new URL(Astro.url.pathname, site).href;
 const fullTitle = title === "Taia Tiniyara" ? title : `${title} · Taia Tiniyara`;

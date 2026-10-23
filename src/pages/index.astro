@@ -8,11 +8,28 @@ const projects = (await listProjects(env.DB)).slice(0, 4);
 const posts = await listPosts(env.DB, { limit: 4 });
 ---
 <Layout title="Taia Tiniyara">
-  <h1>Fast, accessible, built last.</h1>
-  <p class="lede">Web apps, mobile apps and APIs for people who'd rather ship.</p>
+  <h1>You've got something to ship.</h1>
+  <p class="lede">A web app, a mobile app or an API. I'll help you get it live, fast, and usable by everyone who needs it.</p>
+  <div class="actions">
+    <a class="btn primary" href="mailto:mail@taiatiniyara.com">Tell me what you need</a>
+    <a class="btn" href="/projects">Look at the work</a>
+  </div>
 
-  <h2>Work</h2>
-  {projects.length === 0 ? <p class="empty">Projects are on their way.</p> : (
+  <h2>What you get</h2>
+  {/* TODO: add a third point, "Something you can keep", once it's clear what that means for clients. */}
+  <ul class="grid">
+    <li class="card">
+      <h3>Speed</h3>
+      <p>Your users aren't left waiting.</p>
+    </li>
+    <li class="card">
+      <h3>Access for everyone</h3>
+      <p>It works with a keyboard and a screen reader.</p>
+    </li>
+  </ul>
+
+  <h2>Look at the work</h2>
+  {projects.length === 0 ? <p class="empty">Nothing here yet. The first project is coming.</p> : (
     <ul class="grid">
       {projects.map((p) => (
         <li class="card">
@@ -27,4 +44,8 @@ const posts = await listPosts(env.DB, { limit: 4 });
   <h2>Latest posts</h2>
   <PostList posts={posts} />
   <p><a href="/blog">All posts</a></p>
+
+  <h2>Start with an email</h2>
+  <p>Tell me what you're building, who it's for and when you need it. I'll write back.</p>
+  <p><a href="mailto:mail@taiatiniyara.com">mail@taiatiniyara.com</a></p>
 </Layout>
