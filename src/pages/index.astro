@@ -15,13 +15,13 @@ const measured = new Date(proof.measuredOn + "T00:00:00Z").toLocaleDateString("e
 <Layout title="Web apps, mobile apps and APIs from Fiji" wide jsonLd={[websiteLd()]}>
   <section class="band block hero">
     <div class="wrap">
-      <p class="kicker">Software engineer in Fiji</p>
-      <h1>You've got something to ship.</h1>
-      <div class="rule"></div>
-      <p class="lede">A web app, a mobile app or an API. I'll help you get it live, fast, and usable by everyone who needs it.</p>
-      <div class="actions">
-        <a class="btn primary" href="#contact">Tell me what you need</a>
-        <a class="btn" href="#work">Look at the work</a>
+      <h1>You've got something to <span class="pop">ship.</span></h1>
+      <div>
+        <p class="lede">I'm Taia, a software engineer in Fiji. Web app, mobile app or API: I'll help you get it live, fast, and usable by everyone who needs it.</p>
+        <div class="actions">
+          <a class="btn primary" href="#contact">Tell me what you need</a>
+          <a class="btn" href="#work">Look at the work</a>
+        </div>
       </div>
     </div>
   </section>
@@ -33,8 +33,8 @@ const measured = new Date(proof.measuredOn + "T00:00:00Z").toLocaleDateString("e
         <>
           <ProjectCard project={feature} featured lazy={false} />
           {rest.length > 0 && (
-            <ul class="grid three">
-              {rest.map((p) => <ProjectCard project={p} />)}
+            <ul class="rows">
+              {rest.map((p) => <ProjectCard project={p} row />)}
             </ul>
           )}
           <p class="more"><a href="/projects">All work</a></p>
@@ -44,51 +44,68 @@ const measured = new Date(proof.measuredOn + "T00:00:00Z").toLocaleDateString("e
   </section>
 
   <section class="band sunk" aria-labelledby="proof-h">
-    <div class="wrap">
-      <h2 id="proof-h">Proof, not promises</h2>
-      <ul class="proof">
+    <div class="wrap split">
+      <div class="head">
+        <h2 id="proof-h">Measured on this site</h2>
+        <p class="fineprint">Checked on {measured} on a production build, with axe and a network log. Automated checks don't catch everything, but they show what I hold my own site to.</p>
+      </div>
+      <ul class="ledger">
         <li>
-          <h3>Speed</h3>
-          <p>Your users aren't left waiting.</p>
-          <span class="stat">{proof.firstLoadKb} kB</span>
-          <p class="note">of HTML, CSS, scripts and fonts load on this site's home page, before any images.</p>
+          <div>
+            <h3>Speed</h3>
+            <p>Your users aren't left waiting.</p>
+          </div>
+          <div>
+            <span class="stat">{proof.firstLoadKb} kB</span>
+            <p class="note">of HTML, CSS, scripts and fonts load on this site's home page, before any images.</p>
+          </div>
         </li>
         <li>
-          <h3>Access for everyone</h3>
-          <p>It works with a keyboard and a screen reader.</p>
-          <span class="stat">{proof.axeViolations}</span>
-          <p class="note">accessibility violations found by an automated check across {proof.pages} pages, in light and dark.</p>
+          <div>
+            <h3>Access for everyone</h3>
+            <p>It works with a keyboard and a screen reader.</p>
+          </div>
+          <div>
+            <span class="stat">{proof.axeViolations}</span>
+            <p class="note">accessibility violations found by an automated check across {proof.pages} pages, in light and dark.</p>
+          </div>
         </li>
         <li>
-          <h3>Something you keep</h3>
-          <p>The code, the docs and the accounts are yours. Plain tools, so anyone can pick it up.</p>
-          <span class="stat">{proof.thirdParty}</span>
-          <p class="note">third-party scripts, trackers or cookies on this site. Just Astro on Cloudflare.</p>
+          <div>
+            <h3>Something you keep</h3>
+            <p>The code, the docs and the accounts are yours. Plain tools, so anyone can pick it up.</p>
+          </div>
+          <div>
+            <span class="stat">{proof.thirdParty}</span>
+            <p class="note">third-party scripts, trackers or cookies on this site. Just Astro on Cloudflare.</p>
+          </div>
         </li>
       </ul>
-      <p class="fineprint">Measured on {measured} on a production build, with axe and a network log. Automated checks don't catch everything, but they show what I hold my own site to.</p>
     </div>
   </section>
 
   <section class="band" aria-labelledby="posts-h">
-    <div class="wrap">
-      <h2 id="posts-h">Latest posts</h2>
-      <PostList posts={posts} />
-      <p class="more"><a href="/blog">All posts</a></p>
+    <div class="wrap split">
+      <div class="head">
+        <h2 id="posts-h">Latest posts</h2>
+        <p class="more"><a href="/blog">All posts</a></p>
+      </div>
+      <PostList posts={posts} showProject={false} />
     </div>
   </section>
 
   <section class="band block" id="contact" aria-labelledby="contact-h">
-    <div class="wrap">
-      <h2 id="contact-h">Start with a message</h2>
-      <div class="rule"></div>
-      <p class="lede">Tell me what you're building and who it's for. I'll write back.</p>
-      <ContactForm id="home" />
-      <div class="direct">
-        <p>Prefer email? <a href="mailto:mail@taiatiniyara.com">mail@taiatiniyara.com</a></p>
-        <button class="btn" type="button" data-copy="mail@taiatiniyara.com">Copy email</button>
+    <div class="wrap split">
+      <div class="head">
+        <h2 id="contact-h">Start with a message</h2>
+        <p class="lede">Tell me what you're building and who it's for. I'll write back.</p>
+        <div class="direct">
+          <p>Prefer email? <a href="mailto:mail@taiatiniyara.com">mail@taiatiniyara.com</a></p>
+          <button class="btn" type="button" data-copy="mail@taiatiniyara.com">Copy email</button>
+        </div>
+        <p class="copy-status" role="status" data-copy-status></p>
       </div>
-      <p class="copy-status" role="status" data-copy-status></p>
+      <ContactForm id="home" />
     </div>
   </section>
 </Layout>

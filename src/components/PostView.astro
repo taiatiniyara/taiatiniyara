@@ -21,7 +21,6 @@ const showToc = toc.filter((h) => h.level === 2).length >= 3;
 <article>
   {post.project_slug && <p class="meta"><a href={`/projects/${post.project_slug}`}>{post.project_title}</a></p>}
   <h1>{post.title}</h1>
-  <div class="rule"></div>
   {post.summary && <p class="lede">{post.summary}</p>}
   <p class="byline">
     {post.published_at ? <time datetime={fmtDate(post.published_at)}>{fmtDate(post.published_at)}</time> : <strong class="status">Draft</strong>}

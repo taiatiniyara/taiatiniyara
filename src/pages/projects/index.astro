@@ -8,13 +8,17 @@ const projects = await listProjects(env.DB);
 ---
 <Layout title="Work" description="Projects I've built, with the live site and source where I can share them." hl="lagoon">
   <h1>Work</h1>
-  <div class="rule"></div>
   <p class="lede">See what I've built before you decide. Open a project to read how it was made.</p>
   <p>Where I can, I link the live site and the source.</p>
   {projects.length === 0 ? <p class="empty">Nothing here yet. The first project is coming.</p> : (
-    <ul class="grid">
-      {projects.map((p, i) => <ProjectCard project={p} level="h2" lazy={i > 1} />)}
-    </ul>
+    <>
+      <ProjectCard project={projects[0]} featured level="h2" lazy={false} />
+      {projects.length > 1 && (
+        <ul class="rows">
+          {projects.slice(1).map((p) => <ProjectCard project={p} row level="h2" />)}
+        </ul>
+      )}
+    </>
   )}
 
   <h2>Want something like this?</h2>

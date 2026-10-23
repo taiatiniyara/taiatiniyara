@@ -6,20 +6,22 @@ interface Props {
   project: Project;
   /** The large card at the top of a list. */
   featured?: boolean;
+  /** A ruled row for the rest of the list, with no image. */
+  row?: boolean;
   /** Heading level for the title, to fit the page's outline. */
   level?: "h2" | "h3";
   /** False for a card that is above the fold. */
   lazy?: boolean;
 }
-const { project: p, featured = false, level = "h3", lazy = true } = Astro.props;
+const { project: p, featured = false, row = false, level = "h3", lazy = true } = Astro.props;
 const Root = featured ? "article" : "li";
 const Title = level;
 const cover = p.cover_key ? `/${p.cover_key}` : null;
 const srcset = cover && !cover.endsWith(".gif") ? IMAGE_WIDTHS.map((w) => `${cover}?w=${w} ${w}w`).join(", ") : undefined;
 const sizes = featured ? "(min-width: 64rem) 38rem, 100vw" : "(min-width: 64rem) 20rem, (min-width: 40rem) 50vw, 100vw";
 ---
-<Root class:list={["card", { feature: featured, "has-cover": featured && cover }]}>
-  {cover && <img src={`${cover}?w=${featured ? 1200 : 800}`} srcset={srcset} sizes={sizes} alt="" width="800" height="400" loading={lazy ? "lazy" : "eager"} decoding="async" />}
+<Root class:list={row ? ["row"] : ["card", { feature: featured, "has-cover": featured && cover }]}>
+  {cover && !row && <img src={`${cover}?w=${featured ? 1200 : 800}`} srcset={srcset} sizes={sizes} alt="" width="800" height="400" loading={lazy ? "lazy" : "eager"} decoding="async" />}
   <div class="body">
     <Title><a class="stretch" href={`/projects/${p.slug}`}>{p.title}</a></Title>
     {p.summary && <p>{p.summary}</p>}
