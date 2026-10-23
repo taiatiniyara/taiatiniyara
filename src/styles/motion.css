@@ -1,0 +1,79 @@
+/* Motion (brand/ui-ux.md): transform and opacity only, steps() so it moves tile by tile.
+   Everything here sits behind prefers-reduced-motion: no-preference; without it the page is simply final. */
+
+.tiles { display: block; }
+.tiles rect { fill: var(--accent); }
+.tiles rect:nth-child(1) { --i: 0; } .tiles rect:nth-child(2) { --i: 1; } .tiles rect:nth-child(3) { --i: 2; }
+.tiles rect:nth-child(4) { --i: 3; } .tiles rect:nth-child(5) { --i: 4; } .tiles rect:nth-child(6) { --i: 5; }
+.tiles rect:nth-child(7) { --i: 6; } .tiles rect:nth-child(8) { --i: 7; } .tiles rect:nth-child(9) { --i: 8; }
+.tiles rect:nth-child(10) { --i: 9; }
+
+.hero-mark { width: 192px; height: 96px; margin-bottom: 24px; }
+@media (min-width: 40rem) { .hero-mark { width: 288px; height: 144px; } }
+
+/* Contact form loader: shown while the message is sent. It is the one thing allowed to loop. */
+.loader { display: none; width: 96px; height: 48px; align-self: center; }
+form[data-sending] .loader { display: block; }
+
+.sent-mark { width: 192px; height: 96px; margin-bottom: 32px; }
+
+/* Page curtain: five columns that lift off the new page. */
+.curtain { display: none; }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* 1. Home intro: the ten tiles drop in, then "ship." is stamped on. */
+  html[data-nav] { --lead: 240ms; }
+  html:not([data-intro="done"]) .hero-mark rect {
+    animation: tile-drop 160ms steps(4, end) backwards;
+    animation-delay: calc(var(--lead, 0ms) + var(--i) * 60ms);
+  }
+  html:not([data-intro="done"]) .hero .pop {
+    position: relative; isolation: isolate; background: none;
+    animation: show 1ms steps(1, end) backwards;
+    animation-delay: calc(var(--lead, 0ms) + 560ms);
+  }
+  html:not([data-intro="done"]) .hero .pop::before {
+    content: ""; position: absolute; inset: 0; z-index: -1; background: var(--hl); transform-origin: left;
+    animation: wipe 200ms steps(5, end) backwards;
+    animation-delay: calc(var(--lead, 0ms) + 560ms);
+  }
+
+  /* 4. The mark as a loader (form submit) and as a confirmation (message sent). */
+  form[data-sending] .loader rect {
+    animation: tile-pulse 1200ms steps(1, end) infinite;
+    animation-delay: calc(var(--i) * 120ms - 1200ms);
+  }
+  .sent-mark rect {
+    animation: tile-drop 160ms steps(4, end) backwards;
+    animation-delay: calc(var(--i) * 60ms);
+  }
+
+  /* 2. Page curtain: plays when you arrive by following a link on this site. */
+  html[data-nav] .curtain {
+    display: grid; grid-template-columns: repeat(5, 1fr); position: fixed; inset: 0; z-index: 100; pointer-events: none;
+  }
+  .curtain i { background: var(--dark-blue); animation: lift 200ms steps(5, end) both; }
+  .curtain i:nth-child(2) { background: var(--accent); }
+  .curtain i:nth-child(4) { background: var(--hl); }
+  .curtain i:nth-child(1) { animation-delay: 0ms; }
+  .curtain i:nth-child(2) { animation-delay: 30ms; }
+  .curtain i:nth-child(3) { animation-delay: 60ms; }
+  .curtain i:nth-child(4) { animation-delay: 90ms; }
+  .curtain i:nth-child(5) { animation-delay: 120ms; }
+
+  /* 3. Ledger rows print in as they scroll into view (where the browser supports scroll timelines). */
+  @supports (animation-timeline: view()) {
+    .ledger li {
+      animation: print steps(4, end) both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 70%;
+    }
+  }
+}
+
+@keyframes tile-drop { from { transform: translateY(-3px); opacity: 0; } }
+@keyframes tile-pulse { 0% { opacity: 0.25; } 10% { opacity: 1; } 40% { opacity: 0.25; } }
+@keyframes show { from { opacity: 0; } }
+@keyframes wipe { from { transform: scaleX(0); } }
+@keyframes lift { to { transform: translateY(-100%); } }
+@keyframes print { from { transform: translateY(-16px); opacity: 0; } }
