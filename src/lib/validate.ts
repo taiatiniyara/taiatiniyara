@@ -34,9 +34,10 @@ export function parseProject(raw: Raw): Parsed<ProjectInput> {
   const repo = webUrl(raw.repo_url);
   const live = webUrl(raw.live_url);
   if (repo === undefined || live === undefined) return { ok: false, error: "Enter links like https://example.com." };
+  const result = str(raw.result, 160);
   const cover = str(raw.cover_key, 100) || null;
   if (cover && !/^media\/[a-f0-9]{64}\.(webp|gif)$/.test(cover)) return { ok: false, error: "The cover image is not valid." };
-  return { ok: true, body: c.body, value: { slug: c.slug, title: c.title, summary: c.summary, status: c.status, cover_key: cover, repo_url: repo, live_url: live } };
+  return { ok: true, body: c.body, value: { slug: c.slug, title: c.title, summary: c.summary, result, status: c.status, cover_key: cover, repo_url: repo, live_url: live } };
 }
 
 export function parsePost(raw: Raw): Parsed<PostInput> {

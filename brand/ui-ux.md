@@ -11,7 +11,7 @@ Draft. Tokens live in `colors.css`; the mark and type are defined in `index.html
 
 ## Shape
 - Corners: 0. (Open: allow 2 px on inputs?)
-- Hover/pressed states move or invert a block; they never blur or glow.
+- Hover/pressed states move or invert a block; they never blur or glow. Cards move 4 px up and left (not under `prefers-reduced-motion`).
 - Max content width 64 rem; running text max 60 ch.
 - Breakpoints (mobile-first): 40 rem, 64 rem, 80 rem.
 
@@ -43,6 +43,11 @@ Draft. Tokens live in `colors.css`; the mark and type are defined in `index.html
 - **Focus:** 2 px Lagoon outline, 2 px offset, always visible. Never remove it.
 - **Header:** mark (48 px wide minimum, links home), ≤ 5 nav items, theme toggle. No wordmark next to the mark.
 - **Footer:** name as plain text, a privacy line, and contact links. Social links are optional.
+- **Band:** a full-width section on the page background, with a 64 px top and bottom. At most one Dark Blue band ("block") for every two plain ones. A block looks the same in both themes: Dark Blue ground, Mist text, Neon accent, Ink surfaces, and the page's spectrum colour at full strength (it is safe on Dark Blue even when the page is light). Use it for the hero and the contact section.
+- **Feature card:** the first project, large (image beside text from 64 rem). The rest sit in a 3-up grid. A result line (`Result: …`) gets an 8 px bar in the section colour.
+- **Stat:** a number in Martian Mono 800 (32–48 px, never Dela Gothic), then one plain sentence saying what was measured. Only publish a number you measured; say when.
+- **Field error:** 2 px Hibiscus border, a `!` icon and the message in body text colour (Hibiscus text is too weak on Dark Blue). It says what to do next, appears on blur, and clears once the answer is fixed.
+- **Copy button:** secondary button, confirms with a text message in a live region, never by colour alone.
 - **Empty / error / loading:** skeletons (flat Blue blocks) for loading; short, plain-language messages with one next step.
 
 ## Motion

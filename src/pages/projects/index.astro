@@ -1,6 +1,7 @@
 ---
 import { env } from "cloudflare:workers";
 import Layout from "../../layouts/Layout.astro";
+import ProjectCard from "../../components/ProjectCard.astro";
 import { listProjects } from "../../lib/db.ts";
 
 const projects = await listProjects(env.DB);
@@ -12,16 +13,11 @@ const projects = await listProjects(env.DB);
   <p>Where I can, I link the live site and the source.</p>
   {projects.length === 0 ? <p class="empty">Nothing here yet. The first project is coming.</p> : (
     <ul class="grid">
-      {projects.map((p) => (
-        <li class="card">
-          {p.cover_key && <img src={`/${p.cover_key}?w=800`} alt="" loading="lazy" width="800" height="400" />}
-          <h2><a class="stretch" href={`/projects/${p.slug}`}>{p.title}</a></h2>
-          {p.summary && <p>{p.summary}</p>}
-        </li>
-      ))}
+      {projects.map((p, i) => <ProjectCard project={p} level="h2" lazy={i > 1} />)}
     </ul>
   )}
 
   <h2>Want something like this?</h2>
-  <p>Tell me what you're building and when you need it. <a href="mailto:mail@taiatiniyara.com">mail@taiatiniyara.com</a></p>
+  <p>Tell me what you're building and when you need it.</p>
+  <div class="actions"><a class="btn primary" href="/contact">Tell me what you need</a></div>
 </Layout>

@@ -1,0 +1,49 @@
+---
+import { env } from "cloudflare:workers";
+import Layout from "../layouts/Layout.astro";
+import ContactForm from "../components/ContactForm.astro";
+import { parseEnquiry, type EnquiryErrors, type EnquiryFields } from "../lib/enquiry.ts";
+import { countEnquiriesSince, saveEnquiry } from "../lib/db.ts";
+import { notifyEnquiry } from "../lib/notify.ts";
+import { sameOrigin } from "../lib/url.ts";
+
+const MAX_PER_HOUR = 20; // across all visitors; a flood stops here instead of filling the inbox
+
+let values: Partial<EnquiryFields> = {};
+let errors: EnquiryErrors = {};
+let formError = "";
+
+if (Astro.request.method === "POST") {
+  if (!sameOrigin(Astro.request, Astro.url.origin)) return new Response("Bad origin", { status: 403, headers: { "Cache-Control": "no-store" } });
+  const parsed = parseEnquiry(await Astro.request.formData());
+  if (parsed.ok) {
+    if (parsed.spam) return Astro.redirect("/contact/sent", 303);
+    if ((await countEnquiriesSince(env.DB, Math.floor(Date.now() / 1000) - 3600)) >= MAX_PER_HOUR) {
+      values = parsed.value;
+      formError = "Too many messages have come in this hour. Please email mail@taiatiniyara.com instead.";
+      Astro.response.status = 429;
+    } else {
+      await saveEnquiry(env.DB, parsed.value);
+      Astro.locals.cfContext.waitUntil(notifyEnquiry(parsed.value));
+      return Astro.redirect("/contact/sent", 303);
+    }
+  } else {
+    values = parsed.values;
+    errors = parsed.errors;
+    Astro.response.status = 400;
+  }
+  Astro.response.headers.set("Cache-Control", "no-store");
+}
+---
+<Layout title="Contact" description="Tell me what you're building, who it's for and when you need it." hl="lagoon">
+  <h1>Tell me what you need</h1>
+  <div class="rule"></div>
+  <p class="lede">What you're building, who it's for and when you need it. I'll write back.</p>
+  <ContactForm values={values} errors={errors} formError={formError} />
+  <div class="direct">
+    <p>Prefer email? <a href="mailto:mail@taiatiniyara.com">mail@taiatiniyara.com</a></p>
+    <button class="btn" type="button" data-copy="mail@taiatiniyara.com">Copy email</button>
+  </div>
+  <p class="copy-status" role="status" data-copy-status></p>
+  <p class="fineprint">I keep your message only to reply to it.</p>
+</Layout>

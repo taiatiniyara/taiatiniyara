@@ -1,0 +1,55 @@
+---
+import { TIMELINES, MESSAGE_MAX, type EnquiryErrors, type EnquiryFields } from "../lib/enquiry.ts";
+
+interface Props {
+  /** Prefix so the form can appear twice on a page without clashing ids. */
+  id?: string;
+  values?: Partial<EnquiryFields>;
+  errors?: EnquiryErrors;
+  formError?: string;
+}
+const { id = "contact", values = {}, errors = {}, formError = "" } = Astro.props;
+const count = Object.keys(errors).length;
+const field = (n: keyof EnquiryFields) => ({
+  "aria-invalid": errors[n] ? ("true" as const) : undefined,
+  "aria-describedby": `${id}-${n}-error${n === "message" ? ` ${id}-message-hint` : ""}`,
+});
+---
+<form class="form" method="post" action="/contact" novalidate data-enquiry>
+  {formError && <p class="error" role="alert">{formError}</p>}
+  {count > 0 && <p class="error" role="alert">{count === 1 ? "One answer needs fixing." : `${count} answers need fixing.`} Details are below.</p>}
+
+  <div class="field">
+    <label for={`${id}-email`}>Your email</label>
+    <input id={`${id}-email`} name="email" type="email" autocomplete="email" inputmode="email" required value={values.email ?? ""} {...field("email")} />
+    <p class="field-error" id={`${id}-email-error`} data-error-for="email" role="alert">{errors.email}</p>
+  </div>
+
+  <div class="field">
+    <label for={`${id}-message`}>What are you building, and who is it for?</label>
+    <p class="hint" id={`${id}-message-hint`}>A sentence or two is enough. I'll ask for the rest.</p>
+    <textarea id={`${id}-message`} name="message" required maxlength={MESSAGE_MAX} {...field("message")}>{values.message ?? ""}</textarea>
+    <p class="field-error" id={`${id}-message-error`} data-error-for="message" role="alert">{errors.message}</p>
+  </div>
+
+  <div class="field">
+    <label for={`${id}-timeline`}>When do you need it? (optional)</label>
+    <select id={`${id}-timeline`} name="timeline" {...field("timeline")}>
+      <option value="" selected={!values.timeline}>Not sure yet</option>
+      {TIMELINES.map((t) => <option value={t} selected={values.timeline === t}>{t}</option>)}
+    </select>
+    <p class="field-error" id={`${id}-timeline-error`} data-error-for="timeline" role="alert">{errors.timeline}</p>
+  </div>
+
+  <div class="hp" aria-hidden="true">
+    <label>Leave this field empty <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+  </div>
+
+  <div class="actions">
+    <button class="btn primary" type="submit" data-label="Send message">Send message</button>
+  </div>
+</form>
+
+<script>
+  import "../scripts/contact-form.ts";
+</script>

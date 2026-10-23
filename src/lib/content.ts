@@ -5,6 +5,8 @@ import Image from "@tiptap/extension-image";
 import type { JSONContent } from "@tiptap/core";
 import { renderToHTMLString } from "@tiptap/static-renderer/pm/html-string";
 import { IMAGE_WIDTHS, MEDIA_PATH, safeUrl } from "./url.ts";
+import { xml } from "./format.ts";
+import { slugify } from "./slug.ts";
 
 const SiteLink = Link.extend({
   renderHTML({ HTMLAttributes }) {
@@ -48,8 +50,49 @@ export const extensions = [
 
 export const emptyDoc: JSONContent = { type: "doc", content: [{ type: "paragraph" }] };
 
+export interface Heading {
+  level: number;
+  text: string;
+  id: string;
+}
+
+const textOf = (n: JSONContent): string => n.text ?? (n.content ?? []).map(textOf).join("");
+
+/** Headings in document order, each with a unique anchor id. */
+export function headings(doc: JSONContent): Heading[] {
+  const out: Heading[] = [];
+  const seen = new Map<string, number>();
+  const walk = (n: JSONContent) => {
+    if (n.type === "heading") {
+      const text = textOf(n).trim();
+      const base = slugify(text) || "section";
+      const count = seen.get(base) ?? 0;
+      seen.set(base, count + 1);
+      out.push({ level: n.attrs?.level ?? 2, text, id: count ? `${base}-${count + 1}` : base });
+    }
+    n.content?.forEach(walk);
+  };
+  walk(doc);
+  return out;
+}
+
 export function renderBody(doc: JSONContent): string {
-  return renderToHTMLString({ content: doc, extensions });
+  const list = headings(doc);
+  let i = 0;
+  // Give each heading an id and a link to itself. Text is escaped by the renderer, so a literal "<h2>" can't appear in it.
+  return renderToHTMLString({ content: doc, extensions }).replace(/<h([2-4])>([\s\S]*?)<\/h\1>/g, (whole, level, inner) => {
+    const h = list[i++];
+    if (!h) return whole;
+    return `<h${level} id="${h.id}">${inner} <a class="anchor" href="#${h.id}" aria-label="Link to ${xml(h.text)}">#</a></h${level}>`;
+  });
+}
+
+const WORDS_PER_MINUTE = 200;
+
+export function readingMinutes(doc: JSONContent): number {
+  const words = (n: JSONContent): number =>
+    n.text ? n.text.split(/\s+/).filter(Boolean).length : (n.content ?? []).reduce((sum, c) => sum + words(c), 0);
+  return Math.max(1, Math.round(words(doc) / WORDS_PER_MINUTE));
 }
 
 /** First image in a doc, for og:image. */

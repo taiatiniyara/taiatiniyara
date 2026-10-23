@@ -1,4 +1,4 @@
-// Admin dashboard: project ordering, deletes, unused-media cleanup.
+// Admin dashboard and inbox: project ordering, deletes, unused-media cleanup.
 const msg = document.querySelector<HTMLElement>("#message")!;
 
 function show(text: string, isError = false) {
@@ -24,9 +24,10 @@ document.addEventListener("click", async (e) => {
     if (action === "move-up" || action === "move-down") {
       await call("/api/admin/projects", "PATCH", { id: Number(id), move: action === "move-up" ? "up" : "down" });
       location.reload();
-    } else if (action === "delete-project" || action === "delete-post") {
+    } else if (action === "delete-project" || action === "delete-post" || action === "delete-enquiry") {
       if (!confirm(`Delete "${title}" permanently?`)) return;
-      await call(`/api/admin/${action === "delete-project" ? "projects" : "posts"}`, "DELETE", { id: Number(id) });
+      const api = { "delete-project": "projects", "delete-post": "posts", "delete-enquiry": "enquiries" }[action];
+      await call(`/api/admin/${api}`, "DELETE", { id: Number(id) });
       location.reload();
     } else if (action === "media-scan") {
       const r = await call("/api/admin/media", "POST", { dryRun: true });
