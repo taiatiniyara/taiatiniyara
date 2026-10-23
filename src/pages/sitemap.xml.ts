@@ -9,6 +9,7 @@ export async function GET() {
   const entries: [path: string, updated?: number][] = [
     ["/", newest(...posts.map((p) => p.updated_at), ...projects.map((p) => p.updated_at))],
     ["/about"],
+    ["/contact"],
     ["/blog", newest(...posts.map((p) => p.updated_at))],
     ["/projects", newest(...projects.map((p) => p.updated_at))],
     ...projects.map((p): [string, number] => [`/projects/${p.slug}`, p.updated_at]),

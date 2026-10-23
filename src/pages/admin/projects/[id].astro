@@ -24,6 +24,10 @@ const locked = !!project?.published_at;
     <label for="summary">Summary</label>
     <textarea id="summary" name="summary" maxlength="300">{project?.summary ?? ""}</textarea>
 
+    <label for="result">Result (optional)</label>
+    <input id="result" name="result" type="text" maxlength="160" placeholder="Cut month-end billing from 3 days to 3 hours" value={project?.result ?? ""} />
+    <p class="field-note">One line with a real outcome. It shows on the work cards and the project page.</p>
+
     <label for="repo_url">Source link (optional)</label>
     <input id="repo_url" name="repo_url" type="url" placeholder="https://github.com/you/project" value={project?.repo_url ?? ""} />
 

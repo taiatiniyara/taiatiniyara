@@ -12,14 +12,16 @@ interface Props {
   published?: number | null;
   updated?: number;
   jsonLd?: object[];
+  /** Full-bleed page: the page lays out its own .wrap columns. */
+  wide?: boolean;
 }
-const { title, description = DEFAULT_DESCRIPTION, image, hl = "lagoon", noindex = false, article = false, published, updated, jsonLd = [] } = Astro.props;
+const { title, description = DEFAULT_DESCRIPTION, image, hl = "lagoon", noindex = false, article = false, published, updated, jsonLd = [], wide = false } = Astro.props;
 const canonical = absUrl(Astro.url.pathname);
 const fullTitle = `${title} · ${SITE_NAME}`;
 const og = socialImage(image);
 const ogAlt = image ? title : SITE_NAME;
 const here = Astro.url.pathname;
-const nav = [["/projects", "Work"], ["/blog", "Blog"], ["/about", "About"]];
+const nav = [["/projects", "Work"], ["/blog", "Blog"], ["/about", "About"], ["/contact", "Contact"]];
 ---
 <!doctype html>
 <html lang="en">
@@ -57,17 +59,19 @@ const nav = [["/projects", "Work"], ["/blog", "Blog"], ["/about", "About"]];
       <a href="/" aria-label={`${SITE_NAME}, home`}><img src="/mark.svg" width="96" height="48" alt="" /></a>
       <nav aria-label="Main">
         {nav.map(([href, label]) => <a href={href} aria-current={here === href || here.startsWith(href + "/") ? "page" : undefined}>{label}</a>)}
-        <button class="btn" type="button" id="theme-toggle">Theme</button>
+        <button class="theme-toggle" type="button" id="theme-toggle"><span class="to-light">Light theme</span><span class="to-dark">Dark theme</span></button>
       </nav>
     </header>
-    <main id="main"><slot /></main>
+    <main id="main" class={wide ? "wide" : undefined}><slot /></main>
     <footer class="site-footer">
       <span>Taia Tiniyara</span>
       <a href="/rss.xml">RSS feed</a>
+      <a href="/contact">Contact</a>
       <a href="mailto:mail@taiatiniyara.com">Email me</a>
-      <span>No cookies and no analytics. Your theme choice stays in your browser.</span>
+      <span>No cookies and no analytics. Your theme choice stays in your browser. If you use the contact form, I keep your message only to reply to it.</span>
     </footer>
     <script>
+      import "../scripts/copy.ts";
       document.getElementById("theme-toggle")?.addEventListener("click", () => {
         const root = document.documentElement;
         const light = root.dataset.theme ? root.dataset.theme === "light" : matchMedia("(prefers-color-scheme: light)").matches;

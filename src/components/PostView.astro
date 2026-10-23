@@ -1,16 +1,77 @@
 ---
+import type { JSONContent } from "@tiptap/core";
+import PostList from "./PostList.astro";
 import { fmtDate } from "../lib/format.ts";
+import { headings, readingMinutes, renderBody } from "../lib/content.ts";
 import type { PostRow } from "../lib/db.ts";
+import { postPath } from "../lib/db.ts";
 
-interface Props { post: PostRow; html: string }
-const { post, html } = Astro.props;
+interface Props {
+  post: PostRow;
+  doc: JSONContent;
+  /** Reading trail; left out for draft previews, which are not in the public list. */
+  trail?: { newer: PostRow | null; older: PostRow | null; related: PostRow[] };
+}
+const { post, doc, trail } = Astro.props;
+const html = renderBody(doc);
+const minutes = readingMinutes(doc);
+const toc = headings(doc).filter((h) => h.level <= 3);
+const showToc = toc.filter((h) => h.level === 2).length >= 3;
 ---
 <article>
   {post.project_slug && <p class="meta"><a href={`/projects/${post.project_slug}`}>{post.project_title}</a></p>}
   <h1>{post.title}</h1>
   <div class="rule"></div>
-  <p class="meta">
+  {post.summary && <p class="lede">{post.summary}</p>}
+  <p class="byline">
     {post.published_at ? <time datetime={fmtDate(post.published_at)}>{fmtDate(post.published_at)}</time> : <strong class="status">Draft</strong>}
+    <span>{minutes} min read</span>
   </p>
+  {showToc && (
+    <nav class="toc" aria-labelledby="toc-title">
+      <p class="toc-title" id="toc-title">On this page</p>
+      <ol>
+        {toc.map((h) => <li class={`l${h.level}`}><a href={`#${h.id}`}>{h.text}</a></li>)}
+      </ol>
+    </nav>
+  )}
   <div class="prose" set:html={html} />
 </article>
+
+<div class="end">
+  <section class="card cta" aria-labelledby="cta-h">
+    <h2 id="cta-h">Building something like this?</h2>
+    <p>Tell me what you need and when. I'll write back.</p>
+    <div class="actions">
+      <a class="btn primary" href="/contact">Tell me what you need</a>
+      <a class="btn" href="/rss.xml">Follow by RSS</a>
+    </div>
+    <p class="fineprint">RSS lets a feed reader show you new posts. No account, no email.</p>
+  </section>
+
+  {trail && trail.related.length > 0 && (
+    <section class="related" aria-labelledby="related-h">
+      <h2 id="related-h">More from {post.project_title}</h2>
+      <PostList posts={trail.related} showProject={false} />
+    </section>
+  )}
+
+  {trail && (trail.newer || trail.older) && (
+    <nav aria-label="More posts">
+      <ul class="trail">
+        <li>{trail.older && (
+          <div class="card">
+            <span class="dir">Older post</span>
+            <a class="stretch" href={postPath(trail.older)}>{trail.older.title}</a>
+          </div>
+        )}</li>
+        <li>{trail.newer && (
+          <div class="card next">
+            <span class="dir">Newer post</span>
+            <a class="stretch" href={postPath(trail.newer)}>{trail.newer.title}</a>
+          </div>
+        )}</li>
+      </ul>
+    </nav>
+  )}
+</div>

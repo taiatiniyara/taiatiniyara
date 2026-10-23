@@ -9,6 +9,7 @@ const { project, html, posts } = Astro.props;
   <h1>{project.title}</h1>
   <div class="rule"></div>
   {project.summary && <p class="lede">{project.summary}</p>}
+  {project.result && <p class="result"><strong>Result:</strong> {project.result}</p>}
   {(project.repo_url || project.live_url) && (
     <div class="actions">
       {project.live_url && <a class="btn primary" href={project.live_url} target="_blank" rel="noopener">Live site</a>}

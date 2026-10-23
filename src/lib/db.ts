@@ -8,6 +8,7 @@ export interface Project {
   slug: string;
   title: string;
   summary: string;
+  result: string;
   cover_key: string | null;
   repo_url: string | null;
   live_url: string | null;
@@ -73,6 +74,7 @@ export interface ProjectInput {
   slug: string;
   title: string;
   summary: string;
+  result: string;
   cover_key: string | null;
   repo_url: string | null;
   live_url: string | null;
@@ -85,10 +87,10 @@ export async function saveProject(db: D1Database, id: number | null, input: Proj
     const next = await db.prepare("SELECT COALESCE(MAX(sort_order), 0) + 1 AS n FROM projects").first<{ n: number }>();
     const row = await db
       .prepare(
-        `INSERT INTO projects (slug, title, summary, cover_key, repo_url, live_url, sort_order, status, published_at, created_at, updated_at)
-         VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?10) RETURNING id`,
+        `INSERT INTO projects (slug, title, summary, result, cover_key, repo_url, live_url, sort_order, status, published_at, created_at, updated_at)
+         VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?11) RETURNING id`,
       )
-      .bind(input.slug, input.title, input.summary, input.cover_key, input.repo_url, input.live_url, next!.n, input.status, input.status === "published" ? t : null, t)
+      .bind(input.slug, input.title, input.summary, input.result, input.cover_key, input.repo_url, input.live_url, next!.n, input.status, input.status === "published" ? t : null, t)
       .first<{ id: number }>();
     return row!.id;
   }
@@ -97,12 +99,12 @@ export async function saveProject(db: D1Database, id: number | null, input: Proj
     .prepare(
       `UPDATE projects SET
          slug = CASE WHEN published_at IS NULL THEN ?2 ELSE slug END,
-         title = ?3, summary = ?4, cover_key = ?5, repo_url = ?6, live_url = ?7, status = ?8,
-         published_at = COALESCE(published_at, CASE WHEN ?8 = 'published' THEN ?9 END),
-         updated_at = ?9
+         title = ?3, summary = ?4, result = ?5, cover_key = ?6, repo_url = ?7, live_url = ?8, status = ?9,
+         published_at = COALESCE(published_at, CASE WHEN ?9 = 'published' THEN ?10 END),
+         updated_at = ?10
        WHERE id = ?1`,
     )
-    .bind(id, input.slug, input.title, input.summary, input.cover_key, input.repo_url, input.live_url, input.status, t)
+    .bind(id, input.slug, input.title, input.summary, input.result, input.cover_key, input.repo_url, input.live_url, input.status, t)
     .run();
   return id;
 }
@@ -205,4 +207,30 @@ export const recordMedia = (db: D1Database, key: string, size: number) =>
 export async function listMedia(db: D1Database) {
   const { results } = await db.prepare("SELECT * FROM media ORDER BY created_at DESC").all<{ key: string; size: number; created_at: number }>();
   return results;
+}
+
+// ---- enquiries (contact form) ----
+
+export interface Enquiry {
+  id: number;
+  email: string;
+  message: string;
+  timeline: string;
+  created_at: number;
+}
+
+export const saveEnquiry = (db: D1Database, e: Pick<Enquiry, "email" | "message" | "timeline">) =>
+  db.prepare("INSERT INTO enquiries (email, message, timeline, created_at) VALUES (?1,?2,?3,?4)").bind(e.email, e.message, e.timeline, now()).run();
+
+export async function listEnquiries(db: D1Database) {
+  const { results } = await db.prepare("SELECT * FROM enquiries ORDER BY created_at DESC, id DESC LIMIT 200").all<Enquiry>();
+  return results;
+}
+
+export const deleteEnquiry = (db: D1Database, id: number) => db.prepare("DELETE FROM enquiries WHERE id = ?1").bind(id).run();
+
+/** How many enquiries arrived since `since` (unix seconds), for the contact form's flood limit. */
+export async function countEnquiriesSince(db: D1Database, since: number) {
+  const row = await db.prepare("SELECT COUNT(*) AS n FROM enquiries WHERE created_at >= ?1").bind(since).first<{ n: number }>();
+  return row!.n;
 }
