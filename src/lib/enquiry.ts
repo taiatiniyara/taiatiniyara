@@ -46,7 +46,3 @@ export function parseEnquiry(form: FormData): ParsedEnquiry {
   if (get("website")) return { ok: true, value: values, spam: true };
   return Object.keys(errors).length ? { ok: false, errors, values } : { ok: true, value: values, spam: false };
 }
-
-/** Plain-text notification body. */
-export const enquirySubject = (e: EnquiryFields) => `New enquiry from ${e.email}`;
-export const enquiryText = (e: EnquiryFields) => `${e.message}\n\nTimeline: ${e.timeline || "Not given"}\nReply to: ${e.email}\n`;
