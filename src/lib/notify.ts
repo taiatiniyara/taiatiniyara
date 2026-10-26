@@ -15,7 +15,7 @@ export async function notifyEnquiry(e: EnquiryFields, at = new Date()) {
   const toThem = enquiryAcknowledgement(e, at, env.ADMIN_EMAIL);
   // Sent independently, so a bounce on the visitor's address can't stop the one that reaches me.
   const results = await Promise.allSettled([
-    mail.send({ from: { ...FROM, name: "taiatiniyara.com contact form" }, to: env.ADMIN_EMAIL, replyTo: e.email, ...toMe }),
+    mail.send({ from: { ...FROM, name: "New Enquiry" }, to: env.ADMIN_EMAIL, replyTo: e.email, ...toMe }),
     mail.send({
       from: FROM,
       to: e.email,
