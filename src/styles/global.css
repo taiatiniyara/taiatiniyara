@@ -137,6 +137,7 @@ img { max-width: 100%; height: auto; display: block; }
   @media (hover: hover) { .card:hover { transform: translate(-4px, -4px); } }
 }
 .card:focus-within { outline: 2px solid var(--focus); outline-offset: 2px; }
+img.cover { aspect-ratio: 2 / 1; object-fit: cover; width: 100%; margin: 32px 0; }
 .card img { aspect-ratio: 2 / 1; object-fit: cover; width: calc(100% + 48px); max-width: none; margin: -24px -24px 8px; }
 .empty { border: 1px solid var(--border); padding: 24px; }
 
